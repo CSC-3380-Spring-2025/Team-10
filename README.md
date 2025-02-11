@@ -1,10 +1,10 @@
-# [Name of the Project] : [Team Number]
-# Members
-Project Manager: [Name] ([GitHub Name])\
-Communications Lead: [Name] ([GitHub Name])\
-Git Master: [Name] ([GitHub Name])\
-Design Lead: [Name] ([GitHub Name])\
-Quality Assurance Tester: [Name] ([GitHub Name])
+# Study Sprout : 10
+# 5
+Project Manager: Megan Steinhauser ([GitHub Name])\
+Communications Lead: Lexi Reed ([GitHub Name])\
+Git Master: Ashtyn Roberts ([GitHub Name])\
+Design Lead: Jeffrey Min ([GitHub Name])\
+Quality Assurance Tester: Lillian Andino ([GitHub Name])
 
 # About Our Software
 

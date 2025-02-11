@@ -1,7 +1,7 @@
 # Study Sprout : 10
 # 5
 Project Manager: Megan Steinhauser (megansteinhauser)\
-Communications Lead: Lexi Reed ([GitHub Name])\
+Communications Lead: Lexi Reed ([Lexree17])\
 Git Master: Ashtyn Roberts (ashtyn-roberts)\
 Design Lead: Jeffrey Min ([GitHub Name])\
 Quality Assurance Tester: Lillian Andino ([GitHub Name])

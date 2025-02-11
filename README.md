@@ -1,6 +1,6 @@
 # Study Sprout : 10
 # 5
-Project Manager: Megan Steinhauser ([GitHub Name])\
+Project Manager: Megan Steinhauser (megansteinhauser)\
 Communications Lead: Lexi Reed ([GitHub Name])\
 Git Master: Ashtyn Roberts ([GitHub Name])\
 Design Lead: Jeffrey Min ([GitHub Name])\

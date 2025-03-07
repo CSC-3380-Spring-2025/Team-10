@@ -3,7 +3,7 @@
 Project Manager: Megan Steinhauser (megansteinhauser)\
 Communications Lead: Lexi Reed ([Lexree17])\
 Git Master: Ashtyn Roberts (ashtyn-roberts)\
-Design Lead: Jeffrey Min ([GitHub Name])\
+Design Lead: Jeffrey Min ([JeffreyMin])\
 Quality Assurance Tester: Lillian Andino ([GitHub Name])
 
 # About Our Software

@@ -1,20 +1,21 @@
 # Study Sprout : 10
 # 5
-Project Manager: Megan Steinhauser (megansteinhauser)\
-Communications Lead: Lexi Reed ([Lexree17])\
-Git Master: Ashtyn Roberts (ashtyn-roberts)\
-Design Lead: Jeffrey Min ([GitHub Name])\
-Quality Assurance Tester: Lillian Andino ([GitHub Name])
+Project Manager: Megan Steinhauser (@megansteinhauser)
+Communications Lead: Lexi Reed (@lexree17)
+Git Master: Ashtyn Roberts (@ashtyn-roberts)
+Design Lead: Jeffrey Min (@jeffreymin)
+Quality Assurance Tester: Lillian Andino (@lillianandino04))
 
 # About Our Software
+Make studying easier for yourself! Study Sprout is a tool that takes advantage of spaced repetition while incorporating flashcards, tests, and quizzes for more efficient studying. Customize your own schedule, get notifications, start streaks, and grow your plants!
 
-Describe a little about what the project is about here.
 ## Platforms Tested on
 - MacOS
 - Android
 - iOS
 - Linux
 - Windows
+
 # Important Links
 Kanban Board: https://github.com/orgs/CSC-3380-Spring-2025/projects/23/views/1
 Designs: [link]\
@@ -25,6 +26,7 @@ Styles Guide(s): [link]
 ## Dependencies
 - List all dependencies here
 - Don't forget to include versions
+
 ### Downloading Dependencies
 Describe where to download the dependencies here. Some will likely require a web download. Provide links here. For IDE extensions, make sure your project works with the free version of them, and detail which IDE(s) these are available in. 
 

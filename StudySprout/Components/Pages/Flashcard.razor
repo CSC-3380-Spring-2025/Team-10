@@ -1,0 +1,20 @@
+@* Lexi Reed created this but due to github issues this has been pasted by the gitmaster to commit *@
+@page "/flashcard"
+@code {
+
+    private string question = "What is the best study tool";
+    private string answer = "Study Sprout";
+    private bool showAnswer = false;
+
+    private void ShowAnswer()
+    {
+        showAnswer = true;
+    }
+
+    private void NextQuestion()
+    {
+        question = "What is better study sprout or quizlet?";
+        answer = "Study Sprout";
+        showAnswer = false;
+    }
+}

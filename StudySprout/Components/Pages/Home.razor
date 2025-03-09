@@ -1,7 +1,27 @@
-﻿@page "/"
+﻿@* Jeffery Min created this code for the homepage but due to github cloning issues I will be committing on his behalf *@
+@page "/"
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+@* logo @
 
-Welcome to your new app.
+<div class="navbar">
+    <a href="/" class="logo-link">
+        <img src="@LogoPath" alt="Logo" class="logo" />
+    </a>
+</div>
+
+@ Garden Button *@
+<div class="content">
+    <button @onclick="GoToGarden" class="garden-button">GARDEN</button>
+</div>
+
+@code {
+    private string LogoPath = "images/logo.png"; // Path to your logo
+
+    private void GoToGarden()
+    {
+        // Add navigation logic here
+        Console.WriteLine("Garden button clicked!");
+    }
+}

@@ -1,0 +1,58 @@
+@* Megan Steinhauser created this code but due to github cloning issues I, Ashtyn, will be commiting for her *@
+@page "/users"
+@inject HttpClient Http
+
+<h3 class="text-2xl font-bold mb-4">User Information</h3>
+
+@if (users == null)
+{
+    <p>Loading users...</p>
+}
+else
+{
+    <table class="table-auto border-collapse border border-darkgreen-300 w-full">
+        <thead>
+            <tr class="bg-gray-200">
+                <th class="border border-green-300 px-4 py-2">ID</th>
+                <th class="border border-green-300 px-4 py-2">Name</th>
+                <th class="border border-green-300 px-4 py-2">Email</th>
+                <th class="border border-green-300 px-4 py-2">Role</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var user in users)
+            {
+                <tr>
+                    <td class="border border-green-300 px-4 py-2">@user.UserID</td>
+                    <td class="border border-green-300 px-4 py-2">@user.Name</td>
+                    <td class="border border-green-300 px-4 py-2">@user.Email</td>
+                    <td class="border border-green-300 px-4 py-2">@user.Role</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private List<User> users;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            users = await Http.GetFromJsonAsync<List<User>>("https://localhost:5001/api/users");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error implementing users: {ex.Message}");
+        }
+    }
+
+    private class User
+    {
+        public int UserID { get; set; }
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+    }
+}

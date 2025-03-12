@@ -3,25 +3,93 @@
 
 <PageTitle>Home</PageTitle>
 
-@* logo @
-
+@* logo *@
 <div class="navbar">
     <a href="/" class="logo-link">
         <img src="@LogoPath" alt="Logo" class="logo" />
     </a>
+    <div class="nav-buttons">
+        <button @onclick="GoToSignIn" class="nav-button">SIGN IN</button>
+        <button @onclick="GoToSignUp" class="nav-button">SIGN UP</button>
+    </div>
 </div>
 
-@ Garden Button *@
+
+@* Garden Button *@
 <div class="content">
-    <button @onclick="GoToGarden" class="garden-button">GARDEN</button>
+    <button @onclick="GoToGarden" class="garden-button">CREATE A UNIQUE GARDEN</button>
 </div>
+
+<div class="content">
+    <button @onclick="GoToFlashcard" class="flashcard-button">CREATE FLASHCARDS</button>
+</div>
+
+<style>
+    :host{
+    display: block;
+}
+
+:host .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f8f8f8;
+}
+
+:host .logo-link{
+    text-decoration: none;
+}
+
+:host .logo {
+    height: 50px;
+    width: 50px;
+}
+
+:host .nav-buttons {
+    display:flex;
+    gap: 10px;
+}
+
+:host .nav-button { 
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+:host .nav-button:hover {
+    background-color: #0056b3;
+}
+
+</style>
 
 @code {
-    private string LogoPath = "images/logo.png"; // Path to your logo
+    private string LogoPath = "/StudySprout.png"; // Path to your logo
 
     private void GoToGarden()
     {
         // Add navigation logic here
         Console.WriteLine("Garden button clicked!");
+    }
+
+    private void GoToFlashcard()
+    {
+        // Add navigation logic here
+        Console.WriteLine("Flashcard button clicked!");
+    }
+
+    private void GoToSignIn()
+    {
+        // Add navigation logic here
+        Console.WriteLine("Sign in button clicked!");
+    }
+
+    private void GoToSignUp()
+    {
+        // Add navigation logic here
+        Console.WriteLine("Sign up button clicked!");
     }
 }

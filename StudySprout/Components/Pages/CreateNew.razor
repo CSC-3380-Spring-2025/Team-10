@@ -2,3 +2,65 @@
 @attribute [StreamRendering]
 
 <PageTitle>CREATE NEW</PageTitle>
+
+<h1>CREATE A NEW STUDY SET.</h1>
+
+<p>READY, SET, STUDY!</p>
+
+<!-- Create your own set of flashcards to study from.-->
+<div>
+    <label for="setTitle">SET TITLE:</label>
+    <input type="text" id="setTitle" @bind="setTitle" required />
+
+    <label for="description">DESCRIPTION:</label>
+    <input type="text" id="description" @bind="description"/>
+
+    <label for="dueDate">LEARN BY:</label>
+    <input type="date" id="dueDate" @bind="dueDate"/>
+
+    <!-- Create your set -->
+    <button class="btn btn-primary" @onclick="create">CREATE</button>
+</div>
+
+@if (isSuccess)
+{
+    <p class="alert alert-success">Study set created successfully!</p>
+}
+
+@if (isError)
+{
+    <p class="alert alert-danger">Error: Please fill out all fields correctly!</p>
+}
+
+@code
+{
+    private string setTitle { get; set; }
+    private string description { get; set; }
+    private DateTime dueDate { get; set; }
+    private bool isSuccess { get; set; }
+    private bool isError { get; set; }
+
+    private void create()
+    {
+        // Reset success and error states
+        isSuccess = false;
+        isError = false;
+
+        // Validate input
+        if (string.IsNullOrEmpty(setTitle) || string.IsNullOrEmpty(description) || dueDate == default)
+        {
+            isError = true; // Show error if any required field is empty
+            return;
+        }
+
+        // Simulate saving the study set (e.g., to a database or API)
+        // This is where you would call a backend service or data repository to save the study set.
+        Console.WriteLine($"Creating study set: Title: {setTitle}, Description: {description}, Due Date: {dueDate}");
+
+        // Simulate success
+        isSuccess = true;
+        setTitle = string.Empty; // Clear the input fields
+        description = string.Empty;
+        dueDate = default; // Reset the due date to an empty value
+    }
+}

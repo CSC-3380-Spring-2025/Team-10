@@ -5,3 +5,23 @@ public class StudyTime {
     public DateTime EndDate {get; set;} 
     public string Description {get; set;} 
 }
+
+using <System class="Collections Generic">;
+using <System class="Ling">;
+
+    public class StudyCalendarEdit
+    {
+        private List<StudyTime> _times = new();
+
+        public List<StudyTime> GetAllTimes() => _times;
+
+        public StudyTime? GetTime(int Id) => _times.FirstOrDefault(e => e.ID == id);
+
+        public void AddTime (StudyTime newTime){
+            newTime.Id = _times.Count > 0 ? _times.Max(e => e.Id) + 1 : 1;
+            _times.Add(newTime);
+        }
+
+    }
+</System>
+</System>

@@ -1,0 +1,94 @@
+@page "/signin"
+
+<PageTitle>Sign In</PageTitle>
+
+<div class="signin-container">
+    <h1>Sign In</h1>
+    <form>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" @bind="Email" class="form-control" placeholder="Enter your email" />
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" @bind="Password" class="form-control" placeholder="Enter your password" />
+        </div>
+        <button type="button" @onclick="HandleSignIn" class="btn btn-primary">Sign In</button>
+    </form>
+    <p class="signup-link">
+        Don't have an account? <a href="/signup">Sign Up</a>
+    </p>
+</div>
+
+<style>
+    .signin-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .signin-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .signup-link {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .signup-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .signup-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+@code {
+    private string Email { get; set; } = string.Empty;
+    private string Password { get; set; } = string.Empty;
+
+    private void HandleSignIn()
+    {
+        // Add your sign-in logic here
+        Console.WriteLine($"Email: {Email}, Password: {Password}");
+    }
+}

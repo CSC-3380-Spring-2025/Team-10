@@ -1,20 +1,39 @@
 @* Lexi Reed *@
 @page "/flashcard"
-@code {
 
-    private string question = "What is the best study tool";
-    private string answer = "Study Sprout";
-    private bool showAnswer = false;
+<div class="container">
+    <img class="logoImage" src="https://placehold.co/231x109" />
+    <div class="flexContainer">
+        <div class="flexItem subtleButton">
+            <div></div>
+        </div>
+        <div class="flexItem positiveButton">
+            <div></div>
+        </div>
+    </div>
+    <div class="primaryButton button1">
+        <div></div>
+    </div>
+    <div class="primaryButton button2">
+        <div></div>
+    </div>
+    <div class="primaryButton button3">
+        <div></div>
+    </div>
+    <div class="backgroundBox"></div>
+    <img class="largeImage" src="https://placehold.co/421x283" />
+    <div class="textHeading">
+        What is the best study tool ever?
+    </div>
+    <img class="sideImage1" src="https://placehold.co/468x316" />
+    <img class="sideImage2" src="https://placehold.co/1463x658" />
+    <img class="sideImage3" src="https://placehold.co/543x317" />
+    <div class="circleBox"></div>
+    <div class="circleText">
+        Keep studying... or I will devour your sprouts...
+    </div>
+    <img class="backgroundImage" src="https://placehold.co/1465x824" />
+</div>
 
-    private void ShowAnswer()
-    {
-        showAnswer = true;
-    }
+<link rel="stylesheet" href="Flashcard.css">
 
-    private void NextQuestion()
-    {
-        question = "What is better study sprout or quizlet?";
-        answer = "Study Sprout";
-        showAnswer = false;
-    }
-}

@@ -17,11 +17,30 @@ using <System class="Ling">;
 
         public StudyTime? GetTime(int Id) => _times.FirstOrDefault(e => e.ID == id);
 
-        public void AddTime (StudyTime newTime){
+        public void AddTime (StudyTime newTime)
+        {
             newTime.Id = _times.Count > 0 ? _times.Max(e => e.Id) + 1 : 1;
             _times.Add(newTime);
         }
-
+    public void UpdateTime (StudyTime updatedTime)
+    {
+        var existing = GetTime(updatedTime.Id)
+        if (existing != null)
+        {
+            existing.Title = updatedTime.Title;
+            existing.StartDate = updatedTime.StartDate;
+            existing.EndDate = updatedTime.EndDate;
+            existing.Description = updatedTime.Description; 
+        }
     }
+    public void DeleteEvent (int id)
+    {
+        var ev = GetTime(id);
+        if (ev != null)
+        {
+            _times.Remove(ev);
+        }
+    }
+}
 </System>
 </System>

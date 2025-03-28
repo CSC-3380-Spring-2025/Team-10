@@ -1,41 +1,73 @@
 @* Lexi Reed *@
 @page "/flashcard"
 
-
-
 <div class="container">
     <img class="logoImage" src="https://placehold.co/231x109" />
+    
+    <div class="flashcard" @onclick="FlipCard">
+        <div class="flashcard-inner @(isFlipped ? "flipped" : "")">
+            <div class="flashcard-front">
+                <h2>Question</h2>
+                <p>What is the best study tool ever?</p>
+            </div>
+            <div class="flashcard-back">
+                <h2>Answer</h2>
+                <p>StudySprout!</p>
+            </div>
+        </div>
+    </div>
+
     <div class="flexContainer">
-        <div class="flexItem subtleButton">
-            <div></div>
+        <div class="flexItem subtleButton" @onclick="FlipCard">
+            <div>Flip Card</div>
         </div>
-        <div class="flexItem positiveButton">
-            <div></div>
+        <div class="flexItem positiveButton" @onclick="MarkCorrect">
+            <div>Correct</div>
         </div>
     </div>
-    <div class="primaryButton button1">
-        <div></div>
+
+    <div class="primaryButton button1" @onclick="MarkIncorrect">
+        <div>Incorrect</div>
     </div>
-    <div class="primaryButton button2">
-        <div></div>
+    <div class="primaryButton button2" @onclick="NextCard">
+        <div>Next Card</div>
     </div>
-    <div class="primaryButton button3">
-        <div></div>
+    <div class="primaryButton button3" @onclick="RestartQuiz">
+        <div>Restart</div>
     </div>
-    <div class="backgroundBox"></div>
-    <img class="largeImage" src="https://placehold.co/421x283" />
-    <div class="textHeading">
-        What is the best study tool ever?
-    </div>
-    <img class="sideImage1" src="https://placehold.co/468x316" />
-    <img class="sideImage2" src="https://placehold.co/1463x658" />
-    <img class="sideImage3" src="https://placehold.co/543x317" />
-    <div class="circleBox"></div>
-    <div class="circleText">
-        Keep studying... or I will devour your sprouts...
-    </div>
-    <img class="backgroundImage" src="https://placehold.co/1465x824" />
 </div>
 
 <link rel="stylesheet" href="Flashcard.css">
 
+@code {
+    private bool isFlipped = false;
+
+    private void FlipCard()
+    {
+        isFlipped = !isFlipped;
+    }
+
+    private void MarkCorrect()
+    {
+        // Logic for marking the card as correct
+        Console.WriteLine("Marked as Correct");
+    }
+
+    private void MarkIncorrect()
+    {
+        // Logic for marking the card as incorrect
+        Console.WriteLine("Marked as Incorrect");
+    }
+
+    private void NextCard()
+    {
+        // Logic for moving to the next card
+        Console.WriteLine("Next Card");
+    }
+
+    private void RestartQuiz()
+    {
+        // Logic for restarting the quiz
+        Console.WriteLine("Quiz Restarted");
+    }
+}

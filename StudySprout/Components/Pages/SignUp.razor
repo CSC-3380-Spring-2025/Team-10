@@ -2,36 +2,83 @@
 
 <PageTitle>Sign Up</PageTitle>
 
-<div class="signup-container">
-    <h1>Sign Up</h1>
-    <form>
-        <div class="form-group">
-            <label for="name">Name:</label>
-            <input type="text" id="name" @bind="Name" class="form-control" placeholder="Enter your name" />
+<div class="signup-page">
+    <div class="signup-left">
+        <h2 class="signup-text">
+            I'M <span class="highlight">SO EXCITED</span> YOU'RE <span class="highlight">JOINING US</span>!!!!
+        </h2>
+        <br>
+        <img src="Slink-In-Pot.png" alt="Slinkin Pot" class="signup-image" />
+    </div>
+    <div class="signup-right">
+        <div class="signup-container">
+            <h1>Sign Up</h1>
+            <form>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" @bind="Name" class="form-control" placeholder="Enter your name" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" @bind="Email" class="form-control" placeholder="Enter your email" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" @bind="Password" class="form-control" placeholder="Enter your password" />
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" @bind="ConfirmPassword" class="form-control" placeholder="Confirm your password" />
+                </div>
+                <button type="button" @onclick="HandleSignUp" class="btn btn-primary">Sign Up</button>
+            </form>
+            <p class="signin-link">
+                Already have an account? <a href="/signin">Sign In</a>
+            </p>
         </div>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" @bind="Email" class="form-control" placeholder="Enter your email" />
-        </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" @bind="Password" class="form-control" placeholder="Enter your password" />
-        </div>
-        <div class="form-group">
-            <label for="confirm-password">Confirm Password:</label>
-            <input type="password" id="confirm-password" @bind="ConfirmPassword" class="form-control" placeholder="Confirm your password" />
-        </div>
-        <button type="button" @onclick="HandleSignUp" class="btn btn-primary">Sign Up</button>
-    </form>
-    <p class="signin-link">
-        Already have an account? <a href="/signin">Sign In</a>
-    </p>
+    </div>
 </div>
 
 <style>
+    .signup-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background-color: rgb(255, 255, 255);
+    }
+
+    .signup-left {
+        flex: 1;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .signup-image {
+        max-width: 75%;
+        height: auto;
+    }
+
+    .signup-text {
+        font-size: 24px;
+        font-weight: bold;
+        color: #000000;
+        margin-top: 20px;
+    }
+
+    .highlight {
+        color: #00b912;
+    }
+
+    .signup-right {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
     .signup-container {
         max-width: 400px;
-        margin: 50px auto;
         padding: 20px;
         border: 1px solid #ccc;
         border-radius: 10px;
@@ -64,7 +111,7 @@
     .btn {
         width: 100%;
         padding: 10px;
-        background-color: #007bff;
+        background-color: #00d44a;
         color: white;
         border: none;
         border-radius: 5px;
@@ -72,7 +119,7 @@
     }
 
     .btn:hover {
-        background-color: #0056b3;
+        background-color: #00b321;
     }
 
     .signin-link {

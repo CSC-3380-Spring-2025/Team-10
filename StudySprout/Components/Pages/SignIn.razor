@@ -1,26 +1,65 @@
 @page "/signin"
 
 <PageTitle>Sign In</PageTitle>
-
-<div class="signin-container">
-    <h1>Sign In</h1>
-    <form>
-        <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" @bind="Email" class="form-control" placeholder="Enter your email" />
-        </div>
-        <div class="form-group">
-            <label for="password">Password:</label>
-            <input type="password" id="password" @bind="Password" class="form-control" placeholder="Enter your password" />
-        </div>
-        <button type="button" @onclick="HandleSignIn" class="btn btn-primary">Sign In</button>
-    </form>
-    <p class="signup-link">
-        Don't have an account? <a href="/signup">Sign Up</a>
-    </p>
+<div class="signin-page">
+    <div class="signin-left">
+        <h2 class="signin-text"><span class="bold">Welcome Back!</span></h2>
+        <h3 class="signin-text">Log into your account!</h3>
+        <img src="Slink.png" alt="Slink" class="signin-image" />
+    </div>
+    <div class="signin-container">
+        <h1>Sign In</h1>
+        <form>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="email" id="email" @bind="Email" class="form-control" placeholder="Enter your email" />
+            </div>
+            <div class="form-group">
+                <label for="password">Password:</label>
+                <input type="password" id="password" @bind="Password" class="form-control" placeholder="Enter your password" />
+            </div>
+            <button type="button" @onclick="HandleSignIn" class="btn btn-primary">Sign In</button>
+        </form>
+        @if (!string.IsNullOrEmpty(ErrorMessage))
+        {
+            <p class=" errorMessage">@ErrorMessage</p>
+        }
+        <p class="forgot-password">
+            Forgot Password? <a href="/forgotpassword">Forgot Password</a>
+        </p>
+        <p class="signup-link">
+            Don't have an account? <a href="/signup">Sign Up</a>
+        </p>
+    </div>
 </div>
-
 <style>
+     .signin-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background-color: rgb(255, 255, 255);
+    }
+
+     .signup-left {
+        flex: 1;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .signin-image {
+        max-width: 50%;
+        height: auto;
+    }
+
+     .signin-text {
+        font-size: 32px;
+        color: #000000;
+        margin-top: 20px;
+        text-align: center;
+    }
+    
+
     .signin-container {
         max-width: 400px;
         margin: 50px auto;
@@ -56,7 +95,7 @@
     .btn {
         width: 100%;
         padding: 10px;
-        background-color: #007bff;
+        background-color: #00d44a;
         color: white;
         border: none;
         border-radius: 5px;
@@ -64,7 +103,7 @@
     }
 
     .btn:hover {
-        background-color: #0056b3;
+        background-color: #00b321;
     }
 
     .signup-link {
@@ -85,10 +124,15 @@
 @code {
     private string Email { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
+    private string ErrorMessage { get; set; } = string.Empty;
 
     private void HandleSignIn()
     {
-        // Add your sign-in logic here
+        if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
+        {
+            ErrorMessage = "Please enter both email and password.";
+            return;
+        }
         Console.WriteLine($"Email: {Email}, Password: {Password}");
     }
 }

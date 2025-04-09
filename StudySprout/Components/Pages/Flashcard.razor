@@ -1,73 +1,24 @@
-@* Lexi Reed *@
+@*Lexi Reed *@
 @page "/flashcard"
 
-<div class="container">
-    <img class="logoImage" src="https://placehold.co/231x109" />
-    
-    <div class="flashcard" @onclick="FlipCard">
-        <div class="flashcard-inner @(isFlipped ? "flipped" : "")">
-            <div class="flashcard-front">
-                <h2>Question</h2>
-                <p>What is the best study tool ever?</p>
-            </div>
-            <div class="flashcard-back">
-                <h2>Answer</h2>
-                <p>StudySprout!</p>
-            </div>
-        </div>
-    </div>
+<nav class="navbar"> 
+    <img class="nav-logo" src="/Pictures/StudySprout.png" alt="Study Sprout Logo" />
+    <button class="sign-up">Sign Up</button>
+    <button class="log-in">Log In</button>
+    <button class="my-garden">MY GARDEN</button>
+    <button class="my-study-sets">MY STUDY SETS</button>
+    <button class="create-new">CREATE NEW</button>
+</nav>
 
-    <div class="flexContainer">
-        <div class="flexItem subtleButton" @onclick="FlipCard">
-            <div>Flip Card</div>
-        </div>
-        <div class="flexItem positiveButton" @onclick="MarkCorrect">
-            <div>Correct</div>
-        </div>
+<div class="flip-card"> 
+  <div class="flip-card-inner">
+    <div class="flip-card-front">
+      <h1>what's the best study tool?</h1>
+      <img class="slink-icon" src="/Pictures/Slink.png" alt="Slink Image" />
     </div>
-
-    <div class="primaryButton button1" @onclick="MarkIncorrect">
-        <div>Incorrect</div>
+    <div class="flip-card-back">
+      <h1>Study Sprout</h1>
     </div>
-    <div class="primaryButton button2" @onclick="NextCard">
-        <div>Next Card</div>
-    </div>
-    <div class="primaryButton button3" @onclick="RestartQuiz">
-        <div>Restart</div>
-    </div>
+  </div>
 </div>
 
-<link rel="stylesheet" href="Flashcard.css">
-
-@code {
-    private bool isFlipped = false;
-
-    private void FlipCard()
-    {
-        isFlipped = !isFlipped;
-    }
-
-    private void MarkCorrect()
-    {
-        // marking the card as correct
-        Console.WriteLine("Marked as Correct");
-    }
-
-    private void MarkIncorrect()
-    {
-        // marking the card as incorrect
-        Console.WriteLine("Marked as Incorrect");
-    }
-
-    private void NextCard()
-    {
-        // moving to the next card
-        Console.WriteLine("Next Card");
-    }
-
-    private void RestartQuiz()
-    {
-        // restarting the quiz
-        Console.WriteLine("Quiz Restarted");
-    }
-}

@@ -1,21 +1,23 @@
-public class StudyTime {
-    public int Id {get; set;} 
-    public string Title {get; set;} 
-    public DateTime StartDate {get; set;} 
-    public DateTime EndDate {get; set;} 
-    public string Description {get; set;} 
-}
-
-using <System class="Collections Generic">;
-using <System class="Ling">;
-
+@page "/calendar"
+@*using System;
+using System.Collections.Generic;
+using System.Linq;
+*@
+@code{
+    public class StudyTime {
+        public int Id {get; set;} 
+        public string Title {get; set;} 
+        public DateTime StartDate {get; set;} 
+        public DateTime EndDate {get; set;} 
+        public string Description {get; set;} 
+    }
     public class StudyCalendarEdit
     {
         private List<StudyTime> _times = new();
 
         public List<StudyTime> GetAllTimes() => _times;
 
-        public StudyTime? GetTime(int Id) => _times.FirstOrDefault(e => e.ID == id);
+        public StudyTime? GetTime(int Id) => _times.FirstOrDefault(e => e.Id == Id);
 
         public void AddTime (StudyTime newTime)
         {
@@ -24,7 +26,7 @@ using <System class="Ling">;
         }
     public void UpdateTime (StudyTime updatedTime)
     {
-        var existing = GetTime(updatedTime.Id)
+        var existing = GetTime(updatedTime.Id);
         if (existing != null)
         {
             existing.Title = updatedTime.Title;
@@ -42,5 +44,4 @@ using <System class="Ling">;
         }
     }
 }
-</System>
-</System>
+}

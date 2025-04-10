@@ -145,8 +145,20 @@
 
 
 @code {
+    @inject NavigationManager Navigation;
     private string LogoPath = "/StudySprout.png"; // Path to your logo
 
+    private void GoToSignIn()
+    {
+        Navigation.NavigateTo("/signin");
+        Console.WriteLine("Sign in button clicked!");
+    }
+
+    private void GoToSignUp()
+    {
+        Navigation.NavigateTo("/signup");
+        Console.WriteLine("Sign up button clicked!");
+    }
     private void GoToGarden()
     {
         // Add navigation logic here
@@ -159,15 +171,4 @@
         Console.WriteLine("Flashcard button clicked!");
     }
 
-    private void GoToSignIn()
-    {
-        // Add navigation logic here
-        Console.WriteLine("Sign in button clicked!");
-    }
-
-    private void GoToSignUp()
-    {
-        // Add navigation logic here
-        Console.WriteLine("Sign up button clicked!");
-    }
 }

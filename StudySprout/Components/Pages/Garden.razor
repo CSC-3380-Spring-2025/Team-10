@@ -1,0 +1,21 @@
+@page "/my-garden"
+@inject NavigationManager NavManager
+
+<div class="navbar">
+    <a href="/" class="logo-link">
+        <img src="/StudySprout.png" alt="Logo" class="logo" />
+    </a>
+    <div class="nav-buttons">
+        <button @onclick="GoToSignIn" class="nav-button">SIGN IN</button>
+        <button @onclick="GoToSignUp" class="nav-button">SIGN UP</button>
+    </div>
+</div>
+
+<div class="garden-container">
+    <img src="/images/Garden.png" alt="My Garden" class="garden-image" />
+</div>
+
+@code {
+    private void GoToSignIn() => NavManager.NavigateTo("/login");
+    private void GoToSignUp() => NavManager.NavigateTo("/signup");
+}

@@ -82,3 +82,55 @@
     margin-top: 10px; /* Adds space between the rectangle and text */
     width: 80%; /* Ensures the text stays within a certain width */
 }
+
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f8f8f8;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+}
+
+.logo-link img.logo {
+    height: 50px;
+    width: 50px;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.nav-button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.nav-button:hover {
+    background-color: #0056b3;
+}
+
+.garden-container {
+    margin-top: 90px; /* Space below navbar */
+    height: calc(100vh - 90px); /* Full screen minus navbar height */
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.garden-image {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}

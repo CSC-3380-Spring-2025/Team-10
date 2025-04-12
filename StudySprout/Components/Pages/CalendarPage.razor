@@ -44,4 +44,40 @@ using System.Linq;
         }
     }
 }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Study Sprout Calendar</title>
+  <link rel="stylesheet" href="calendar.css" />
+</head>
+<body>
+  <div class="calendar-wrapper">
+    <header>
+      <div class="dropdown">
+        <select>
+          <option>Pick an option</option>
+        </select>
+      </div>
+      <h1>March <span>2021</span></h1>
+      <div class="logo">🌱 Study Sprout</div>
+    </header>
+
+    <div class="calendar">
+      <div class="day-labels">
+        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+      </div>
+      <div class="days">
+        
+        <div class="day blank"></div><div class="day blank"></div><div class="day">1<br><span class="event orange">Groomers appt.</span></div>
+        <div class="day">2</div><div class="day">3<br><span class="event red">Meeting w/ Chris</span></div>
+        <div class="day">4<br><span class="event blue">Lunch w/ Mom</span></div><div class="day">5</div>
+        
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+
 }

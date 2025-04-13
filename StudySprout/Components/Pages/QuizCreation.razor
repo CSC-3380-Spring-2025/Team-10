@@ -1,0 +1,141 @@
+@page "/quiz-creation"
+
+<PageTitle>Quiz Creation</PageTitle>
+
+<div class="quiz-creation-page">
+    <h1>Create a New Quiz</h1>
+
+    <!-- Quiz Title Input -->
+    <div class="form-group">
+        <label for="quiz-title">Quiz Title:</label>
+        <input type="text" id="quiz-title" @bind="QuizTitle" class="form-control" placeholder="Enter quiz title" />
+    </div>
+
+    <!-- Flashcards Selection -->
+    <div class="flashcards-selection">
+        <h2>Select Flashcards</h2>
+        @if (Flashcards.Count == 0)
+        {
+            <p>No flashcards available. Please create flashcards first.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var flashcard in Flashcards)
+                {
+                    <li>
+                        <input type="checkbox" @bind="flashcard.IsSelected" />
+                        <span>@flashcard.Question</span>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+
+    <!-- Save Quiz Button -->
+    <button @onclick="SaveQuiz" class="btn btn-primary">Save Quiz</button>
+
+    <!-- Success Message -->
+    @if (!string.IsNullOrEmpty(SuccessMessage))
+    {
+        <p class="success-message">@SuccessMessage</p>
+    }
+</div>
+
+<style>
+    .quiz-creation-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .flashcards-selection ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .flashcards-selection li {
+        margin-bottom: 10px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #0056b3;
+    }
+
+    .success-message {
+        color: green;
+        margin-top: 20px;
+        font-weight: bold;
+    }
+</style>
+
+@code {
+    private string QuizTitle { get; set; } = string.Empty;
+    private List<Flashcard> Flashcards { get; set; } = new List<Flashcard>();
+    private string SuccessMessage { get; set; } = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        // Mock data for flashcards
+        Flashcards = new List<Flashcard>
+        {
+            new Flashcard { Id = 1, Question = "What is 2 + 2?", Answer = "4" },
+            new Flashcard { Id = 2, Question = "What is the capital of France?", Answer = "Paris" },
+            new Flashcard { Id = 3, Question = "What is the square root of 16?", Answer = "4" }
+        };
+    }
+
+    private void SaveQuiz()
+    {
+        if (string.IsNullOrEmpty(QuizTitle))
+        {
+            SuccessMessage = "Please enter a quiz title.";
+            return;
+        }
+
+        var selectedFlashcards = Flashcards.Where(f => f.IsSelected).ToList();
+        if (selectedFlashcards.Count == 0)
+        {
+            SuccessMessage = "Please select at least one flashcard.";
+            return;
+        }
+
+        // Save the quiz (mock logic)
+        Console.WriteLine($"Quiz '{QuizTitle}' saved with {selectedFlashcards.Count} flashcards.");
+        SuccessMessage = $"Quiz '{QuizTitle}' has been saved successfully!";
+    }
+
+    private class Flashcard
+    {
+        public int Id { get; set; }
+        public string Question { get; set; }
+        public string Answer { get; set; }
+        public bool IsSelected { get; set; }
+    }
+}

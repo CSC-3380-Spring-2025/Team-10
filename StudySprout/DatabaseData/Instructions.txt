@@ -1,0 +1,25 @@
+Create basic queries:
+- Standard Create
+- Standard Read
+- Standard Update
+- Standard Delete
+
+Based on the common values we would manipulate these from.
+
+Determine host and set up MySQL server within it.
+- Look at the documentation for Blazor.
+- Need to know the standard ones that are typically connected to.
+- This will allow for us to follow pre-documented procedures easily.
+
+Create separate class objects for each table needed.
+- Each attribute of that class are the columns of that table.
+
+Decide on the information we need to store and insert dummy values into the tables.
+- This will allow for us to run a test sample program.
+- We will need to edit it to match the front-end.
+
+Create the basic connector database object.
+- It will allow for the handling of the files seemlessly.
+- This handles the connection to the DB and to run the queries back and forth.
+
+Once we've figured out the host and set up the server, make sure you download the right library to handle the connection.

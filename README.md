@@ -4,7 +4,7 @@ Project Manager: Megan Steinhauser (@megansteinhauser)
 Communications Lead: Lexi Reed (@lexree17)
 Git Master: Ashtyn Roberts (@ashtyn-roberts)
 Design Lead: Jeffrey Min (@jeffreymin)
-Quality Assurance Tester: Lillian Andino (@lillianandino04)
+Quality Assurance Tester: Lillian Andino (@lillianandino04))
 
 # About Our Software
 Make studying easier for yourself! Study Sprout is a tool that takes advantage of spaced repetition while incorporating flashcards, tests, and quizzes for more efficient studying. Customize your own schedule, get notifications, start streaks, and grow your plants! Whether you're preparing for an exam, mastering a new subject, or reinforcing key concepts, Study Sprout adapts to your needs with a range of tools that enhance your study sessions.

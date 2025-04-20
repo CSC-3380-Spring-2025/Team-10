@@ -1,87 +1,44 @@
 @page "/calendar"
-@*using System;
-using System.Collections.Generic;
-using System.Linq;
-*@
-@code{
-    public class StudyTime {
-        public int Id {get; set;} 
-        public string Title {get; set;} 
-        public DateTime StartDate {get; set;} 
-        public DateTime EndDate {get; set;} 
-        public string Description {get; set;} 
-    }
-    public class StudyCalendarEdit
-    {
-        private List<StudyTime> _times = new();
+@using StudySprout.DatabaseData
+@inject StudyCalendarEdit CalendarService
 
-        public List<StudyTime> GetAllTimes() => _times;
+<h1>🌱 Study Sprout Calendar</h1>
+<h3>March 2021</h3>
 
-        public StudyTime? GetTime(int Id) => _times.FirstOrDefault(e => e.Id == Id);
-
-        public void AddTime (StudyTime newTime)
-        {
-            newTime.Id = _times.Count > 0 ? _times.Max(e => e.Id) + 1 : 1;
-            _times.Add(newTime);
-        }
-    public void UpdateTime (StudyTime updatedTime)
-    {
-        var existing = GetTime(updatedTime.Id);
-        if (existing != null)
-        {
-            existing.Title = updatedTime.Title;
-            existing.StartDate = updatedTime.StartDate;
-            existing.EndDate = updatedTime.EndDate;
-            existing.Description = updatedTime.Description; 
-        }
-    }
-    public void DeleteEvent (int id)
-    {
-        var ev = GetTime(id);
-        if (ev != null)
-        {
-            _times.Remove(ev);
-        }
-    }
-}
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Study Sprout Calendar</title>
-  <link rel="stylesheet" href="calendar.css" />
-</head>
-<body>
-  <div class="calendar-wrapper">
-    <header>
-      <div class="dropdown">
-        <select>
-          <option>Pick an option</option>
-        </select>
-      </div>
-      <h1>March <span>2021</span></h1>
-      <div class="logo">🌱 Study Sprout</div>
-    </header>
-
-    <div class="calendar">
-      <div class="day-labels">
-        <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
-      </div>
-      <div class="days">
-        
-        <div class="day blank"></div><div class="day blank"></div><div class="day">1<br><span class="event orange">Groomers appt.</span></div>
-        <div class="day">2</div><div class="day">3<br><span class="event red">Meeting w/ Chris</span></div>
-        <div class="day">4<br><span class="event blue">Lunch w/ Mom</span></div><div class="day">5</div>
-        
-      </div>
+<div class="calendar">
+    <div class="day-labels">
+        <div>Sun</div><div>Mon</div><div>Tue</div>
+        <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
     </div>
-  </div>
-</body>
-</html>
-}
-<div class="day">8<br>
-  <span class="event red">Interview w/ Figma</span>
-  <span class="event orange">Send follow-up email</span>
+
+    <div class="days">
+        <div class="day blank"></div>
+        <div class="day blank"></div>
+
+        @foreach (var day in Enumerable.Range(1, 31))
+        {
+            var date = new DateTime(2021, 3, day);
+            var events = CalendarService.GetAllTimes().Where(e => e.StartDate.Date == date.Date).ToList();
+
+            <div class="day">
+                <strong>@day</strong>
+                @foreach (var ev in events)
+                {
+                    <div class="event">@ev.Title</div>
+                }
+            </div>
+        }
+    </div>
 </div>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (!CalendarService.GetAllTimes().Any())
+        {
+            CalendarService.AddSampleData();
+        }
+    }
+}
+
 

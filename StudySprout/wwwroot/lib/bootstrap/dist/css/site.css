@@ -50,3 +50,35 @@
     margin-top: 10px;  /* Adds space between the rectangle and text */
     width: 80%;  /* Ensures the text stays within a certain width */
 }
+
+.divider-container {
+    display: flex;
+    justify-content: center; /* Center the divider */
+    margin-top: 20px; /* Adjust spacing above */
+    margin-bottom: 20px; /* Adjust spacing below */
+}
+
+.vine-divider {
+    width: 80%; /* Adjust width as needed */
+    max-width: 600px; /* Prevent it from being too large */
+    height: auto; /* Maintain aspect ratio */
+}
+
+.mascot-container {
+    display: flex;
+    justify-content: center; /* Center the mascot */
+    margin-top: 100px; /* Space below the divider */
+}
+
+.slink-mascot {
+    width: 250px; /* Adjust size */
+    height: auto; /* Keep aspect ratio */
+}
+
+.mascot-description {
+    font-size: 16px; /* Smaller text size */
+    color: #333; /* Darker color for readability */
+    text-align: center;
+    margin-top: 10px; /* Adds space between the rectangle and text */
+    width: 80%; /* Ensures the text stays within a certain width */
+}

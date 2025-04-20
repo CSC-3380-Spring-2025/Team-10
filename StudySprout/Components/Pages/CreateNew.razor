@@ -72,7 +72,7 @@
     .alert {
         padding: 10px;
         border-radius: 4px;
-        margin-top: 20px;
+        margin-top: 10px;
         text-align: center;
     }
 
@@ -87,6 +87,15 @@
         color: #721c24;
         border: 1px solid #f5c6cb;
     }
+
+    .background-container {
+        background-image: url('/Users/lillianandino/Desktop/SPRING25/oo design/Team-10/StudySprout/wwwroot/background-create-new.jpeg'); /* Path to your image */
+        background-size: cover; /* Ensure the image covers the entire container */
+        background-position: center; /* Center the background image */
+        background-repeat: no-repeat; /* Don't repeat the background */
+        padding: 20px; /* Add some padding around the content */
+        color: white; /* White text color for visibility */
+    }
 </style>
 
 <h1>CREATE A NEW STUDY SET.</h1>
@@ -95,13 +104,13 @@
 
 <!-- Create your own set of flashcards to study from.-->
 <div>
-    <label for="setTitle">SET TITLE:</label>
+    <label for="setTitle">SET TITLE</label>
     <input type="text" id="setTitle" @bind="setTitle" required />
 
-    <label for="description">DESCRIPTION:</label>
+    <label for="description">DESCRIPTION</label>
     <input type="text" id="description" @bind="description"/>
 
-    <label for="dueDate">LEARN BY:</label>
+    <label for="dueDate">LEARN BY</label>
     <input type="date" id="dueDate" @bind="dueDate"/>
 
     <!-- Create your set --><base href="/Repository/">

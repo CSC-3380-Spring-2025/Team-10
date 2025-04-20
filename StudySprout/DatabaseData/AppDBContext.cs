@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
 
-public class AppDBContext : DBContext
+public class AppDBContext : DbContext
 {
     // Define a DbSet for the UserInput table
-    public DBSet<UserInput> UserInputs { get; set; }
+    public DbSet<UserInput> UserInputs { get; set; }
 
-    protected override void OnConfiguring(DBContextOptionsBuilder optionsBuilder)
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
         // Configure the database connection (adjust server, database, username, and password)
         optionsBuilder.UseMySql(
@@ -16,9 +16,6 @@ public class AppDBContext : DBContext
 }
 
 /*
-
-Replace "your-server", "your-database", "your-username", and "your-password" with your actual MySQL server details.
-
-The DbSet<UserInput> is used to map your UserInput model to a database table.
-
+Replace "your-server" "your-database" "your-username" "your-password"
+DbSet<UserInput> -> maps UserInput model to DB table
 */

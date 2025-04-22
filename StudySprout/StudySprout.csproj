@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="FirebaseDatabase.net" Version="5.0.0" />
+    <PackageReference Include="Google.Cloud.Firestore" Version="3.10.0" />
   </ItemGroup>
 
 </Project>

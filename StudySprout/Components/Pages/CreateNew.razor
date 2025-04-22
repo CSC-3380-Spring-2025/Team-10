@@ -1,3 +1,5 @@
+@using Google.Cloud.Firestore;
+
 @page "/CreateNew"
 @attribute [StreamRendering]
 
@@ -59,13 +61,15 @@
         background-color: #2a9d8f;
         color: white;
         font-size: 1rem;
-        border: none;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
+    using Microsoft.AspNetCore.Http.HttpResults;
 
-    button.btn:hover {
+#line default
+#line hidden
+#nullable disable
+#nullable restore
+#line 4 "/Users/lillianandino/Desktop/SPRING25/ood/Team-10/StudySprout/Components/Pages/CreateNew.razor"
+ "/Users/lillianandino/Desktop/SPRING25/ood/Team-10/StudySprout/Components/Pages/CreateNew.razor"
+ton.btn:hover {
         background-color: #1f7a68;
     }
 
@@ -114,7 +118,7 @@
     <input type="date" id="dueDate" @bind="dueDate"/>
 
     <!-- Create your set -->
-    <button class="btn btn-primary" @onclick="create">CREATE</button>
+    <button class="btn btn-primary" @onclick="CreateStudySet">CREATE</button>
 </div>
 
 @if (isSuccess)
@@ -127,35 +131,125 @@
     <p class="alert alert-danger">Error: Please fill out all fields correctly!</p>
 }
 
+<h2>My Study Sets</h2>
+@if (sets != null && sets.Count > 0)
+{
+    <ul>
+        @foreach (var set in sets)
+        {
+            <li>
+                <h3>@set.Title</h3>
+                <p>@set.Description</p>
+                <p>LEARN BY: @set.DueDate.ToShortDateString()</p>
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No study sets available. Create your first study set!</p>
+}
+
 @code
 {
-    private string setTitle { get; set; }
-    private string description { get; set; }
-    private DateTime dueDate { get; set; }
-    private bool isSuccess { get; set; }
-    private bool isError { get; set; }
+    public string setTitle { get; set; }
+    public string description { get; set; }
+    public DateTime dueDate { get; set; }
+    public bool isSuccess { get; set; }
+    public bool isError { get; set; }
+    public string errorMessage { get; set; }
 
-    private void create()
+    private FirestoreDb MyStudySets;
+
+    public List<StudySet> sets { get; set; } = new List<StudySet>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        MyStudySets = FirestoreDb.Create("studysprout-67ec9");
+        await LoadStudySets();
+    }
+    private async Task CreateStudySet()
     {
         // Reset success and error states
         isSuccess = false;
         isError = false;
+        errorMessage = string.Empty;
 
         // Validate input
-        if (string.IsNullOrEmpty(setTitle) || string.IsNullOrEmpty(description) || dueDate == default)
+        try
         {
-            isError = true; // Show error if any required field is empty
-            return;
+            if (string.IsNullOrEmpty(setTitle) || string.IsNullOrEmpty(description) || dueDate == default)
+            {
+                isError = true; // Show error if any required field is empty
+                errorMessage = "Please fill out all fields correctly!";
+                return;
+            }
+
+            var studySetData = new
+            {
+                Title = setTitle,
+                Description = description,
+                DueDate = dueDate,
+                Created = DateTime.UtcNow
+            };
+
+            CollectionReference studySetsCollection = MyStudySets.Collection("StudySets");
+            await studySetsCollection.AddAsync(studySetData);
+            
+            isSuccess = true;
+            await ReloadStudySets();
+            ClearInputs();
         }
+        catch (Exception e)
+        {
+            isError = true;
+            errorMessage = $"An error occurred: {e.Message}";
+        }
+    }
 
-        // Simulate saving the study set (e.g., to a database or API)
-        // This is where you would call a backend service or data repository to save the study set.
-        Console.WriteLine($"Creating study set: Title: {setTitle}, Description: {description}, Due Date: {dueDate}");
+    private async Task LoadStudySets()
+    {
+        try
+        {
+            CollectionReference studySetsCollection = MyStudySets.Collection("StudySets");
+            QuerySnapshot snapshot = await studySetsCollection.GetSnapshotAsync();
 
-        // Simulate success
-        isSuccess = true;
-        setTitle = string.Empty; // Clear the input fields
+            sets.Clear();
+
+            // Loop through documents and populate the local list
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (document.Exists)
+                {
+                    var data = document.ConvertTo<StudySet>();
+                    sets.Add(data);
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            // Handle errors
+            isError = true;
+            errorMessage = $"An error occurred while loading study sets: {ex.Message}";
+        }
+    }
+    private async Task ReloadStudySets()
+    {
+        await LoadStudySets();
+    }
+
+    // Method to clear the input fields
+    private void ClearInputs()
+    {
+        setTitle = string.Empty;
         description = string.Empty;
-        dueDate = default; // Reset the due date to an empty value
+        dueDate = default;
+    }
+    public class StudySet
+    {
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime DueDate { get; set; }
+        public DateTime Created { get; set; }
     }
 }

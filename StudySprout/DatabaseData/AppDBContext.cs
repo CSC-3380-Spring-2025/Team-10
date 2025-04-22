@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+/*using Microsoft.EntityFrameworkCore;
 
 public class AppDBContext : DbContext
 {
@@ -15,7 +15,7 @@ public class AppDBContext : DbContext
     }
 }
 
-/*
+
 Replace "your-server" "your-database" "your-username" "your-password"
 DbSet<UserInput> -> maps UserInput model to DB table
 */

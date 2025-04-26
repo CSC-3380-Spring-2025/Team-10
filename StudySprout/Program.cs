@@ -1,6 +1,6 @@
 using StudySprout.Components;
 
-string credentialPath = @"C:/Users/lillianandino/Desktop/SPRING25/ood/studysprout-67ec9-firebase-adminsdk-fbsvc-b844ad9ee9.json";
+string credentialPath = @"/Users/lillianandino/Desktop/SPRING25/ood/studysprout-67ec9-firebase-adminsdk-fbsvc-b844ad9ee9.json";
 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
 
 var builder = WebApplication.CreateBuilder(args);

@@ -1,18 +1,18 @@
 ﻿@* Jeffery Min created this code for the homepage but due to github cloning issues I will be committing on his behalf *@
 @page "/"
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
 @* logo *@
-<div class="navbar">
-    <a href="/" class="logo-link">
-        <img src="@LogoPath" alt="Logo" class="logo" />
-    </a>
-    <div class="nav-buttons">
-        <button @onclick="GoToSignIn" class="nav-button">SIGN IN</button>
-        <button @onclick="GoToSignUp" class="nav-button">SIGN UP</button>
-    </div>
-</div>
+<nav class="navbar">
+    <img class="=logo-link" src="@LogoPath" alt="Logo" style="width: 150px; height: 100px;" />
+    <button @onclick="NavigatetoSignUp" class="sign-up">Sign Up</button>
+    <button @onclick="NavigateToSignIn" class="log-in">Log In</button>
+    <button @onclick="NavigateToMyGarden" class="my-garden">MY GARDEN</button>
+    <button @onclick="NavigateToStudySets"class="my-study-sets">MY STUDY SETS</button>
+    <button @onclick="NavigateToCreatNew" class="create-new">CREATE NEW</button>
+</nav>
 
 @* Garden Button *@
 <div class="content">
@@ -40,9 +40,9 @@
     text-decoration: none;
 }
 
-:host .logo {
-    height: 50px;
-    width: 50px;
+:host .logo-link {
+    height: 10;
+    width: 10px;
 }
 
 :host .nav-buttons {
@@ -63,10 +63,77 @@
     background-color: #0056b3;
 }
 
+.sign-up {
+        color: var(--Text-Neutral-Default, #303030);
+        font-size: 22px;
+        font-family: Inter;
+        font-weight: 700;
+        line-height: 22px;
+        word-wrap: break-word;
+        background-color: white;
+        border-color: #303030;
+    }
+
+/* Log in */
+    .log-in {
+        color: var(--Text-Brand-On-Brand, #F5F5F5);
+        font-size: 21px;
+        font-family: Inter;
+        font-weight: 700;
+        line-height: 21px;
+        word-wrap: break-word;
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+/* MY GARDEN */
+    .my-garden {
+        color: var(--Text-Positive-Secondary, #009951);
+        font-size: 26px;
+        font-family: Inter;
+        font-weight: 700;
+        line-height: 26px;
+        word-wrap: break-word;
+        background-color: white;
+        border-color: #009951;
+    }
+
+/* MY STUDY SETS */
+    .my-study-sets {
+        color: var(--Text-Positive-Secondary, #009951);
+        font-size: 26px;
+        font-family: Inter;
+        font-weight: 700;
+        line-height: 26px;
+        word-wrap: break-word;
+        background-color: white;
+        border-color: #009951;
+    }
+
+.navbar button {
+    border: 2px solid transparent;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.navbar button:hover {
+    background-color: #e6e6e6;
+    transform: scale(1.05);
+}
+
+.logo-link{
+    width: 50px;
+    height: 50px;
+}
+
 </style>
 
 @* Background image *@
-<img style="width: 1764.43px; height: 504px" src="GrowingSprouts.jpeg" />
+<img style="width: 1000px; height: 504px" src="GrowingSprouts.jpeg" />
 
 @* Grow with study sprout text*@
 <h1 style="
@@ -147,18 +214,7 @@
 @code {
     @inject NavigationManager Navigation;
     private string LogoPath = "/StudySprout.png"; // Path to your logo
-
-    private void GoToSignIn()
-    {
-        Navigation.NavigateTo("/signin");
-        Console.WriteLine("Sign in button clicked!");
-    }
-
-    private void GoToSignUp()
-    {
-        Navigation.NavigateTo("/signup");
-        Console.WriteLine("Sign up button clicked!");
-    }
+    @inject NavigationManager Navigation 
     private void GoToGarden()
     {
         // Add navigation logic here
@@ -169,6 +225,32 @@
     {
         // Add navigation logic here
         Console.WriteLine("Flashcard button clicked!");
+    }
+
+     private void NavigatetoSignUp()
+    {
+        Console.WriteLine("Navigating to sign up...");
+        Navigation.NavigateTo("/signup", forceLoad: true);
+    }
+    private void NavigateToSignIn()
+    {
+        Console.WriteLine("Navigating to sign in...");
+        Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+    private void NavigateToMyGarden()
+    {
+        Console.WriteLine("Navigating to my garden...");
+        Navigation.NavigateTo("/mygarden", forceLoad: true);
+    }
+    private void NavigateToStudySets()
+    {
+        Console.WriteLine("Navigating to my study sets...");
+        Navigation.NavigateTo("/mystudysets", forceLoad: true);
+    }
+    private void NavigateToCreatNew()
+    {
+        Console.WriteLine("Navigating to create new...");
+        Navigation.NavigateTo("/createnew", forceLoad: true);
     }
 
 }

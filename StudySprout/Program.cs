@@ -8,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
+builder.Services.AddSingleton<StudySprout.DatabaseData.StudyCalendarEdit>();
+
 
 var app = builder.Build();
 

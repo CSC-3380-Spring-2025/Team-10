@@ -1,12 +1,14 @@
 /*Lexi Reed*/
 /* Styles for the Flashcard page */
 
+
 body {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     margin: 0;
+    background-color: #009951; /* trying to make background green */
 }
 
 .flip-card {

@@ -1,0 +1,185 @@
+@page "/quiz"
+@rendermode InteractiveServer
+
+<PageTitle>Quiz</PageTitle>
+
+<nav class="navbar1"> 
+    <img class="nav-logo" src="favicon.png" alt="Study Sprout Logo" />
+    <NavLink class="nav-button1" href="/signup">Sign Up</NavLink>
+        <NavLink class="nav-button1" href="/signin">Log In</NavLink>
+        <NavLink class="nav-button2" href="/MyGarden">MY GARDEN</NavLink>
+        <NavLink class="nav-button2" href="/MyStudySets">MY STUDY SETS</NavLink>
+        <NavLink class="nav-button2" href="/CreateNew">CREATE NEW</NavLink>
+</nav>
+
+<div class="quiz-page">
+    <h1>Quizzes</h1>
+
+
+    <!-- Button to navigate to Quiz Creation -->
+   <button @onclick="NavigateToQuizCreation" class="btn btn-primary">Create a New Quiz</button>
+
+    <!-- List of Saved Quizzes -->
+    <div class="saved-quizzes">
+        <h2>Saved Quizzes</h2>
+        @if (SavedQuizzes.Count == 0)
+        {
+            <p>No quizzes saved yet.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var quiz in SavedQuizzes)
+                {
+                    <li>
+                        <span>@quiz.Title</span>
+                        <button @onclick="() => TakeQuiz(quiz.Id)" class="btn btn-secondary">Take Quiz</button>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+<style>
+    .quiz-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        margin: 10px 0;
+        background-color: #139d11;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #006a05;
+    }
+
+    .saved-quizzes ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .saved-quizzes li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .saved-quizzes li button {
+        margin-left: 10px;
+    }
+
+    .navbar1 {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: #f1f1f1;
+        padding: 2px;
+        border-bottom: 2px solid #ccc;
+        position: fixed;
+        top: 0;
+        width: 84%;
+        height: 80px;
+        z-index: 1000;
+        margin-left: -24px;
+    }
+    .nav-button1 {
+        display: inline-block;
+        padding: 5px 20px;
+        background-color: #d0d0d0;
+        color: rgb(0, 0, 0);
+        text-align: center;
+        text-decoration: none;
+        border: #000;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+    .nav-button2 {
+        display: inline-block;
+        padding: 5px 20px;
+        background-color: #218b3c;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+    .nav-button:hover {
+        background-color: #0056b3;
+    }
+    
+    .nav-logo{
+         width: 50px;
+        height: 45px;
+    }
+</style>
+
+@code {
+    @inject NavigationManager Navigation
+
+    // Mock data for saved quizzes
+    private List<QuizModel> SavedQuizzes { get; set; } = new List<QuizModel>
+    {
+        new QuizModel { Id = 1, Title = "Math Quiz" },
+        new QuizModel { Id = 2, Title = "Science Quiz" }
+    };
+
+    // Navigate to the Quiz Creation page
+   private void NavigateToQuizCreation()
+    {
+        Console.WriteLine("Navigating to quiz creation...");
+        Navigation.NavigateTo("/quizcreation", forceLoad: true);
+    }
+
+    private void NavigatetoSignUp()
+    {
+        Console.WriteLine("Navigating to sign up...");
+        Navigation.NavigateTo("/signup", forceLoad: true);
+    }
+    private void NavigateToSignIn()
+    {
+        Console.WriteLine("Navigating to sign in...");
+        Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+    private void NavigateToMyGarden()
+    {
+        Console.WriteLine("Navigating to my garden...");
+        Navigation.NavigateTo("/mygarden", forceLoad: true);
+    }
+    private void NavigateToStudySets()
+    {
+        Console.WriteLine("Navigating to my study sets...");
+        Navigation.NavigateTo("/mystudysets", forceLoad: true);
+    }
+    private void NavigateToCreatNew()
+    {
+        Console.WriteLine("Navigating to create new...");
+        Navigation.NavigateTo("/createnew", forceLoad: true);
+    }
+
+    // Take a quiz by navigating to a page with randomized questions
+    private void TakeQuiz(int quizId)
+    {
+        Console.WriteLine($"Navigating to take quiz with ID: {quizId}...");
+        Navigation.NavigateTo($"/takequiz/{quizId}");
+    }
+
+    // Quiz model
+    private class QuizModel
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+    }
+}

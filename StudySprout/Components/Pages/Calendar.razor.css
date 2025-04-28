@@ -1,0 +1,63 @@
+.calendar {
+    max-width: 1000px;
+    margin: auto;
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+  }
+  
+  .day-labels {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+  }
+  
+  .day {
+    border: 1px solid #eee;
+    min-height: 120px;
+    padding: 5px;
+    position: relative;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+  }
+  
+  .day.blank {
+    background: transparent;
+    border: none;
+  }
+  
+  .day strong {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+  }
+  
+  .event {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    padding: 2px 5px;
+    border-radius: 5px;
+    word-wrap: break-word;
+  }
+  
+  .event.personal {
+    background-color: #ffe4b5; /* light orange */
+  }
+  
+  .event.work {
+    background-color: #f8c2c2; /* light pink */
+  }
+  
+  .event.social {
+    background-color: #b5d8ff; /* light blue */
+  }
+  

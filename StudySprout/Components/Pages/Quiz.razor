@@ -4,19 +4,13 @@
 <PageTitle>Quiz</PageTitle>
 
 <nav class="navbar1"> 
-        <img class="nav-logo" src="/favicon.png" alt="Study Sprout Logo" />
-        @*<button @onclick="NavigatetoSignUp" class="sign-up">Sign Up</button>
-        <button @onclick="NavigateToSignIn" class="log-in">Log In</button>
-        <button @onclick="NavigateToMyGarden" class="my-garden">MY GARDEN</button>
-        <button @onclick="NavigateToStudySets"class="my-study-sets">MY STUDY SETS</button>
-        <button @onclick="NavigateToCreatNew" class="create-new">CREATE NEW</button>*@
-
-        <NavLink class="nav-button1" href="/signup">Sign Up</NavLink>
+    <img class="nav-logo" src="favicon.png" alt="Study Sprout Logo" />
+    <NavLink class="nav-button1" href="/signup">Sign Up</NavLink>
         <NavLink class="nav-button1" href="/signin">Log In</NavLink>
         <NavLink class="nav-button2" href="/MyGarden">MY GARDEN</NavLink>
         <NavLink class="nav-button2" href="/MyStudySets">MY STUDY SETS</NavLink>
         <NavLink class="nav-button2" href="/CreateNew">CREATE NEW</NavLink>
-    </nav>
+</nav>
 
 <div class="quiz-page">
     <h1>Quizzes</h1>
@@ -57,7 +51,7 @@
     .btn {
         padding: 10px 20px;
         margin: 10px 0;
-        background-color: #007bff;
+        background-color: #139d11;
         color: white;
         border: none;
         border-radius: 5px;
@@ -65,7 +59,7 @@
     }
 
     .btn:hover {
-        background-color: #0056b3;
+        background-color: #006a05;
     }
 
     .saved-quizzes ul {
@@ -110,7 +104,6 @@
         cursor: pointer;
         text-decoration: underline;
     }
-
     .nav-button2 {
         display: inline-block;
         padding: 5px 20px;
@@ -123,61 +116,12 @@
         cursor: pointer;
         font-weight: bold;
     }
-
     .nav-button:hover {
         background-color: #0056b3;
     }
-
-    /*.sign-up {
-        color: var(--Text-Neutral-Default, #303030);
-        font-size: 22px;
-        font-family: Inter;
-        font-weight: 700;
-        line-height: 22px;
-        word-wrap: break-word;
-        background-color: white;
-        border-color: #303030;
-    }
-
-/* Log in 
-    .log-in {
-        color: var(--Text-Brand-On-Brand, #F5F5F5);
-        font-size: 21px;
-        font-family: Inter;
-        font-weight: 700;
-        line-height: 21px;
-        word-wrap: break-word;
-        background-color: #007BFF;
-        border-color: #007BFF;
-    }
-
-/* MY GARDEN 
-    .my-garden {
-        color: var(--Text-Positive-Secondary, #009951);
-        font-size: 26px;
-        font-family: Inter;
-        font-weight: 700;
-        line-height: 26px;
-        word-wrap: break-word;
-        background-color: white;
-        border-color: #009951;
-    }
-
-/* MY STUDY SETS 
-    .my-study-sets {
-        color: var(--Text-Positive-Secondary, #009951);
-        font-size: 26px;
-        font-family: Inter;
-        font-weight: 700;
-        line-height: 26px;
-        word-wrap: break-word;
-        background-color: white;
-        border-color: #009951;
-    }*/
-
-
-    .nav-logo {
-        width: 50px;
+    
+    .nav-logo{
+         width: 50px;
         height: 45px;
     }
 </style>
@@ -228,6 +172,7 @@
     // Take a quiz by navigating to a page with randomized questions
     private void TakeQuiz(int quizId)
     {
+        Console.WriteLine($"Navigating to take quiz with ID: {quizId}...");
         Navigation.NavigateTo($"/takequiz/{quizId}");
     }
 

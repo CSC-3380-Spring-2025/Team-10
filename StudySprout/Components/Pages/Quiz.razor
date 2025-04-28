@@ -13,10 +13,9 @@
 </nav>
 
 <div class="quiz-page">
-    <h2>Quizzes</h2>
-
     <div class="banner">
-        <h1><span class="highlight">Quizzes</span></h1>
+        <h1><span class="highlight">QUIZZES.</span></h1>
+        <h3><span class="highlight">READY, SET, STUDY!</span></h3>
     </div>
     <!-- Button to navigate to Quiz Creation -->
    <button @onclick="NavigateToQuizCreation" class="btn btn-primary">Create a New Quiz</button>
@@ -130,24 +129,34 @@
     h1 {
         text-align: center;
         color: #ffffff;
-        font-size: 4rem;
-        margin-top: -15px;
-        text-shadow: 3px 5px 10px #211e1e;
+        font-size: 4.5rem;
+        margin-top: 20px;
+        text-shadow: 5px 5px 8px #211e1e;
+        font-weight: bold;
+    }
+
+    h3 {
+        text-align: center;
+        color: #ff6a00;
+        font-size: 1.6rem;
+        margin-top: 1px;
+        text-shadow: 4px 4px 4px #000000;
         font-weight: bold;
     }
     .banner {
-        background-image: url('quizbackground.jpg');
+        background-image: url('quizzesbackground.jpg');
         background-size: cover;
         background-position: top;
         text-align: center;
         color: white;
         padding: 50px 20px;
         position: relative;
-        width: 125%; /* Adjust width to account for the left navigation panel */
-        margin-left: -100px; /* Shift the banner to the right to align with the navigation panel */
+        width: 152%; /* Adjust width to account for the left navigation panel */
+        margin-left: -200px; /* Shift the banner to the right to align with the navigation panel */
         height: 248px;
         box-sizing: border-box;
         font-weight: bolder;
+        margin-top: 70px;
     }
 </style>
 

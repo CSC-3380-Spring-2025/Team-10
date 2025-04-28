@@ -3,13 +3,19 @@
 
 <PageTitle>Quiz</PageTitle>
 
-<nav class="navbar"> 
-        <img class="nav-logo" src="/Pictures/StudySprout.png" alt="Study Sprout Logo" />
-        <button @onclick="NavigatetoSignUp" class="sign-up">Sign Up</button>
+<nav class="navbar1"> 
+        <img class="nav-logo" src="/favicon.png" alt="Study Sprout Logo" />
+        @*<button @onclick="NavigatetoSignUp" class="sign-up">Sign Up</button>
         <button @onclick="NavigateToSignIn" class="log-in">Log In</button>
         <button @onclick="NavigateToMyGarden" class="my-garden">MY GARDEN</button>
         <button @onclick="NavigateToStudySets"class="my-study-sets">MY STUDY SETS</button>
-        <button @onclick="NavigateToCreatNew" class="create-new">CREATE NEW</button>
+        <button @onclick="NavigateToCreatNew" class="create-new">CREATE NEW</button>*@
+
+        <NavLink class="nav-button1" href="/signup">Sign Up</NavLink>
+        <NavLink class="nav-button1" href="/signin">Log In</NavLink>
+        <NavLink class="nav-button2" href="/MyGarden">MY GARDEN</NavLink>
+        <NavLink class="nav-button2" href="/MyStudySets">MY STUDY SETS</NavLink>
+        <NavLink class="nav-button2" href="/CreateNew">CREATE NEW</NavLink>
     </nav>
 
 <div class="quiz-page">
@@ -78,7 +84,51 @@
         margin-left: 10px;
     }
 
-    .sign-up {
+    .navbar1 {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        background-color: #f1f1f1;
+        padding: 2px;
+        border-bottom: 2px solid #ccc;
+        position: fixed;
+        top: 0;
+        width: 84%;
+        height: 80px;
+        z-index: 1000;
+        margin-left: -24px;
+    }
+    .nav-button1 {
+        display: inline-block;
+        padding: 5px 20px;
+        background-color: #d0d0d0;
+        color: rgb(0, 0, 0);
+        text-align: center;
+        text-decoration: none;
+        border: #000;
+        border-radius: 5px;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
+    .nav-button2 {
+        display: inline-block;
+        padding: 5px 20px;
+        background-color: #218b3c;
+        color: white;
+        text-align: center;
+        text-decoration: none;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+    }
+
+    .nav-button:hover {
+        background-color: #0056b3;
+    }
+
+    /*.sign-up {
         color: var(--Text-Neutral-Default, #303030);
         font-size: 22px;
         font-family: Inter;
@@ -89,7 +139,7 @@
         border-color: #303030;
     }
 
-/* Log in */
+/* Log in 
     .log-in {
         color: var(--Text-Brand-On-Brand, #F5F5F5);
         font-size: 21px;
@@ -101,7 +151,7 @@
         border-color: #007BFF;
     }
 
-/* MY GARDEN */
+/* MY GARDEN 
     .my-garden {
         color: var(--Text-Positive-Secondary, #009951);
         font-size: 26px;
@@ -113,7 +163,7 @@
         border-color: #009951;
     }
 
-/* MY STUDY SETS */
+/* MY STUDY SETS 
     .my-study-sets {
         color: var(--Text-Positive-Secondary, #009951);
         font-size: 26px;
@@ -123,11 +173,12 @@
         word-wrap: break-word;
         background-color: white;
         border-color: #009951;
-    }
+    }*/
+
 
     .nav-logo {
-        width: 100px;
-        height: 50px;
+        width: 50px;
+        height: 45px;
     }
 </style>
 

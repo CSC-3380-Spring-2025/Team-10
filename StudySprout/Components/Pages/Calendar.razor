@@ -22,7 +22,7 @@
         @foreach (var day in Enumerable.Range(1, 31))
         {
             var date = new DateTime(2021, 3, day);
-            var events = CalendarService.GetAllTimes().Where(e => e.StartDate.Date == date.Date).ToList();
+            //var events = CalendarService.GetAllTimes().Where(e => e.StartDate.Date == date.Date).ToList();
 
             <div class="day">
                 <strong>@day</strong>

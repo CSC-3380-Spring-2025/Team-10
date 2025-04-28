@@ -169,8 +169,8 @@ body {
 }
 
 .nav-logo {
-    width: 100px;
-    height: 50px; /* Adjust the height of the logo */
+    width: 50px;
+    height: 45px; /* Adjust the height of the logo */
     margin-left: 10px; /* Add some spacing from the left edge */
     align-self: center; /* Vertically align the logo in the navbar */
 }

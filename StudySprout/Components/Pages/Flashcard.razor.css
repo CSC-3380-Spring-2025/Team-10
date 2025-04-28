@@ -147,7 +147,7 @@ body {
     border-bottom: 2px solid #ccc;
     position: fixed;
     top: 0;
-    width: 100%;
+    width: 83%;
     height: 80px;
     z-index: 1000;
     margin-left: -32px;
@@ -169,7 +169,8 @@ body {
 }
 
 .nav-logo {
-    height: 40px; /* Adjust the height of the logo */
+    width: 100px;
+    height: 50px; /* Adjust the height of the logo */
     margin-left: 10px; /* Add some spacing from the left edge */
     align-self: center; /* Vertically align the logo in the navbar */
 }

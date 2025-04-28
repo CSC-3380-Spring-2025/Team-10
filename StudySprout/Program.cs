@@ -1,6 +1,8 @@
 using StudySprout.Components;
+using Google.Cloud.Firestore;
 
-string credentialPath = @"/Users/lillianandino/Desktop/SPRING25/ood/studysprout-67ec9-firebase-adminsdk-fbsvc-b844ad9ee9.json";
+
+string credentialPath = Path.Combine(Directory.GetCurrentDirectory(), "Credentials", "studysprout-67ec9-firebase-adminsdk-fbsvc-b844ad9ee9.json");
 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
 
 var builder = WebApplication.CreateBuilder(args);
@@ -9,6 +11,13 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddSingleton<StudySprout.DatabaseData.StudyCalendarEdit>();
+
+builder.Services.AddSingleton(_ =>
+{
+    return new FirestoreDbBuilder{
+        ProjectId = "studysprout-67ec9"
+    }.Build();
+});
 
 
 var app = builder.Build();

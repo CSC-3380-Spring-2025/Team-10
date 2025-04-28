@@ -1,4 +1,5 @@
-@* @using Google.Cloud.Firestore;
+@using Google.Cloud.Firestore;
+@using StudySprout.Models
 
 @page "/MyStudySets"
 @attribute [StreamRendering]
@@ -6,36 +7,132 @@
 
 <PageTitle>MY STUDY SETS</PageTitle>
 
-<h1>MY STUDY SETS.</h1>
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
+        <nav>
+            @*<a href="/MyGarden">MY GARDEN</a>*@
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
+        </nav>
+    </div>
 
-<p>READY, SET, STUDY!</p>
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
 
-<!--Click on a set to view your flashcards.-->
-<ul>
-    @foreach (var set in studySets)
-    {
-        <li>
-            <strong>@set.title</strong>:-- set.description
-        </li>
-    }
-</ul>
+<div class="banner">
+    <h1><span class="highlight">MY</span> STUDY SETS.</h1>
+    <h4>READY, SET, STUDY!</h4>
+    <img class="slink-icon" src="/Slink.png" alt="Slink Icon"/>
+</div>
 
-@if (isSuccess)
+<!-- Debugging Section -->
+@foreach (var set in sets)
 {
-    <p class="alert alert-success">Study set accessed successfully</p>
+    <div>
+        <p>Debug: TITLE=@set.TITLE, DESCRIPTION=@set.DESCRIPTION, LEARNBY=@set.LEARNBY</p>
+    </div>
 }
 
 @if (isError)
 {
-    <p class="alert alert-danger">Error</p>
+    <p class="alert alert-danger">@errorMessage</p>
 }
 
 @code
 {
-    private System.Collections.ArrayList studySets;
+    private FirestoreDb StudySproutDB;
+    public List<StudySet> sets { get; set; } = new List<StudySet>();
+    public bool isError { get; set; }
+    public string errorMessage { get; set; }
 
-    protected override void OnInitialized()
+    protected override async Task OnInitializedAsync()
     {
-        studySets = wait DBCreateNewData.StudySets.ToListAsync();
+        Console.WriteLine("Initializing Firestore");
+        try
+        {
+            StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+            await LoadStudySets();
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+            errorMessage = $"Error initializing Firestore: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+        StateHasChanged();
     }
-} *@
+
+    private async Task LoadStudySets()
+    {
+        try
+        {
+            Console.WriteLine("Loading study sets from Firestore...");
+            CollectionReference studySetsCollection = StudySproutDB.Collection("MyStudySetsDB");
+            QuerySnapshot snapshot = await studySetsCollection.GetSnapshotAsync();
+
+            sets.Clear();
+
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (document.Exists)
+                {
+                    Console.WriteLine($"Document ID: {document.Id}");
+                    foreach (var field in document.ToDictionary())
+                    {
+                        Console.WriteLine($"{field.Key}: {field.Value}");
+                    }
+                    var data = document.ConvertTo<StudySet>();
+                    sets.Add(data);
+                    Console.WriteLine($"Added to sets: TITLE={data.TITLE}, DESCRIPTION={data.DESCRIPTION}, LEARNBY={data.LEARNBY}");
+                }
+            }
+            Console.WriteLine($"Total sets: {sets.Count}");
+            Console.WriteLine("Study sets loaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading study sets: {ex.Message}");
+            isError = true;
+            errorMessage = $"An error occurred while loading study sets: {ex.Message}";
+        }
+        StateHasChanged();
+    }
+
+    public void GoToLogIn()
+    {
+        Console.WriteLine("Go to LogIn/SignIn...");
+        Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+}
+
+@if (sets == null || sets.Count == 0)
+{
+    if (!isError)
+    {
+        <p>Loading study sets...</p>
+    }
+    else
+    {
+        <p class="alert alert-danger">@errorMessage</p>
+    }
+}
+else
+{
+    <ul>
+        @foreach (var set in sets)
+        {
+            <li class="study-set">
+                <h3>@set.TITLE</h3>
+                <p>@set.DESCRIPTION</p>
+                <div class="buttons">
+                    <a class="btn btn-learn" href="#">LEARN BY @set.LEARNBY.ToString("MMMM d, yyyy")</a>
+                    <a class="btn btn-days" href="#">DAYS REMAINING: @(DateTime.Now - @set.LEARNBY).Days</a>
+                </div>
+            </li>
+        }
+    </ul>
+}

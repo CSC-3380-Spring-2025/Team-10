@@ -2,7 +2,21 @@
 
 <PageTitle>Home</PageTitle>
 
-@* Navigation Buttons *@
+@* logo
+<nav class="navbar1">
+    <img class="=logo-link" src="@LogoPath" alt="Logo" style="width: 50px; height: 40px;" />
+    @*<button @onclick="NavigatetoSignUp" class="sign-up">Sign Up</button>
+    <button @onclick="NavigateToSignIn" class="log-in">Log In</button>
+    <button @onclick="NavigateToMyGarden" class="my-garden">MY GARDEN</button>
+    <button @onclick="NavigateToStudySets"class="my-study-sets">MY STUDY SETS</button>
+    <button @onclick="NavigateToCreatNew" class="create-new">CREATE NEW</button> !!
+
+    <NavLink class="nav-button1" href="/signup">Sign Up</NavLink>
+    <NavLink class="nav-button1" href="/signin">Log In</NavLink>
+    <NavLink class="nav-button2" href="/MyGarden">MY GARDEN</NavLink>
+    <NavLink class="nav-button2" href="/MyStudySets">MY STUDY SETS</NavLink>
+    <NavLink class="nav-button2" href="/CreateNew">CREATE NEW</NavLink>
+</nav>*@
 
 <header>
     <div class="logo">
@@ -222,6 +236,19 @@
 
 @code {
     @inject NavigationManager Navigation;
+    private string LogoPath = "/favicon.png"; // Path to your logo
+    @inject NavigationManager Navigation 
+    private void GoToGarden()
+    {
+        Console.WriteLine("Garden button clicked!");
+        Navigation.NavigateTo("/MyGarden", forceLoad: true);
+    }
+
+    private void GoToFlashcard()
+    {
+        Console.WriteLine("Flashcard button clicked!");
+        Navigation.NavigateTo("/flashcard", forceLoad: true);
+    }
 
     private void NavigatetoSignUp()
     {
@@ -247,4 +274,11 @@
     {
         Navigation.NavigateTo("/createnew", forceLoad: true);
     }
+
+    public void GoToLogIn()
+    {
+        Console.WriteLine("Go to LogIn/SignIn...");
+        Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+
 }

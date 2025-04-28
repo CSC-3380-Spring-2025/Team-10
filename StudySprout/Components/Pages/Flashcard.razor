@@ -1,14 +1,60 @@
 @*Lexi Reed *@
 @page "/flashcard"
 
-<nav class="navbar"> 
+@inject NavigationManager Navigation
+@using Microsoft.AspNetCore.Components.Routing
+
+
+@*<nav class="navbar"> 
     <img class="nav-logo" src="/Pictures/StudySprout.png" alt="Study Sprout Logo" />
-    <button class="sign-up">Sign Up</button>
-    <button class="log-in">Log In</button>
+    <button class="/signup">Sign Up</button>
+    <button class="/signin">Log In</button>
     <button class="my-garden">MY GARDEN</button>
-    <button class="my-study-sets">MY STUDY SETS</button>
-    <button class="create-new">CREATE NEW</button>
+    <button class="/MyStudySets">MY STUDY SETS</button>
+    <button class="/CreateNew">CREATE NEW</button>
+</nav>/*@
+
+<nav class="navbar"> 
+  <img class="nav-logo" src="/favicon.png" alt="Study Sprout Logo" />
+  <NavLink class="nav-button1" href="/signup">Sign Up</NavLink>
+  <NavLink class="nav-button1" href="/signin">Log In</NavLink>
+  <NavLink class="nav-button2" href="/MyGarden">MY GARDEN</NavLink>
+  <NavLink class="nav-button2" href="/MyStudySets">MY STUDY SETS</NavLink>
+  <NavLink class="nav-button2" href="/CreateNew">CREATE NEW</NavLink>
 </nav>
+
+<style>
+  .nav-button1 {
+    display: flex;
+    padding: 5px 20px;
+    background-color: #d0d0d0;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    text-decoration: none;
+    border: #000;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .nav-button2 {
+    display: flex;
+    padding: 5px 20px;
+    background-color: #218b3c;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+
+  .nav-button:hover {
+    background-color: #0056b3;
+  }
+</style>
+
 
 <div class="flip-card"> 
   <div class="flip-card-inner">

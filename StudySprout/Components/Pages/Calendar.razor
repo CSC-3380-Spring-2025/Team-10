@@ -24,7 +24,8 @@
                 <strong>@day</strong>
                 @foreach (var ev in events)
                 {
-                    <div class="event">@ev.Title</div>
+                    <div class="event @ev.Category.ToLower()">@ev.Title</div>
+
                 }
             </div>
         }

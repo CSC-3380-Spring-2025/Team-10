@@ -13,9 +13,11 @@
 </nav>
 
 <div class="quiz-page">
-    <h1>Quizzes</h1>
+    <h2>Quizzes</h2>
 
-
+    <div class="banner">
+        <h1><span class="highlight">Quizzes</span></h1>
+    </div>
     <!-- Button to navigate to Quiz Creation -->
    <button @onclick="NavigateToQuizCreation" class="btn btn-primary">Create a New Quiz</button>
 
@@ -123,6 +125,29 @@
     .nav-logo{
          width: 50px;
         height: 45px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #ffffff;
+        font-size: 4rem;
+        margin-top: -15px;
+        text-shadow: 3px 5px 10px #211e1e;
+        font-weight: bold;
+    }
+    .banner {
+        background-image: url('quizbackground.jpg');
+        background-size: cover;
+        background-position: top;
+        text-align: center;
+        color: white;
+        padding: 50px 20px;
+        position: relative;
+        width: 125%; /* Adjust width to account for the left navigation panel */
+        margin-left: -100px; /* Shift the banner to the right to align with the navigation panel */
+        height: 248px;
+        box-sizing: border-box;
+        font-weight: bolder;
     }
 </style>
 

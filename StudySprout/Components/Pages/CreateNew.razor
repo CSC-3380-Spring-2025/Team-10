@@ -37,7 +37,7 @@
 
     h1, h2, h3 {
         text-align: center;
-        color: #2a9d8f;
+        color: #4e7429;
         margin-top: 20px;
     }
 
@@ -209,9 +209,9 @@
         @foreach (var set in sets)
         {
             <li>
-                <h3>@set.Title</h3>
-                <p>@set.Description</p>
-                @*<p>LEARN BY: @set.DueDate.ToShortDateString()</p>*@
+                <h3>@set.TITLE</h3>
+                <p>@set.DESCRIPTION</p>
+                <p><strong>LEARN BY</strong> @set.LEARNBY.ToString("MMMM d, yyyy")</p>
             </li>
         }
     </ul>
@@ -225,21 +225,20 @@ else
 {
     public string setTitle { get; set; }
     public string description { get; set; }
-    //public DateTime dueDate { get; set; }
     public bool isSuccess { get; set; }
     public bool isError { get; set; }
     public string errorMessage { get; set; }
 
-    private FirestoreDb MyStudySets;
+    private FirestoreDb StudySproutDB;
 
     public List<StudySet> sets { get; set; } = new List<StudySet>();
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("📌 Initializing Firestore");
+        Console.WriteLine("Initializing Firestore");
         try
         {
-            MyStudySets = FirestoreDb.Create("studysprout-67ec9");
+            StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
             await LoadStudySets();
         }
         catch (Exception ex)
@@ -251,18 +250,16 @@ else
     }
      private async Task CreateStudySet()
     {
-        Console.WriteLine("✅ Form submitted");
-        Console.WriteLine($"📌 Input Data - Title: {setTitle}, Description: {description}");
+        Console.WriteLine("Form submitted");
+        Console.WriteLine($"Input Data - Title: {setTitle}, Description: {description}");
 
-        // Reset success and error states
         isSuccess = false;
         isError = false;
         errorMessage = string.Empty;
 
-        // Validate the input fields
         if (string.IsNullOrEmpty(setTitle) || string.IsNullOrEmpty(description))
         {
-            Console.WriteLine("❌ Validation failed: Missing required fields.");
+            Console.WriteLine("Validation failed: Missing required fields.");
             isError = true;
             errorMessage = "Please fill out all fields correctly!";
             return;
@@ -270,38 +267,35 @@ else
 
         try
         {
-            Console.WriteLine("🚀 Connecting to Firestore");
-            CollectionReference studySetsCollection = MyStudySets.Collection("StudySets");
+            Console.WriteLine("Connecting to Firestore");
+            CollectionReference studySetsCollection = StudySproutDB.Collection("MyStudySetsDB");
 
-            // Create a new document in the "StudySets" collection
+            //Create new doc in  "StudySets" collection
             await studySetsCollection.AddAsync(new StudySet
             {
-                Title = setTitle,
-                Description = description
+                TITLE = setTitle,
+                DESCRIPTION = description
             });
 
-            Console.WriteLine("🚀 Study set successfully saved!");
+            Console.WriteLine("Study set successfully saved!");
             isSuccess = true;
 
-            // Reload the study sets to reflect the new data
             await ReloadStudySets();
-
-            // Clear the input fields
             ClearInputs();
         }
         catch (Exception e)
         {
-            Console.WriteLine($"❌ Firestore save error: {e.Message}");
+            Console.WriteLine($"Firestore save error: {e.Message}");
             isError = true;
-            errorMessage = $"❌ Firestore save error: {e.Message}";
+            errorMessage = $"Firestore save error: {e.Message}";
         }
     }
     private async Task LoadStudySets()
     {
         try
         {
-            Console.WriteLine("📌 Loading study sets from Firestore...");
-            CollectionReference studySetsCollection = MyStudySets.Collection("StudySets");
+            Console.WriteLine("Loading study sets from Firestore...");
+            CollectionReference studySetsCollection = StudySproutDB.Collection("StudySets");
             QuerySnapshot snapshot = await studySetsCollection.GetSnapshotAsync();
 
             sets.Clear();
@@ -320,11 +314,11 @@ else
                     sets.Add(data);
                 }
             }
-        Console.WriteLine("✅ Study sets loaded successfully.");
+        Console.WriteLine("Study sets loaded successfully.");
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"❌ Error loading study sets: {ex.Message}");
+            Console.WriteLine($"Error loading study sets: {ex.Message}");
             isError = true;
             errorMessage = $"An error occurred while loading study sets: {ex.Message}";
         }
@@ -332,14 +326,11 @@ else
     private async Task ReloadStudySets()
     {
         await LoadStudySets();
-       //StateHasChanged();
     }
 
-    // Method to clear the input fields
     private void ClearInputs()
     {
         setTitle = string.Empty;
         description = string.Empty;
-        //dueDate = default;
     }
 }

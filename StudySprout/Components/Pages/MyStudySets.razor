@@ -7,88 +7,27 @@
 
 <PageTitle>MY STUDY SETS</PageTitle>
 
-<h1>MY STUDY SETS.</h1>
-<p>READY, SET, STUDY!</p>
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
+        <nav>
+            @*<a href="/MyGarden">MY GARDEN</a>*@
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
+        </nav>
+    </div>
 
-<style>
-    body, html {
-        margin: 0;
-        padding: 0;
-        font-family: 'Arial', sans-serif;
-        box-sizing: border-box;
-    }
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
 
-    * {
-        box-sizing: inherit;
-    }
-
-    body {
-        background-color: #f4f7fa;
-        color: #333;
-        line-height: 1.6;
-        font-size: 16px;
-        min-height: 100vh;
-        display: flex;
-        flex-direction: column;
-    }
-
-    main {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        flex-grow: 1;
-    }
-
-    h1, h2, h3 {
-        text-align: center;
-        color: #4e7429;
-        margin-top: 20px;
-    }
-
-    h1 {
-        font-size: 2.5rem;
-        margin-bottom: 10px;
-    }
-
-    ul {
-        list-style: none;
-        padding: 0;
-    }
-
-    ul li {
-        background: #fff;
-        margin: 10px 0;
-        padding: 15px;
-        border-radius: 8px;
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    }
-
-    ul li h3 {
-        margin:  0;
-        color:  #555;
-        font-size: 1rem;
-    }
-
-    .alert {
-        padding: 12px;
-        border-radius: 5px;
-        margin-top: 10px;
-        text-align: center;
-        font-size: 1rem;
-    }
-
-    .alert-success {
-        background-color: #d4edda;
-        color: #155724;
-        border: 1px solid #c3e6cb;
-    }
-
-    .alert-danger {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-    }
-</style>
+<div class="banner">
+    <h1><span class="highlight">MY</span> STUDY SETS.</h1>
+    <h4>READY, SET, STUDY!</h4>
+    <img class="slink-icon" src="/Slink.png" alt="Slink Icon"/>
+</div>
 
 <!-- Debugging Section -->
 @foreach (var set in sets)
@@ -148,21 +87,25 @@
                     }
                     var data = document.ConvertTo<StudySet>();
                     sets.Add(data);
-                    StateHasChanged();
                     Console.WriteLine($"Added to sets: TITLE={data.TITLE}, DESCRIPTION={data.DESCRIPTION}, LEARNBY={data.LEARNBY}");
                 }
             }
             Console.WriteLine($"Total sets: {sets.Count}");
             Console.WriteLine("Study sets loaded successfully.");
-            StateHasChanged();
         }
         catch (Exception ex)
         {
             Console.WriteLine($"Error loading study sets: {ex.Message}");
             isError = true;
             errorMessage = $"An error occurred while loading study sets: {ex.Message}";
-            StateHasChanged();
         }
+        StateHasChanged();
+    }
+
+    public void GoToLogIn()
+    {
+        Console.WriteLine("Go to LogIn/SignIn...");
+        Navigation.NavigateTo("/signin", forceLoad: true);
     }
 }
 
@@ -182,10 +125,13 @@ else
     <ul>
         @foreach (var set in sets)
         {
-            <li>
+            <li class="study-set">
                 <h3>@set.TITLE</h3>
                 <p>@set.DESCRIPTION</p>
-                <p><strong>LEARN BY:</strong> @set.LEARNBY.ToString("MMMM d, yyyy")</p>
+                <div class="buttons">
+                    <a class="btn btn-learn" href="#">LEARN BY @set.LEARNBY.ToString("MMMM d, yyyy")</a>
+                    <a class="btn btn-days" href="#">DAYS REMAINING: @(DateTime.Now - @set.LEARNBY).Days</a>
+                </div>
             </li>
         }
     </ul>

@@ -1,0 +1,157 @@
+@page "/signup"
+
+<PageTitle>Sign Up</PageTitle>
+
+<div class="signup-page">
+    <div class="signup-left">
+        <h2 class="signup-text">
+            I'M <span class="highlight">SO EXCITED</span> YOU'RE <span class="highlight">JOINING US</span>!!!!
+        </h2>
+        <br>
+        <img src="Slink-In-Pot.png" alt="Slinkin Pot" class="signup-image" />
+    </div>
+    <div class="signup-right">
+        <div class="signup-container">
+            <h1>Sign Up</h1>
+            <form>
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" @bind="Name" class="form-control" placeholder="Enter your name" />
+                </div>
+                <div class="form-group">
+                    <label for="email">Email:</label>
+                    <input type="email" id="email" @bind="Email" class="form-control" placeholder="Enter your email" />
+                </div>
+                <div class="form-group">
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" @bind="Password" class="form-control" placeholder="Enter your password" />
+                </div>
+                <div class="form-group">
+                    <label for="confirm-password">Confirm Password:</label>
+                    <input type="password" id="confirm-password" @bind="ConfirmPassword" class="form-control" placeholder="Confirm your password" />
+                </div>
+                <button type="button" @onclick="HandleSignUp" class="btn btn-primary">Sign Up</button>
+            </form>
+            <p class="signin-link">
+                Already have an account? <a href="/signin">Sign In</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+<style>
+    .signup-page {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+        background-color: rgb(255, 255, 255);
+    }
+
+    .signup-left {
+        flex: 1;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .signup-image {
+        max-width: 75%;
+        height: auto;
+    }
+
+    .signup-text {
+        font-size: 24px;
+        font-weight: bold;
+        color: #000000;
+        margin-top: 20px;
+    }
+
+    .highlight {
+        color: #00b912;
+    }
+
+    .signup-right {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .signup-container {
+        max-width: 400px;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .signup-container h1 {
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 10px;
+        background-color: #00d44a;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #00b321;
+    }
+
+    .signin-link {
+        text-align: center;
+        margin-top: 15px;
+    }
+
+    .signin-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+
+    .signin-link a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+@code {
+    private string Name { get; set; } = string.Empty;
+    private string Email { get; set; } = string.Empty;
+    private string Password { get; set; } = string.Empty;
+    private string ConfirmPassword { get; set; } = string.Empty;
+
+    private void HandleSignUp()
+    {
+        if (Password != ConfirmPassword)
+        {
+            Console.WriteLine("Passwords do not match!");
+            return;
+        }
+
+        // Add your sign-up logic here
+        Console.WriteLine($"Name: {Name}, Email: {Email}, Password: {Password}");
+    }
+}

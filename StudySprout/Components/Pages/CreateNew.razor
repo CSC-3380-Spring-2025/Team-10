@@ -1,0 +1,446 @@
+@using Google.Cloud.Firestore;
+@using StudySprout.Models
+
+@page "/CreateNew"
+@attribute [StreamRendering]
+@inject NavigationManager Navigation
+
+<PageTitle>CREATE NEW</PageTitle>
+
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
+        <nav>
+            @*<a href="/MyGarden">MY GARDEN</a>*@
+            <a href="/MyStudySets">MY STUDY SETS</a>
+            <a href="/CreateNew"class="active">CREATE NEW SET</a>
+        </nav>
+    </div>
+
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
+
+<div class="banner">
+    <h1><span class="highlight">CREATE</span> A NEW</h1>
+    <h1><span class="highlight">STUDY SET.</span></h1>
+    <h4>READY, SET, STUDY!</h4>
+    <img class="slink-icon" src="/Slink.png" alt="Slink Icon"/>
+</div>
+
+<main>
+    <form>
+        <div>
+            <label for="setTitle">SET TITLE</label>
+            <input type="text" id="setTitle" @bind="setTitle" />
+            @if (string.IsNullOrEmpty(setTitle))
+            {
+                <p class="alert alert-danger">Set Title is required.</p>
+            }
+        </div>
+
+        <div>
+            <label for="description">DESCRIPTION</label>
+            <input type="text" id="description" @bind="description" />
+            @if (string.IsNullOrEmpty(description))
+            {
+                <p class="alert alert-danger">Description is required.</p>
+            }
+        </div>
+
+        <div>
+            <button type="button" class="btn btn-primary" @onclick="async () => await CreateStudySet()">CREATE</button>
+        </div>
+    </form>
+
+
+    @if (isSuccess)
+    {
+        <p class="alert alert-success">Study set created successfully!</p>
+    }
+
+    @if (isError)
+    {
+        <p class="alert alert-danger">@errorMessage</p>
+    }
+
+    @if (sets != null && sets.Count > 0)
+    {
+        <ul>
+            @foreach (var set in sets)
+            {
+                <li>
+                    <h3>@set.TITLE</h3>
+                    <p>@set.DESCRIPTION</p>
+                    <p><strong>LEARN BY</strong> @set.LEARNBY.ToString("MMMM d, yyyy")</p>
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <p>No study sets available. Create your first study set!</p>
+    }
+</main>
+
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        box-sizing: border-box;
+    }
+
+    * {
+        box-sizing: inherit;
+    }
+
+    body {
+        background-color: #ffffff;
+        color: #333;
+        line-height: 1.6;
+        font-size: 16px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        flex-grow: 1;
+    }
+
+    h1 {
+        text-align: center;
+        color: #000000;
+        font-size: 4rem;
+        margin-top: -15px;
+        text-shadow: 3px 5px 10px #ffffff;
+        font-weight: bold;
+    }
+    
+    h4 {
+        text-align: center;
+        color: #851212;
+        text-shadow: 2px 2px 5px #ffffff;
+        margin-top: 10px;
+        font-weight: bold;
+        font-size: 30px;
+    }
+
+    p {
+        text-align: center;
+        color: #555;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+
+    form {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input[type="text"], input[type="date"], textarea, select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #2a9d8f;
+        outline: none;
+    }
+
+    button.btn {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background-color: #2a9d41;
+        color: white;
+        font-size: 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button.btn:hover {
+        background-color: #1f7a68;
+    }
+
+    .alert {
+        padding: 12px;
+        border-radius: 5px;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 1rem;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    ul li {
+        background: #fff;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #2a9d8f;
+    }
+
+    ul li p {
+        margin: 5px 0 0;
+        color: #555;
+        font-size: 1rem;
+    }
+
+    footer {
+        background-color: #2a9d8f;
+        color: white;
+        padding: 15px 0;
+        text-align: center;
+    }
+
+    footer a {
+        color: white;
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #ffffff;
+        width: 160%;
+        margin-left: -231px;
+        margin-top: -16px;
+        box-sizing: border-box;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    header nav {
+        display: flex;
+        gap: 49px;
+    }
+
+    header nav a {
+        text-decoration: none;
+        color: #4e7429;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    header nav a:hover {
+        text-decoration: underline;
+    }
+
+    .logo img {
+        height: 50px;
+        width: 45px;
+        margin-top: -8px;
+    }
+
+    .slink-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        height: 80px;
+        width: 135px;
+    }
+
+    .auth-links a {
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1rem;
+        color: #4e7429;
+        padding: 5px 15px;
+        border: 1px solid #4e7429;
+        border-radius: 5px;
+    }
+
+    .auth-links a:hover {
+        background-color: #4e7429;
+        color: white;
+    }
+
+    .banner {
+        background-image: url('background3.jpg');
+        background-size: cover;
+        background-position: top;
+        text-align: center;
+        color: white;
+        padding: 50px 20px;
+        position: relative;
+        width: 165%; /* Adjust width to account for the left navigation panel */
+        margin-left: -230px; /* Shift the banner to the right to align with the navigation panel */
+        height: 248px;
+        box-sizing: border-box;
+        font-weight: bolder;
+    }
+</style>
+
+@code
+{
+    public string setTitle { get; set; }
+    public string description { get; set; }
+    public bool isSuccess { get; set; }
+    public bool isError { get; set; }
+    public string errorMessage { get; set; }
+
+    private FirestoreDb StudySproutDB;
+
+    public List<StudySet> sets { get; set; } = new List<StudySet>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("Initializing Firestore");
+        try
+        {
+            StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+            await LoadStudySets();
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+            errorMessage = $"Error initializing Firestore: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+    }
+     private async Task CreateStudySet()
+    {
+        Console.WriteLine("Form submitted");
+        Console.WriteLine($"Input Data - Title: {setTitle}, Description: {description}");
+
+        isSuccess = false;
+        isError = false;
+        errorMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(setTitle) || string.IsNullOrEmpty(description))
+        {
+            Console.WriteLine("Validation failed: Missing required fields.");
+            isError = true;
+            errorMessage = "Please fill out all fields correctly!";
+            return;
+        }
+
+        try
+        {
+            Console.WriteLine("Connecting to Firestore");
+            CollectionReference studySetsCollection = StudySproutDB.Collection("MyStudySetsDB");
+
+            //Create new doc in  "StudySets" collection
+            await studySetsCollection.AddAsync(new StudySet
+            {
+                TITLE = setTitle,
+                DESCRIPTION = description
+            });
+
+            Console.WriteLine("Study set successfully saved!");
+            isSuccess = true;
+
+            await ReloadStudySets();
+            ClearInputs();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"Firestore save error: {e.Message}");
+            isError = true;
+            errorMessage = $"Firestore save error: {e.Message}";
+        }
+    }
+    private async Task LoadStudySets()
+    {
+        try
+        {
+            Console.WriteLine("Loading study sets from Firestore...");
+            CollectionReference studySetsCollection = StudySproutDB.Collection("StudySets");
+            QuerySnapshot snapshot = await studySetsCollection.GetSnapshotAsync();
+
+            sets.Clear();
+
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (document.Exists)
+                {
+                    Console.WriteLine($"Document ID: {document.Id}");
+                    foreach (var field in document.ToDictionary())
+                    {
+                        
+                        Console.WriteLine($"{field.Key}: {field.Value}");
+                    }
+                    var data = document.ConvertTo<StudySet>();
+                    sets.Add(data);
+                }
+            }
+        Console.WriteLine("Study sets loaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error loading study sets: {ex.Message}");
+            isError = true;
+            errorMessage = $"An error occurred while loading study sets: {ex.Message}";
+        }
+    }
+    private async Task ReloadStudySets()
+    {
+        await LoadStudySets();
+    }
+
+    private void ClearInputs()
+    {
+        setTitle = string.Empty;
+        description = string.Empty;
+    }
+    public void GoToLogIn()
+    {
+        Console.WriteLine("Go to LogIn/SignIn...");
+        Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+}

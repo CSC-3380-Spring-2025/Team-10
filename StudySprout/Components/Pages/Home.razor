@@ -1,7 +1,256 @@
-﻿@page "/"
+﻿@* Jeffery Min created this code for the homepage but due to github cloning issues I will be committing on his behalf *@
+@page "/"
+@rendermode InteractiveServer
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+@* logo *@
+<nav class="navbar">
+    <img class="=logo-link" src="@LogoPath" alt="Logo" style="width: 150px; height: 100px;" />
+    <button @onclick="NavigatetoSignUp" class="sign-up">Sign Up</button>
+    <button @onclick="NavigateToSignIn" class="log-in">Log In</button>
+    <button @onclick="NavigateToMyGarden" class="my-garden">MY GARDEN</button>
+    <button @onclick="NavigateToStudySets"class="my-study-sets">MY STUDY SETS</button>
+    <button @onclick="NavigateToCreatNew" class="create-new">CREATE NEW</button>
+</nav>
 
-Welcome to your new app.
+@* Garden Button *@
+<div class="content">
+    <button @onclick="GoToGarden" class="garden-button">CREATE A UNIQUE GARDEN</button>
+</div>
+
+<div class="content">
+    <button @onclick="GoToFlashcard" class="flashcard-button">CREATE FLASHCARDS</button>
+</div>
+
+<style>
+    :host{
+    display: block;
+}
+
+:host .navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background-color: #f8f8f8;
+}
+
+:host .logo-link{
+    text-decoration: none;
+}
+
+:host .logo-link {
+    height: 10;
+    width: 10px;
+}
+
+:host .nav-buttons {
+    display:flex;
+    gap: 10px;
+}
+
+:host .nav-button { 
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+:host .nav-button:hover {
+    background-color: #0056b3;
+}
+
+.sign-up {
+        color: var(--Text-Neutral-Default, #303030);
+        font-size: 22px;
+        font-family: Inter;
+        font-weight: 700;
+        line-height: 22px;
+        word-wrap: break-word;
+        background-color: white;
+        border-color: #303030;
+    }
+
+/* Log in */
+    .log-in {
+        color: var(--Text-Brand-On-Brand, #F5F5F5);
+        font-size: 21px;
+        font-family: Inter;
+        font-weight: 700;
+        line-height: 21px;
+        word-wrap: break-word;
+        background-color: #007BFF;
+        border-color: #007BFF;
+    }
+
+/* MY GARDEN */
+    .my-garden {
+        color: var(--Text-Positive-Secondary, #009951);
+        font-size: 26px;
+        font-family: Inter;
+        font-weight: 700;
+        line-height: 26px;
+        word-wrap: break-word;
+        background-color: white;
+        border-color: #009951;
+    }
+
+/* MY STUDY SETS */
+    .my-study-sets {
+        color: var(--Text-Positive-Secondary, #009951);
+        font-size: 26px;
+        font-family: Inter;
+        font-weight: 700;
+        line-height: 26px;
+        word-wrap: break-word;
+        background-color: white;
+        border-color: #009951;
+    }
+
+.navbar button {
+    border: 2px solid transparent;
+    border-radius: 4px;
+    padding: 10px 15px;
+    font-family: Inter, sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.navbar button:hover {
+    background-color: #e6e6e6;
+    transform: scale(1.05);
+}
+
+.logo-link{
+    width: 50px;
+    height: 50px;
+}
+
+</style>
+
+@* Background image *@
+<img style="width: 1500px; height: 504px" src="GrowingSprouts.jpeg" />
+
+@* Grow with study sprout text*@
+<h1 style="
+    color: #FFF;
+    text-align: center;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: #000;
+    font-family: Arial, sans-serif;
+    font-size: 62px;
+    font-style: normal;
+    font-weight: bold;
+    line-height: 120%; 
+    letter-spacing: -1.86px;">
+    GROW WITH STUDY SPROUT
+</h1>
+
+@*SPACED REPETITION ICON*@
+<div data-size="48" style="width: 69px; height: 69px; position: relative; overflow: hidden">
+  <div style="width: 51.75px; height: 63.25px; left: 8.62px; top: 2.88px; position: absolute; outline: 4px var(--Icon-Default-Default, #1E1E1E) solid; outline-offset: -2px"></div>
+</div>
+
+@*
+.custom-button {
+    width: 275px;
+    height: 71px;
+    padding: 12px;
+    background: var(--Background-Positive-Hover, #009951);
+    border-radius: 8px;
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    text-transform: uppercase;
+    border: 1px solid var(--Border-Positive-Secondary, #009951);
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+*@
+
+@*SPACED REPETITION BUTTON*@
+<CustomButton Text="SPACED REPETITION" />
+
+
+@*Texts*@
+
+<div class="text-container">
+    <div class="spaced-repetition">
+        <div class="title-box">
+            SPACED REPETITION
+        </div>
+        <div class="description">
+            Study Efficiently! Spaced repetition for better recall over time.
+        </div>
+    </div>
+
+    <div class="garden-title">
+        Unique Gardens
+    </div>
+    <div class="description">
+        Nurture knowledge, watch your own garden thrive!
+    </div>
+
+    <div class="free-text">
+        TOTALLY FREE
+    </div>
+    <div class="description">
+        No cost, no catch, just smarter studying with Study Sprout!
+    </div>
+</div>
+
+<div class="divider-container">
+    <img src="/VineDivider.png" alt="Vine Divider" class="vine-divider"  style="width: 1600px; height: 100px;" />
+</div>
+
+
+
+@code {
+    @inject NavigationManager Navigation;
+    private string LogoPath = "/StudySprout.png"; // Path to your logo
+    @inject NavigationManager Navigation 
+    private void GoToGarden()
+    {
+        // Add navigation logic here
+        Console.WriteLine("Garden button clicked!");
+    }
+
+    private void GoToFlashcard()
+    {
+        // Add navigation logic here
+        Console.WriteLine("Flashcard button clicked!");
+    }
+
+     private void NavigatetoSignUp()
+    {
+        Console.WriteLine("Navigating to sign up...");
+        Navigation.NavigateTo("/signup", forceLoad: true);
+    }
+    private void NavigateToSignIn()
+    {
+        Console.WriteLine("Navigating to sign in...");
+        Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+    private void NavigateToMyGarden()
+    {
+        Console.WriteLine("Navigating to my garden...");
+        Navigation.NavigateTo("/mygarden", forceLoad: true);
+    }
+    private void NavigateToStudySets()
+    {
+        Console.WriteLine("Navigating to my study sets...");
+        Navigation.NavigateTo("/mystudysets", forceLoad: true);
+    }
+    private void NavigateToCreatNew()
+    {
+        Console.WriteLine("Navigating to create new...");
+        Navigation.NavigateTo("/createnew", forceLoad: true);
+    }
+
+}

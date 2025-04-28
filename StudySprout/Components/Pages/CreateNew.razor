@@ -1,0 +1,345 @@
+@using Google.Cloud.Firestore;
+@using StudySprout.Models
+
+@page "/CreateNew"
+@attribute [StreamRendering]
+
+<PageTitle>CREATE NEW</PageTitle>
+
+<style>
+    body, html {
+        margin: 0;
+        padding: 0;
+        font-family: 'Arial', sans-serif;
+        box-sizing: border-box;
+    }
+
+    * {
+        box-sizing: inherit;
+    }
+
+    body {
+        background-color: #f4f7fa;
+        color: #333;
+        line-height: 1.6;
+        font-size: 16px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    main {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        flex-grow: 1;
+    }
+
+    h1, h2, h3 {
+        text-align: center;
+        color: #2a9d8f;
+        margin-top: 20px;
+    }
+
+    h1 {
+        font-size: 2.5rem;
+        margin-bottom: 10px;
+    }
+
+    p {
+        text-align: center;
+        color: #555;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
+    }
+
+    form {
+        max-width: 600px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    label {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 5px;
+        display: block;
+    }
+
+    input[type="text"], input[type="date"], textarea, select {
+        width: 100%;
+        padding: 12px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        font-size: 1rem;
+    }
+
+    input:focus, textarea:focus, select:focus {
+        border-color: #2a9d8f;
+        outline: none;
+    }
+
+    button.btn {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background-color: #2a9d8f;
+        color: white;
+        font-size: 1rem;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+    }
+
+    button.btn:hover {
+        background-color: #1f7a68;
+    }
+
+    .alert {
+        padding: 12px;
+        border-radius: 5px;
+        margin-top: 10px;
+        text-align: center;
+        font-size: 1rem;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    ul li {
+        background: #fff;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #2a9d8f;
+    }
+
+    ul li p {
+        margin: 5px 0 0;
+        color: #555;
+        font-size: 1rem;
+    }
+
+    footer {
+        background-color: #2a9d8f;
+        color: white;
+        padding: 15px 0;
+        text-align: center;
+    }
+
+    footer a {
+        color: white;
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+
+<h1>CREATE A NEW STUDY SET.</h1>
+
+<p>READY, SET, STUDY!</p>
+
+<form>
+    <div>
+        <label for="setTitle">SET TITLE</label>
+        <input type="text" id="setTitle" @bind="setTitle" />
+        @if (string.IsNullOrEmpty(setTitle))
+        {
+            <p class="alert alert-danger">Set Title is required.</p>
+        }
+    </div>
+
+    <div>
+        <label for="description">DESCRIPTION</label>
+        <input type="text" id="description" @bind="description" />
+        @if (string.IsNullOrEmpty(description))
+        {
+            <p class="alert alert-danger">Description is required.</p>
+        }
+    </div>
+
+    <div>
+        <button type="button" class="btn btn-primary" @onclick="async () => await CreateStudySet()">CREATE</button>
+    </div>
+</form>
+
+
+@if (isSuccess)
+{
+    <p class="alert alert-success">Study set created successfully!</p>
+}
+
+@if (isError)
+{
+    <p class="alert alert-danger">@errorMessage</p>
+}
+
+<h2>My Study Sets</h2>
+@if (sets != null && sets.Count > 0)
+{
+    <ul>
+        @foreach (var set in sets)
+        {
+            <li>
+                <h3>@set.Title</h3>
+                <p>@set.Description</p>
+                @*<p>LEARN BY: @set.DueDate.ToShortDateString()</p>*@
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <p>No study sets available. Create your first study set!</p>
+}
+
+@code
+{
+    public string setTitle { get; set; }
+    public string description { get; set; }
+    //public DateTime dueDate { get; set; }
+    public bool isSuccess { get; set; }
+    public bool isError { get; set; }
+    public string errorMessage { get; set; }
+
+    private FirestoreDb MyStudySets;
+
+    public List<StudySet> sets { get; set; } = new List<StudySet>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("📌 Initializing Firestore");
+        try
+        {
+            MyStudySets = FirestoreDb.Create("studysprout-67ec9");
+            await LoadStudySets();
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+            errorMessage = $"Error initializing Firestore: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+    }
+     private async Task CreateStudySet()
+    {
+        Console.WriteLine("✅ Form submitted");
+        Console.WriteLine($"📌 Input Data - Title: {setTitle}, Description: {description}");
+
+        // Reset success and error states
+        isSuccess = false;
+        isError = false;
+        errorMessage = string.Empty;
+
+        // Validate the input fields
+        if (string.IsNullOrEmpty(setTitle) || string.IsNullOrEmpty(description))
+        {
+            Console.WriteLine("❌ Validation failed: Missing required fields.");
+            isError = true;
+            errorMessage = "Please fill out all fields correctly!";
+            return;
+        }
+
+        try
+        {
+            Console.WriteLine("🚀 Connecting to Firestore");
+            CollectionReference studySetsCollection = MyStudySets.Collection("StudySets");
+
+            // Create a new document in the "StudySets" collection
+            await studySetsCollection.AddAsync(new StudySet
+            {
+                Title = setTitle,
+                Description = description
+            });
+
+            Console.WriteLine("🚀 Study set successfully saved!");
+            isSuccess = true;
+
+            // Reload the study sets to reflect the new data
+            await ReloadStudySets();
+
+            // Clear the input fields
+            ClearInputs();
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine($"❌ Firestore save error: {e.Message}");
+            isError = true;
+            errorMessage = $"❌ Firestore save error: {e.Message}";
+        }
+    }
+    private async Task LoadStudySets()
+    {
+        try
+        {
+            Console.WriteLine("📌 Loading study sets from Firestore...");
+            CollectionReference studySetsCollection = MyStudySets.Collection("StudySets");
+            QuerySnapshot snapshot = await studySetsCollection.GetSnapshotAsync();
+
+            sets.Clear();
+
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (document.Exists)
+                {
+                    Console.WriteLine($"Document ID: {document.Id}");
+                    foreach (var field in document.ToDictionary())
+                    {
+                        
+                        Console.WriteLine($"{field.Key}: {field.Value}");
+                    }
+                    var data = document.ConvertTo<StudySet>();
+                    sets.Add(data);
+                }
+            }
+        Console.WriteLine("✅ Study sets loaded successfully.");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"❌ Error loading study sets: {ex.Message}");
+            isError = true;
+            errorMessage = $"An error occurred while loading study sets: {ex.Message}";
+        }
+    }
+    private async Task ReloadStudySets()
+    {
+        await LoadStudySets();
+       //StateHasChanged();
+    }
+
+    // Method to clear the input fields
+    private void ClearInputs()
+    {
+        setTitle = string.Empty;
+        description = string.Empty;
+        //dueDate = default;
+    }
+}

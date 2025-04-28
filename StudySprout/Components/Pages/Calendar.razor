@@ -3,7 +3,12 @@
 @inject StudyCalendarEdit CalendarService
 
 <h1>🌱 Study Sprout Calendar</h1>
-<h3>April 2025</h3>
+<div class="header">
+    <button @onclick="PreviousMonth">‹</button>
+    <h2>@GetMonthName(currentMonth) @currentYear</h2>
+    <button @onclick="NextMonth">›</button>
+</div>
+
 
 <div class="calendar">
     <div class="day-labels">
@@ -24,7 +29,8 @@
                 <strong>@day</strong>
                 @foreach (var ev in events)
                 {
-                    <div class="event">@ev.Title</div>
+                    <div class="event @ev.Category.ToLower()">@ev.Title</div>
+
                 }
             </div>
         }
@@ -32,6 +38,35 @@
 </div>
 
 @code {
+    private int currentMonth = 4; // April
+    private int currentYear = 2025;
+
+    private void PreviousMonth()
+{
+    currentMonth--;
+    if (currentMonth < 1)
+    {
+        currentMonth = 12;
+        currentYear--;
+    }
+}
+
+private void NextMonth()
+{
+    currentMonth++;
+    if (currentMonth > 12)
+    {
+        currentMonth = 1;
+        currentYear++;
+    }
+}
+
+private string GetMonthName(int month)
+{
+    return new DateTime(currentYear, month, 1).ToString("MMMM");
+}
+
+
     protected override void OnInitialized()
     {
         if (!CalendarService.GetAllTimes().Any())

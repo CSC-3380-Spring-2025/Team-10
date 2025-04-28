@@ -7,7 +7,7 @@
 }*/
 
 .leaderboard-page {
-  background-color: rgb(255, 255, 255);
+  background-color: rgba(255, 255, 255, 0.707);
   min-height: 100vh; 
   margin-top: 15px;
   padding: 0;
@@ -90,3 +90,6 @@
 	height: auto; 
   margin-bottom: 10px;
   }
+  
+  
+  

@@ -1,15 +1,19 @@
 using Google.Cloud.Firestore;
+using Microsoft.VisualBasic;
 
 namespace StudySprout.Models
 {
     [FirestoreData]
     public class StudySet
     {
-        [FirestoreProperty("Title")]
-        public string Title { get; set; }
+        [FirestoreProperty("TITLE")]
+        public string TITLE { get; set; }
 
-        [FirestoreProperty("Description")]
-        public string Description { get; set; }
+        [FirestoreProperty("DESCRIPTION")]
+        public string DESCRIPTION { get; set; }
+
+        [FirestoreProperty("LEARN BY")]
+        public DateTime LEARNBY { get; set; }
 
         public StudySet() { }
     }

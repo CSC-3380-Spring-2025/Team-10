@@ -30,43 +30,50 @@
     <img class="slink-icon" src="/Slink.png" alt="Slink Icon" />
 </div>
 
-@if (sets == null || sets.Count == 0)
+@if (isLoading)
 {
-    if (!isError)
-    {
-        <p>Loading study sets...</p>
-    }
-    else
-    {
-        <p class="alert alert-danger">@errorMessage</p>
-    }
+    <p>Loading study sets...</p>
+}
+else if (isError)
+{
+    <p class="alert alert-danger">@errorMessage</p>
+}
+else if (sets == null || sets.Count == 0)
+{
+    <p>No study sets found. Create a new set to get started!</p>
 }
 else
 {
-    <Virtualize ItemsProvider="LoadVirtualizedStudySets" Context="set">
-        <div class="study-set">
-            <h3>@set.TITLE</h3>
-            <p>@set.DESCRIPTION</p>
-            <div class="buttons">
-                <a class="btn btn-learn" href="#">LEARN BY @set.LEARNBY.ToString("MMMM d, yyyy")</a>
-                <a class="btn btn-days" href="#">DAYS REMAINING: @(DateTime.Now - @set.LEARNBY).Days</a>
+    <div class="study-sets-container">
+        @foreach (var set in sets)
+        {
+            <div class="study-set">
+                <h3>@set.TITLE</h3>
+                <p>@set.DESCRIPTION</p>
+                <div class="buttons">
+                    <a class="btn btn-learn" href="#">LEARN BY @set.LEARNBY.ToString("MMMM d, yyyy")</a>
+                    <a class="btn btn-days" href="#">
+                        DAYS REMAINING: @Math.Max(0, (set.LEARNBY - DateTime.Now).Days)
+                    </a>
+                </div>
             </div>
-        </div>
-    </Virtualize>
+        }
+    </div>
 }
 
 @code
 {
     private FirestoreDb StudySproutDB;
     public List<StudySet> sets { get; set; } = new List<StudySet>();
+    public bool isLoading { get; set; } = true;
     public bool isError { get; set; }
     public string errorMessage { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Initializing Firestore");
         try
         {
+            Console.WriteLine("Initializing Firestore");
             StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
             await LoadStudySets();
         }
@@ -76,7 +83,10 @@ else
             errorMessage = $"Error initializing Firestore: {ex.Message}";
             Console.WriteLine(errorMessage);
         }
-        StateHasChanged();
+        finally
+        {
+            isLoading = false;
+        }
     }
 
     private async Task LoadStudySets()
@@ -94,10 +104,6 @@ else
                 if (document.Exists)
                 {
                     Console.WriteLine($"Document ID: {document.Id}");
-                    foreach (var field in document.ToDictionary())
-                    {
-                        Console.WriteLine($"{field.Key}: {field.Value}");
-                    }
                     var data = document.ConvertTo<StudySet>();
                     sets.Add(data);
                     Console.WriteLine($"Added to sets: TITLE={data.TITLE}, DESCRIPTION={data.DESCRIPTION}, LEARNBY={data.LEARNBY}");
@@ -112,32 +118,11 @@ else
             isError = true;
             errorMessage = $"An error occurred while loading study sets: {ex.Message}";
         }
-        StateHasChanged();
     }
 
     public void GoToLogIn()
     {
         Console.WriteLine("Go to LogIn/SignIn...");
         Navigation.NavigateTo("/signin", forceLoad: true);
-    }
-
-    private async ValueTask<ItemsProviderResult<StudySet>> LoadVirtualizedStudySets(ItemsProviderRequest request)
-    {
-        try
-        {
-            var pageSize = request.Count;
-            var startIndex = request.StartIndex;
-
-            var paginatedSets = sets.Skip(startIndex).Take(pageSize).ToList();
-
-            return new ItemsProviderResult<StudySet>(paginatedSets, sets.Count);
-        }
-        catch (Exception ex)
-        {
-            Console.WriteLine($"Error loading virtualized study sets: {ex.Message}");
-            isError = true;
-            errorMessage = $"An error occurred while loading study sets: {ex.Message}";
-            return new ItemsProviderResult<StudySet>(new List<StudySet>(), 0);
-        }
     }
 }

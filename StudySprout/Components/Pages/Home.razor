@@ -4,27 +4,49 @@
 
 <PageTitle>Home</PageTitle>
 
-@* logo *@
-<nav class="navbar">
-    <img class="=logo-link" src="@LogoPath" alt="Logo" style="width: 150px; height: 100px;" />
-    <button @onclick="NavigatetoSignUp" class="sign-up">Sign Up</button>
+@* logo
+<nav class="navbar1">
+    <img class="=logo-link" src="@LogoPath" alt="Logo" style="width: 50px; height: 40px;" />
+    @*<button @onclick="NavigatetoSignUp" class="sign-up">Sign Up</button>
     <button @onclick="NavigateToSignIn" class="log-in">Log In</button>
     <button @onclick="NavigateToMyGarden" class="my-garden">MY GARDEN</button>
     <button @onclick="NavigateToStudySets"class="my-study-sets">MY STUDY SETS</button>
-    <button @onclick="NavigateToCreatNew" class="create-new">CREATE NEW</button>
-</nav>
+    <button @onclick="NavigateToCreatNew" class="create-new">CREATE NEW</button> !!
 
-@* Garden Button *@
+    <NavLink class="nav-button1" href="/signup">Sign Up</NavLink>
+    <NavLink class="nav-button1" href="/signin">Log In</NavLink>
+    <NavLink class="nav-button2" href="/MyGarden">MY GARDEN</NavLink>
+    <NavLink class="nav-button2" href="/MyStudySets">MY STUDY SETS</NavLink>
+    <NavLink class="nav-button2" href="/CreateNew">CREATE NEW</NavLink>
+</nav>*@
+
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
+        <nav>
+            @*<a href="/MyGarden">MY GARDEN</a>*@
+            <a href="/MyStudySets">MY STUDY SETS</a>
+            <a href="/CreateNew"class="active">CREATE NEW SET</a>
+        </nav>
+    </div>
+
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
+
+@* Garden Button
 <div class="content">
     <button @onclick="GoToGarden" class="garden-button">CREATE A UNIQUE GARDEN</button>
-</div>
+</div>*@
 
 <div class="content">
-    <button @onclick="GoToFlashcard" class="flashcard-button">CREATE FLASHCARDS</button>
+    <button @onclick="GoToFlashcard" class="nav-button3">VIEW FLASHCARDS</button>
 </div>
 
 <style>
-    :host{
+/*    :host{
     display: block;
 }
 
@@ -41,7 +63,7 @@
 }
 
 :host .logo-link {
-    height: 10;
+    height: 10px;
     width: 10px;
 }
 
@@ -74,7 +96,7 @@
         border-color: #303030;
     }
 
-/* Log in */
+/* Log in
     .log-in {
         color: var(--Text-Brand-On-Brand, #F5F5F5);
         font-size: 21px;
@@ -86,7 +108,7 @@
         border-color: #007BFF;
     }
 
-/* MY GARDEN */
+/* MY GARDEN
     .my-garden {
         color: var(--Text-Positive-Secondary, #009951);
         font-size: 26px;
@@ -98,7 +120,7 @@
         border-color: #009951;
     }
 
-/* MY STUDY SETS */
+/* MY STUDY SETS
     .my-study-sets {
         color: var(--Text-Positive-Secondary, #009951);
         font-size: 26px;
@@ -123,22 +145,147 @@
 .navbar button:hover {
     background-color: #e6e6e6;
     transform: scale(1.05);
+}*/
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #ffffff;
+        width: 160%;
+        margin-left: 21px;
+        margin-top: -16px;
+        box-sizing: border-box;
+    }
+
+    img {
+        margin-top: 15px;
+        margin-left: -19px;
+        max-width: 100%;
+        height: auto;
+    }
+
+    header nav {
+        margin-left: -72px;
+        display: flex;
+        gap: -30px;
+    }
+
+    header nav a {
+        margin-left: 50px;
+        text-decoration: none;
+        color: #4e7429;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    header nav a:hover {
+        text-decoration: underline;
+    }
+
+    h1 {
+        text-align: center;
+        color: #000000;
+        font-size: 4rem;
+        margin-top: -15px;
+        text-shadow: 3px 5px 10px #ffffff;
+        font-weight: bold;
+        margin-left: 100px;
+    }
+    
+    h4 {
+        text-align: center;
+        color: #851212;
+        text-shadow: 2px 2px 5px #ffffff;
+        margin-top: 10px;
+        font-weight: bold;
+        font-size: 30px;
+    }
+
+    .logo img {
+        height: 50px;
+        width: 45px;
+    }
+
+    .slink-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        height: 80px;
+        width: 135px;
+    }
+
+    .auth-links a {
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 1rem;
+        color: #4e7429;
+        padding: 5px 15px;
+        border: 1px solid #4e7429;
+        border-radius: 5px;
+    }
+
+    .auth-links a:hover {
+        background-color: #4e7429;
+        color: white;
+    }
+
+.nav-button1 {
+    display: inline-block;
+    padding: 5px 20px;
+    background-color: #d0d0d0;
+    color: rgb(0, 0, 0);
+    text-align: center;
+    text-decoration: none;
+    border: #000;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.nav-button2 {
+    display: inline-block;
+    padding: 5px 20px;
+    background-color: #218b3c;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.nav-button3 {
+    display: inline-block;
+    padding: 10px 25px;
+    background-color: #000000;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-bottom: 10px;
+    margin-top: -10px;
 }
 
 .logo-link{
-    width: 50px;
-    height: 50px;
+    width: 20px;
+    height: 20px;
 }
 
 </style>
 
 @* Background image *@
-<img style="width: 1500px; height: 504px" src="GrowingSprouts.jpeg" />
+<img style="width: 1220px; height: 430px" src="GrowingSprouts.jpeg" />
 
 @* Grow with study sprout text*@
 <h1 style="
     color: #FFF;
-    text-align: center;
+    text-align: left;
     -webkit-text-stroke-width: 1px;
     -webkit-text-stroke-color: #000;
     font-family: Arial, sans-serif;
@@ -146,9 +293,12 @@
     font-style: normal;
     font-weight: bold;
     line-height: 120%; 
-    letter-spacing: -1.86px;">
+    letter-spacing: -1.86px;
+    margin-top: 10px;
+    margin-left: 140px;">
     GROW WITH STUDY SPROUT
 </h1>
+
 
 @*SPACED REPETITION ICON*@
 <div data-size="48" style="width: 69px; height: 69px; position: relative; overflow: hidden">
@@ -174,8 +324,8 @@
 }
 *@
 
-@*SPACED REPETITION BUTTON*@
-<CustomButton Text="SPACED REPETITION" />
+@*SPACED REPETITION BUTTON
+<CustomButton Text="SPACED REPETITION" />*@
 
 
 @*Texts*@
@@ -206,25 +356,25 @@
 </div>
 
 <div class="divider-container">
-    <img src="/VineDivider.png" alt="Vine Divider" class="vine-divider"  style="width: 1600px; height: 100px;" />
+    <img src="/VineDivider.png" alt="Vine Divider" class="vine-divider"  style="width: 1220px; height: 100px;" />
 </div>
 
 
 
 @code {
     @inject NavigationManager Navigation;
-    private string LogoPath = "/StudySprout.png"; // Path to your logo
+    private string LogoPath = "/favicon.png"; // Path to your logo
     @inject NavigationManager Navigation 
     private void GoToGarden()
     {
-        // Add navigation logic here
         Console.WriteLine("Garden button clicked!");
+        Navigation.NavigateTo("/MyGarden", forceLoad: true);
     }
 
     private void GoToFlashcard()
     {
-        // Add navigation logic here
         Console.WriteLine("Flashcard button clicked!");
+        Navigation.NavigateTo("/flashcard", forceLoad: true);
     }
 
      private void NavigatetoSignUp()
@@ -251,6 +401,12 @@
     {
         Console.WriteLine("Navigating to create new...");
         Navigation.NavigateTo("/createnew", forceLoad: true);
+    }
+
+    public void GoToLogIn()
+    {
+        Console.WriteLine("Go to LogIn/SignIn...");
+        Navigation.NavigateTo("/signin", forceLoad: true);
     }
 
 }

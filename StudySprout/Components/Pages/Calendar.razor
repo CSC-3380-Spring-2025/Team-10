@@ -66,11 +66,5 @@ private string GetMonthName(int month)
 }
 
 
-    protected override void OnInitialized()
-    {
-        if (!CalendarService.GetAllTimes().Any())
-        {
-            CalendarService.AddSampleData();
-        }
-    }
+    
 }

@@ -7,15 +7,15 @@
 }
 
 .header button {
-    background-color: #7bc27d;
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    background-color: #88c38f;
     color: white;
     border: none;
-    padding: 8px 12px;
-    border-radius: 8px;
-    font-size: 1.2rem;
     cursor: pointer;
-    transition: background-color 0.3s;
-}
+  }
+  
 
 .header h2 {
     margin: 0;
@@ -42,7 +42,7 @@
     min-height: 100px;
     padding: 5px;
     position: relative;
-    background-color: #d9f0cd;
+    background-color: #eaf6e4;
     border-radius: 10px;
 }
 
@@ -76,5 +76,65 @@
 .event.social {
     background-color: #b5d8ff;
 }
+
+.add-event-btn {
+    margin: 12px 0;
+    padding: 6px 12px;
+    background-color: #6dbf7e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.event-form {
+    margin: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.event-form input {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+.add-event-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 12px 0;
+}
+
+.add-event-btn {
+    padding: 6px 12px;
+    background-color: #6dbf7e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* Dropdown-style form */
+.event-dropdown {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    z-index: 10;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    width: 250px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-dropdown input {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
 
   

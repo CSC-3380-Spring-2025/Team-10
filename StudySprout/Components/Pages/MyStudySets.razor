@@ -3,8 +3,8 @@
 @using Microsoft.AspNetCore.Components.Web.Virtualization
 
 @page "/MyStudySets"
-@attribute [StreamRendering]
 @inject NavigationManager Navigation
+@implements IDisposable
 
 <PageTitle>MY STUDY SETS</PageTitle>
 
@@ -12,7 +12,6 @@
     <div class="logo">
         <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
         <nav>
-            @*<a href="/MyGarden">MY GARDEN</a>*@
             <a href="/MyStudySets" class="active">MY STUDY SETS</a>
             <a href="/CreateNew">CREATE NEW SET</a>
         </nav>
@@ -30,7 +29,8 @@
     <img class="slink-icon" src="/Slink.png" alt="Slink Icon" />
 </div>
 
-@if (isLoading)
+
+@if (!dataLoaded)
 {
     <p>Loading study sets...</p>
 }
@@ -45,31 +45,43 @@ else if (sets == null || sets.Count == 0)
 else
 {
     <div class="study-sets-container">
-        @foreach (var set in sets)
-        {
-            <div class="study-set">
-                <h3>@set.TITLE</h3>
-                <p>@set.DESCRIPTION</p>
-                <div class="buttons">
-                    <a class="btn btn-learn" href="#">LEARN BY @set.LEARNBY.ToString("MMMM d, yyyy")</a>
-                    <a class="btn btn-days" href="#">
-                        DAYS REMAINING: @Math.Max(0, (set.LEARNBY - DateTime.Now).Days)
-                    </a>
+        @* First, show the data directly as a fallback *@
+        <div class="study-sets-direct">
+            @foreach (var set in sets)
+            {
+                <div class="study-set">
+                    <h3>@set.TITLE</h3>
+                    <p>@set.DESCRIPTION</p>
+                    <p>Learn by: @set.LEARNBY.ToString("MMMM d, yyyy")</p>
                 </div>
-            </div>
-        }
+            }
+        </div>
     </div>
 }
 
-@code
-{
+@code {
     private FirestoreDb StudySproutDB;
-    public List<StudySet> sets { get; set; } = new List<StudySet>();
-    public bool isLoading { get; set; } = true;
-    public bool isError { get; set; }
-    public string errorMessage { get; set; }
+    private List<StudySet> sets = new List<StudySet>();
+    private bool isError = false;
+    private bool dataLoaded = false;
+    private string errorMessage = string.Empty;
+    private System.Threading.Timer _timer;
 
     protected override async Task OnInitializedAsync()
+    {
+        // Start a timer to periodically refresh the UI
+        _timer = new System.Threading.Timer(
+            async _ => await InvokeAsync(StateHasChanged),
+            null,
+            TimeSpan.Zero,
+            TimeSpan.FromSeconds(1)
+        );
+
+        // Direct async call instead of Task.Run
+        await InitializeFirestore();
+    }
+
+    private async Task InitializeFirestore()
     {
         try
         {
@@ -85,19 +97,21 @@ else
         }
         finally
         {
-            isLoading = false;
+            dataLoaded = true;
+            // Make sure this executes on the UI thread
+            await InvokeAsync(StateHasChanged);
         }
     }
 
-    private async Task LoadStudySets()
-    {
+   private async Task LoadStudySets()
+   {
         try
         {
             Console.WriteLine("Loading study sets from Firestore...");
             CollectionReference studySetsCollection = StudySproutDB.Collection("MyStudySetsDB");
             QuerySnapshot snapshot = await studySetsCollection.GetSnapshotAsync();
 
-            sets.Clear();
+            var tempSets = new List<StudySet>();
 
             foreach (DocumentSnapshot document in snapshot.Documents)
             {
@@ -105,24 +119,41 @@ else
                 {
                     Console.WriteLine($"Document ID: {document.Id}");
                     var data = document.ConvertTo<StudySet>();
-                    sets.Add(data);
-                    Console.WriteLine($"Added to sets: TITLE={data.TITLE}, DESCRIPTION={data.DESCRIPTION}, LEARNBY={data.LEARNBY}");
+                    tempSets.Add(data);
+                    Console.WriteLine($"Added: TITLE={data.TITLE}");
                 }
             }
+
+            sets = tempSets;
             Console.WriteLine($"Total sets: {sets.Count}");
-            Console.WriteLine("Study sets loaded successfully.");
+            
+            // Make sure dataLoaded is set to true
+            dataLoaded = true;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading study sets: {ex.Message}");
             isError = true;
-            errorMessage = $"An error occurred while loading study sets: {ex.Message}";
+            errorMessage = $"Error loading study sets: {ex.Message}";
+            Console.WriteLine(errorMessage);
         }
     }
 
-    public void GoToLogIn()
+    // This is an alternative approach if the Virtualize with Items doesn't work
+    private async ValueTask<ItemsProviderResult<StudySet>> LoadVirtualizedStudySets(ItemsProviderRequest request)
     {
-        Console.WriteLine("Go to LogIn/SignIn...");
-        Navigation.NavigateTo("/signin", forceLoad: true);
+        Console.WriteLine($"Virtualization Request: StartIndex={request.StartIndex}, Count={request.Count}");
+
+        var pageSize = request.Count;
+        var startIndex = request.StartIndex;
+
+        var paginatedSets = sets.Skip(startIndex).Take(pageSize).ToList();
+        Console.WriteLine($"Returning {paginatedSets.Count} items out of {sets.Count} total items.");
+
+        return new ItemsProviderResult<StudySet>(paginatedSets, sets.Count);
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
     }
 }

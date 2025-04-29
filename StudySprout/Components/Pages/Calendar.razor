@@ -2,35 +2,44 @@
 @using StudySprout.DatabaseData
 @inject StudyCalendarEdit CalendarService
 
-<h1>🌱Calendar</h1>
-<div class="header">
-    <button @onclick="PreviousMonth">‹</button>
-    <h2>@GetMonthName(currentMonth) @currentYear</h2>
-    <button @onclick="NextMonth">›</button>
-</div>
-
-
+<h1>Study Calendar</h1>
 
 <div class="calendar">
+
+    <div class="header">
+        <button @onclick="PreviousMonth">‹</button>
+        <h2>@GetMonthName(currentMonth) @currentYear</h2>
+        <button @onclick="NextMonth">›</button>
+    </div>
+
     <div class="day-labels">
-        <div>Sun</div><div>Mon</div><div>Tue</div>
-        <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
     </div>
 
     <div class="days">
-        <div class="day blank"></div>
-        <div class="day blank"></div>
-
-        @foreach (var day in Enumerable.Range(1, 31))
+        @for (int i = 0; i < FirstDayOfWeek; i++)
         {
-            var date = new DateTime(2021, 3, day);
-            var events = CalendarService.GetAllTimes().Where(e => e.StartDate.Date == date.Date).ToList();
+            <div class="day blank"></div>
+        }
+
+        @foreach (var day in Enumerable.Range(1, DaysInMonth))
+        {
+            var date = new DateTime(currentYear, currentMonth, day);
+            var events = CalendarService.GetAllTimes()
+                .Where(e => e.StartDate.Date == date.Date)
+                .ToList();
 
             <div class="day">
                 <strong>@day</strong>
                 @foreach (var ev in events)
                 {
-                    <div class="event">@ev.Title</div>
+                    <div class="event @ev.Category.ToLower()">@ev.Title</div>
                 }
             </div>
         }
@@ -38,8 +47,11 @@
 </div>
 
 @code {
-    private int currentMonth = 4; // starting at April
+    private int currentMonth = 4; // April
     private int currentYear = 2025;
+
+    private int DaysInMonth => DateTime.DaysInMonth(currentYear, currentMonth);
+    private int FirstDayOfWeek => (int)new DateTime(currentYear, currentMonth, 1).DayOfWeek;
 
     private void PreviousMonth()
     {
@@ -49,17 +61,23 @@
             currentMonth = 12;
             currentYear--;
         }
+
+        StateHasChanged();
     }
 
-    private void NextMonth()
+   private void NextMonth()
+{
+    Console.WriteLine("NextMonth clicked!");
+    currentMonth++;
+    if (currentMonth > 12)
     {
-        currentMonth++;
-        if (currentMonth > 12)
-        {
-            currentMonth = 1;
-            currentYear++;
-        }
+        currentMonth = 1;
+        currentYear++;
     }
+
+    StateHasChanged();
+}
+
 
     private string GetMonthName(int month)
     {
@@ -74,3 +92,5 @@
         }
     }
 }
+
+

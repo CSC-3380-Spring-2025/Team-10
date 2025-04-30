@@ -1,3 +1,9 @@
+@using Google.Cloud.Firestore;
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+@inject user1 user1
+
 @page "/signup"
 
 <PageTitle>Sign Up</PageTitle>
@@ -13,10 +19,10 @@
     <div class="signup-right">
         <div class="signup-container">
             <h1>Sign Up</h1>
-            <form>
+            <form @onsubmit="HandleSubmit">
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type="text" id="name" @bind="Name" class="form-control" placeholder="Enter your name" />
+                    <input type="text" id="name" @bind="FullName" class="form-control" placeholder="Enter your name" />
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
@@ -30,8 +36,20 @@
                     <label for="confirm-password">Confirm Password:</label>
                     <input type="password" id="confirm-password" @bind="ConfirmPassword" class="form-control" placeholder="Confirm your password" />
                 </div>
-                <button type="button" @onclick="HandleSignUp" class="btn btn-primary">Sign Up</button>
+                <button type="submit" disabled="@isLoading">Sign Up</button>
+                @if (isLoading)
+                {
+                    <span>Creating account...</span>
+                }
+                @if (!string.IsNullOrEmpty(StatusMessage))
+                {
+                    <p>@StatusMessage</p>
+                }
             </form>
+            @if (!string.IsNullOrEmpty(ErrorMessage))
+            {
+                <p class="errorMessage">@ErrorMessage</p>
+            }
             <p class="signin-link">
                 Already have an account? <a href="/signin">Sign In</a>
             </p>
@@ -138,10 +156,109 @@
 </style>
 
 @code {
-    private string Name { get; set; } = string.Empty;
+    private string FullName { get; set; } = string.Empty;
     private string Email { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
     private string ConfirmPassword { get; set; } = string.Empty;
+
+    private bool IsUser { get; set; } = false;
+    private string ErrorMessage { get; set; } = string.Empty;
+    private string StatusMessage { get; set; } = string.Empty;
+    private bool isLoading = false;
+
+    FirestoreDb StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+
+    private async Task HandleSubmit()
+    {
+        isLoading = true;
+        ErrorMessage = string.Empty;
+        StatusMessage = string.Empty;
+
+        // Validate inputs
+        if (string.IsNullOrEmpty(FullName) || string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))
+        {
+            ErrorMessage = "All fields are required.";
+            isLoading = false;
+            return;
+        }
+
+        if (Password != ConfirmPassword)
+        {
+            ErrorMessage = "Passwords do not match.";
+            isLoading = false;
+            return;
+        }
+
+        if (Password.Length < 9)
+        {
+            ErrorMessage = "Password must be at least 9 characters long.";
+            isLoading = false;
+            return;
+        }
+
+        // Check if email already exists
+        if (await EmailExists(Email))
+        {
+            ErrorMessage = "An account with this email already exists.";
+            isLoading = false;
+            return;
+        }
+
+        // Create new user
+        await CreateNewUser();
+        isLoading = false;
+    }
+
+    private async Task<bool> EmailExists(string email)
+    {
+        CollectionReference userCollection = StudySproutDB.Collection("UserAccount");
+        Query query = userCollection.WhereEqualTo("Email", email);
+        QuerySnapshot snapshot = await query.GetSnapshotAsync();
+        
+        return snapshot.Documents.Count > 0;
+    }
+
+    private async Task CreateNewUser()
+    {
+        try
+        {
+            CollectionReference userCollection = StudySproutDB.Collection("UserAccount");
+            
+            // Create document data
+            Dictionary<string, object> userData = new Dictionary<string, object>
+            {
+                { "FullName", FullName },
+                { "Email", Email },
+                { "Password", Password },
+                { "IsUser", IsUser },
+                { "CreatedDate", Timestamp.GetCurrentTimestamp() }
+            };
+            
+            // Add the document
+            DocumentReference docRef = await userCollection.AddAsync(userData);
+            
+            // Successfully created account
+            StatusMessage = "Account created successfully!";
+            
+            // Set user in the user1 service
+            user1.SetUser(Email, Password);
+            
+            // Navigate to appropriate page based on user type
+            await Task.Delay(1000); // Short delay to show success message
+            if (IsUser)
+            {
+                Navigation.NavigateTo("/CreateNew");
+            }
+            else
+            {
+                Navigation.NavigateTo("/MyStudySets");
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error creating account: {ex.Message}";
+        }
+    }
 
     private void HandleSignUp()
     {
@@ -152,6 +269,6 @@
         }
 
         // Add your sign-up logic here
-        Console.WriteLine($"Name: {Name}, Email: {Email}, Password: {Password}");
+        Console.WriteLine($"Name: {FullName}, Email: {Email}, Password: {Password}");
     }
 }

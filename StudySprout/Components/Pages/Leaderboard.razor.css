@@ -6,7 +6,8 @@
   width: 1000px;
 }*/
 
-.leaderboard-page {
+.leaderboard-page
+{
   background-color: rgba(255, 255, 255, 0.707);
   min-height: 100vh; 
   margin-top: 15px;
@@ -17,7 +18,8 @@
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
 
-.row {
+.row
+{
   display: flex;
   justify-content: space-between;
   padding: 8px;
@@ -25,51 +27,57 @@
 }
 
 /* Gold */
-.row:nth-child(1) {
-    background: rgb(164, 142, 12);
-    width: 1150px;
-    border: white;
-    border-radius: 20px;
-    margin-top: 7px;
+.row:nth-child(1)
+{
+  background: rgb(164, 142, 12);
+  width: 1000px;
+  border: white;
+  border-radius: 20px;
+  margin-top: 7px;
 }
 
 /* Silver */
-.row:nth-child(2) {
-    background: #a39d9d;
-    width: 1150px;
-    border: white;
-    border-radius: 20px;
-    margin-top: 7px;
+.row:nth-child(2)
+{
+  background: #a39d9d;
+  width: 1000px;
+  border: white;
+  border-radius: 20px;
+  margin-top: 7px;
 }
 
 /* Bronze */
-.row:nth-child(3) {
-    background: #905a24;
-    width: 1150px;
-    border: white;
-    border-radius: 20px;
-    margin-top: 7px;
-}
-
-/* Participation */
-.row:nth-child(4) {
-  background: #000000;
-  width: 1150px;
+.row:nth-child(3)
+{
+  background: #905a24;
+  width: 1000px;
   border: white;
   border-radius: 20px;
   margin-top: 7px;
 }
 
 /* Participation */
-.row:nth-child(5) {
+.row:nth-child(4)
+{
   background: #000000;
-  width: 1150px;
+  width: 1000px;
   border: white;
   border-radius: 20px;
   margin-top: 7px;
 }
 
-.name {
+/* Participation */
+.row:nth-child(5)
+{
+  background: #000000;
+  width: 1000px;
+  border: white;
+  border-radius: 20px;
+  margin-top: 7px;
+}
+
+.name
+{
 	position: relative;
 	display: inline-block;
 	width: 75%;
@@ -77,26 +85,29 @@
   color: #ffff;
 }
 
-.score {
+.score
+{
   font-weight: bold;
   color: #00cca7;
   text-align: left;
   font-family: Impact, Haettenschweiler, 'Arial Narrow Bold', sans-serif;
 }
-.nav-logo {
+.nav-logo
+{
 	display: block;
 	margin-left: 0; 
 	width:300px; 
 	height: auto; 
   margin-bottom: 10px;
-  }
+}
 
-  .navbar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem;
-    background-color: #f8f8f8;
+.navbar
+{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background-color: #f8f8f8;
 }
 
 header {
@@ -155,5 +166,3 @@ header nav a {
   margin-right: 15px;
   display: block;
 }
-  
-  

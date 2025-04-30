@@ -23,7 +23,7 @@
                 <label for="password">Password:</label>
                 <input type="password" id="password" @bind="Password" class="form-control" placeholder="Enter your password" size="30" maxlength="69" minlength="9" required/>
             </div>
-            <button type="submit" disabled="@isLoading">Sign In</button>
+            <button class="submit" type="submit" disabled="@isLoading">Sign In</button>
             @if (isLoading)
             {
                 <span>Loading...</span>
@@ -105,7 +105,7 @@
         border-radius: 5px;
     }
 
-    .btn {
+    .submit {
         width: 100%;
         padding: 10px;
         background-color: #00d44a;

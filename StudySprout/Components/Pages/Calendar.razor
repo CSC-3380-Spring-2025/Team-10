@@ -2,35 +2,68 @@
 @using StudySprout.DatabaseData
 @inject StudyCalendarEdit CalendarService
 
-<h1>🌱Calendar</h1>
-<div class="header">
-    <button @onclick="PreviousMonth">‹</button>
-    <h2>@GetMonthName(currentMonth) @currentYear</h2>
-    <button @onclick="NextMonth">›</button>
+<h1>Study Calendar</h1>
+
+<div class="calendar">
+
+    <div class="header">
+        <button @onclick="PreviousMonth">‹</button>
+        <h2>@GetMonthName(currentMonth) @currentYear</h2>
+        <button @onclick="NextMonth">›</button>
+    </div>
+
+    <button class="add-event-btn" @onclick="ShowAddEventForm">+ Add Event</button>
+
+    @if (showForm)
+    {
+        <div class="add-event-wrapper">
+    <button class="add-event-btn" @onclick="ShowAddEventForm">
+        + Add Event
+    </button>
+
+    @if (showForm)
+    {
+        <div class="event-dropdown">
+            <h4>Add Event</h4>
+            <input placeholder="Title" @bind="newTitle" />
+            <input type="date" @bind="newDate" />
+            <input placeholder="Category" @bind="newCategory" />
+            <button @onclick="AddEvent">Save</button>
+        </div>
+    }
 </div>
 
 
+    }
 
-<div class="calendar">
     <div class="day-labels">
-        <div>Sun</div><div>Mon</div><div>Tue</div>
-        <div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
     </div>
 
     <div class="days">
-        <div class="day blank"></div>
-        <div class="day blank"></div>
-
-        @foreach (var day in Enumerable.Range(1, 31))
+        @for (int i = 0; i < FirstDayOfWeek; i++)
         {
-            var date = new DateTime(2021, 3, day);
-            var events = CalendarService.GetAllTimes().Where(e => e.StartDate.Date == date.Date).ToList();
+            <div class="day blank"></div>
+        }
+
+        @foreach (var day in Enumerable.Range(1, DaysInMonth))
+        {
+            var date = new DateTime(currentYear, currentMonth, day);
+            var events = CalendarService.GetAllTimes()
+                .Where(e => e.StartDate.Date == date.Date)
+                .ToList();
 
             <div class="day">
                 <strong>@day</strong>
                 @foreach (var ev in events)
                 {
-                    <div class="event">@ev.Title</div>
+                    <div class="event @ev.Category.ToLower()">@ev.Title</div>
                 }
             </div>
         }
@@ -38,8 +71,16 @@
 </div>
 
 @code {
-    private int currentMonth = 4; // starting at April
+    private int currentMonth = 4; // April
     private int currentYear = 2025;
+
+    private string newTitle = string.Empty;
+    private string newCategory = string.Empty;
+    private DateTime newDate = DateTime.Today;
+    private bool showForm = false;
+
+    private int DaysInMonth => DateTime.DaysInMonth(currentYear, currentMonth);
+    private int FirstDayOfWeek => (int)new DateTime(currentYear, currentMonth, 1).DayOfWeek;
 
     private void PreviousMonth()
     {
@@ -49,6 +90,7 @@
             currentMonth = 12;
             currentYear--;
         }
+        StateHasChanged();
     }
 
     private void NextMonth()
@@ -59,11 +101,36 @@
             currentMonth = 1;
             currentYear++;
         }
+        StateHasChanged();
     }
 
     private string GetMonthName(int month)
     {
         return new DateTime(currentYear, month, 1).ToString("MMMM");
+    }
+
+    private void ShowAddEventForm()
+    {
+        showForm = !showForm;
+    }
+
+    private void AddEvent()
+    {
+        CalendarService.AddTime(new StudyTime
+        {
+            Title = newTitle,
+            StartDate = newDate,
+            EndDate = newDate.AddHours(1),
+            Category = newCategory
+        });
+
+        // Reset form
+        newTitle = string.Empty;
+        newCategory = string.Empty;
+        newDate = DateTime.Today;
+        showForm = false;
+
+        StateHasChanged();
     }
 
     protected override void OnInitialized()
@@ -74,3 +141,6 @@
         }
     }
 }
+
+
+

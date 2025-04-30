@@ -5,10 +5,10 @@
 
 <header>
     <div class="logo">
-        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
         <nav>
-            <a href="/MyStudySets">MY STUDY SETS</a>
-            <a href="/CreateNew" class="active">CREATE NEW SET</a>
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
         </nav>
     </div>
 
@@ -17,6 +17,7 @@
         <a href="/signin" class="GoToLogIn">Log in</a>
     </div>
 </header>
+
 
 
 <div class="quiz-page">
@@ -104,21 +105,13 @@
         font-weight: bold;
     }
 
-    header {
+     header {
         display: flex;
         justify-content: space-between;
         align-items: center;
         padding: 10px 20px;
         background-color: #ffffff;
-        width: 160%;
-        margin-left: -231px;
-        margin-top: -16px;
-        box-sizing: border-box;
-    }
-
-    img {
-        max-width: 100%;
-        height: auto;
+        box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
     }
 
     header nav {
@@ -134,53 +127,60 @@
     }
 
     header nav a:hover {
-        text-decoration: underline;
+        text-decoration: underline; /* Underline on hover */
     }
 
-    .logo img {
-        height: 50px;
-        width: 45px;
-        margin-top: -8px;
-    }
-
-    .slink-icon {
-        position: absolute;
-        bottom: 10px;
-        right: 20px;
-        height: 80px;
-        width: 135px;
+    .auth-links {
+        display: flex;
+        align-items: center;
+        gap: 15px;
     }
 
     .auth-links a {
+        color: #4e7429;
         text-decoration: none;
         font-weight: bold;
-        font-size: 1rem;
-        color: #4e7429;
-        padding: 5px 15px;
-        border: 1px solid #4e7429;
-        border-radius: 5px;
     }
 
-    .auth-links a:hover {
+    .auth-links .GoToLogIn {
+        padding: 5px 15px;
         background-color: #4e7429;
         color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .auth-links .GoToLogIn:hover {
+        opacity: 0.9;
+    }
+
+    .button-style {
+        text-decoration: none; /* Remove underline */
+        color: #4e7429; /* Set the text color */
+        font-weight: bold; /* Make the text bold */
+        background: none; /* Remove background */
+        border: none; /* Remove border */
+        font-size: 1rem; /* Adjust font size if needed */
+        cursor: pointer; /* Change the cursor to a pointer */
+        padding: 0; /* Remove padding to match a link */
+        margin: 8px;
     }
     
     .banner {
         background-image: url('quizzesbackground.jpg');
         background-size: cover;
-        background-position: top;
+        background-position: center;
         text-align: center;
         color: white;
-        padding: 50px 20px;
+        padding: 60px 20px;
         position: relative;
-        width: 152%; /* Adjust width to account for the left navigation panel */
-        margin-left: -200px; /* Shift the banner to the right to align with the navigation panel */
-        height: 248px;
-        box-sizing: border-box;
-        font-weight: bolder;
-        margin-top: 70px;
+        width: 100%;
+        height: 250px;
     }
+
+
+
     
 </style>
 

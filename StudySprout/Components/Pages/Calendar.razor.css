@@ -1,7 +1,7 @@
 .calendar {
     max-width: 1000px;
     margin: auto;
-    background: white;
+    background: rgb(163, 221, 164);
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
@@ -60,4 +60,33 @@
   .event.social {
     background-color: #b5d8ff; /* light blue */
   }
+
+  .header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px; /* Space between buttons and month */
+    margin-bottom: 20px;
+}
+
+.header button {
+    background-color: #79b87b;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.header button:hover {
+    background-color: #45a049;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
   

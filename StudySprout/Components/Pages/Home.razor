@@ -1,15 +1,15 @@
 ﻿@page "/"
+@inject NavigationManager Navigation;
 
 <PageTitle>Home</PageTitle>
 
 @* Navigation Buttons *@
 <header>
     <div class="logo">
-        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
         <nav>
-            @*<a href="/MyGarden">MY GARDEN</a>*@
-            <a href="/MyStudySets">MY STUDY SETS</a>
-            <a href="/CreateNew"class="active">CREATE NEW SET</a>
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
         </nav>
     </div>
 
@@ -23,18 +23,18 @@
     <img src="/Images/sproutsImageNoText.jpeg" alt="Sprouts Image" class="large-image" />
     <div class="large-image-content">
         <p class="large-image-text">GROW WITH STUDY SPROUT</p>
-        <button class="get-started-button" @onclick="NavigatetoSignUp">GET STARTED</button>
+        <a href="/signup" class="get-started-button">GET STARTED</a>
     </div>
 </div>
 
 <div class="small-images-container">
     <div class="small-image-item">
-        <img src="/Images/featureOne.png" alt="Feature One" class="small-image" style="width: 20%; max-height: 350px;" />
+        <img src="/Images/featureOne.png" alt="Feature One" class="small-image" style="width: 22%; max-height: 350px;" />
         <button class="feature-button">SPACED REPETITION</button>
         <p class="small-image-text">Study efficiently! We use spaced repetition for better recall over time.</p>
     </div>
     <div class="small-image-item">
-        <img src="/Images/featureTwo.png" alt="Feature Two" class="small-image" style="width: 35%; max-height: 300px;" />
+        <img src="/Images/featureTwo.png" alt="Feature Two" class="small-image" style="width: 30%; max-height: 300px;" />
         <button class="feature-button">UNIQUE GARDENS</button>
         <p class="small-image-text">Nurture knowledge, watch your own garden thrive!</p>
     </div>
@@ -58,11 +58,61 @@
         background-color: #f8f8f8;
     }
 
-    .nav-logo {
-        height: 50px;
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
     }
 
-    .sign-up, .log-in, .my-garden, .my-study-sets, .create-new {
+    header nav {
+        display: flex;
+        gap: 49px;
+    }
+
+    header nav a {
+        text-decoration: none;
+        color: #4e7429;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    header nav a:hover {
+        text-decoration: underline; /* Underline on hover */
+    }
+
+    .auth-links {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .auth-links a {
+        color: #4e7429;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .auth-links .GoToLogIn {
+        padding: 5px 15px;
+        background-color: #4e7429;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .auth-links .GoToLogIn:hover {
+        opacity: 0.9;
+    }
+
+    @*.nav-logo {
+        height: 50px;
+    }*@
+
+    @*.sign-up, .log-in, .my-garden, .my-study-sets, .create-new {
         font-size: 18px;
         font-family: Arial, sans-serif;
         font-weight: bold;
@@ -70,13 +120,24 @@
         padding: 10px 15px;
         border: none;
         cursor: pointer;
-    }
+    }*@
 
+    .button-style {
+        text-decoration: none; /* Remove underline */
+        color: #4e7429; /* Set the text color */
+        font-weight: bold; /* Make the text bold */
+        background: none; /* Remove background */
+        border: none; /* Remove border */
+        font-size: 1rem; /* Adjust font size if needed */
+        cursor: pointer; /* Change the cursor to a pointer */
+        padding: 0; /* Remove padding to match a link */
+        margin: 8px;
+    }
     
     .large-image-container {
         position: relative; /* Ensure the content is positioned relative to this container */
         text-align: center;
-        margin-top: -290px;
+        @*margin-top: -290px;*@
         display: flex;
         justify-content: center;
         align-items: center;
@@ -102,7 +163,7 @@
     }
 
     .large-image-text {
-        font-size: 75px;
+        font-size: 3rem;
         font-family: Arial, sans-serif;
         color: #ffffff;
         text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
@@ -110,7 +171,7 @@
     }
 
     .get-started-button {
-        font-size: 40px;
+        font-size: 1.5rem;
         font-family: Arial, sans-serif;
         font-weight: bold;
         color: #ffffff;
@@ -122,6 +183,7 @@
         text-transform: uppercase;
         box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
         transition: background-color 0.3s ease; /* Smooth hover effect */
+        text-decoration: none;
     }
 
     .get-started-button:hover {
@@ -134,99 +196,64 @@
     align-items: flex-start; /* Align all items to the top */
     gap: 30px;
     margin-top: 40px;
-}
+    flex-wrap: wrap;
 
-.small-image-item {
-    display: flex;
-    flex-direction: column; /* Stack the image, button, and text vertically */
-    align-items: center; /* Center the text, button, and image horizontally */
-    text-align: center; /* Center the text */
-    height: 500px; /* Set a fixed height for all containers */
-}
+    .small-image-item {
+        display: flex;
+        flex-direction: column; /* Stack the image, button, and text vertically */
+        align-items: center; /* Center the text, button, and image horizontally */
+        text-align: center; /* Center the text */
+        max-width: 300px;
+        margin: 10px;
+    }
 
-.small-image {
-    width: 30%;
-    height: auto;
-    max-height: 400px;
-    object-fit: contain;
-}
+    .small-image {
+        width: 30%;
+        height: auto;
+        max-height: 200px;
+        object-fit: contain;
+    }
 
-.feature-button {
-    margin-top: 10px; /* Add space between the image and the button */
-    font-size: 40px;
-    font-family: Arial, sans-serif;
-    font-weight: bold;
-    color: #ffffff;
-    background-color: #177a13;
-    border: none;
-    border-radius: 5px;
-    padding: 8px 16px;
-    cursor: pointer;
-    text-transform: uppercase;
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
-}
+    .feature-button {
+        margin-top: 10px; /* Add space between the image and the button */
+        font-size: 1rem;
+        font-family: Arial, sans-serif;
+        font-weight: bold;
+        color: #ffffff;
+        background-color: #177a13;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 16px;
+        cursor: pointer;
+        text-transform: uppercase;
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2); /* Add a subtle shadow */
+    }
 
-.small-image-text {
-    margin-top: 10px; /* Add space between the button and the text */
-    font-size: 40px; /* Adjust font size */
-    font-family: Arial, sans-serif; /* Set font family */
-    color: #333; /* Set text color */
-    max-width: 90%; /* Limit the width of the text to prevent it from stretching */
-    word-wrap: break-word; /* Ensure long words break to the next line */
-}
+    .feature-button:hover {
+        background-color: #11660e;
+    }
 
-header {
-    display: flex;
-    justify-content: space-between; /* Space out the logo and links */
-    align-items: center; /* Align items vertically */
-    padding: 10px 20px; /* Add padding inside the header */
-    background-color: #ffffff; /* White background */
-    width: 100%; /* Ensure the header spans the full width */
-    box-sizing: border-box; /* Include padding and border in width/height */
-}
+    .small-image-text {
+        margin-top: 10px; /* Add space between the button and the text */
+        font-size: 1rem; /* Adjust font size */
+        font-family: Arial, sans-serif; /* Set font family */
+        color: #333; /* Set text color */
+        max-width: 90%; /* Limit the width of the text to prevent it from stretching */
+        word-wrap: break-word; /* Ensure long words break to the next line */
+    }
 
-.logo img {
-    height: 50px; /* Set the height of the logo */
-    width: auto; /* Maintain aspect ratio */
-}
-
-header nav {
-    display: flex;
-    gap: 49px; /* Space between navigation links */
-}
-
-header nav a {
-    text-decoration: none; /* Remove underline */
-    color: #4e7429; /* Green text color */
-    font-weight: bold; /* Bold text */
-    font-size: 1rem; /* Font size */
-}
-
-header nav a:hover {
-    text-decoration: underline; /* Underline on hover */
-}
-
-.auth-links a {
-    text-decoration: none; /* Remove underline */
-    font-weight: bold; /* Bold text */
-    font-size: 1rem; /* Font size */
-    color: #4e7429; /* Green text color */
-    padding: 5px 15px; /* Add padding around the link */
-    border: 1px solid #4e7429; /* Add a green border */
-    border-radius: 5px; /* Rounded corners */
-}
-
-.auth-links a:hover {
-    background-color: #4e7429; /* Green background on hover */
-    color: white; /* White text on hover */
-}
+    .logo img {
+        height: 10px; /* Set the height of the logo */
+        width: auto; /* Maintain aspect ratio */
+        max-width: 15px;
+        object-fit: contain;
+        display: block;
+    }
     
 </style>
 
 @code {
-    @inject NavigationManager Navigation;
-
-    private void NavigatetoSignUp()
+    private void NavigateToSignUp()
     {
         Navigation.NavigateTo("/signup", forceLoad: true);
     }
@@ -241,13 +268,13 @@ header nav a:hover {
         Navigation.NavigateTo("/mygarden", forceLoad: true);
     }
 
-    private void NavigateToStudySets()
+    private void NavigateToMyStudySets()
     {
-        Navigation.NavigateTo("/mystudysets", forceLoad: true);
+        Navigation.NavigateTo("/MyStudySets", forceLoad: true);
     }
 
-    private void NavigateToCreatNew()
+    private void NavigateToCreateNew()
     {
-        Navigation.NavigateTo("/createnew", forceLoad: true);
+        Navigation.NavigateTo("/CreateNew", forceLoad: true);
     }
 }

@@ -3,14 +3,21 @@
 
 <PageTitle>Take Quiz</PageTitle>
 
-<nav class="navbar1"> 
-    <img class="nav-logo" src="favicon.png" alt="Study Sprout Logo" />
-    <NavLink class="nav-button1" href="/signup">Sign Up</NavLink>
-        <NavLink class="nav-button1" href="/signin">Log In</NavLink>
-        <NavLink class="nav-button2" href="/MyGarden">MY GARDEN</NavLink>
-        <NavLink class="nav-button2" href="/MyStudySets">MY STUDY SETS</NavLink>
-        <NavLink class="nav-button2" href="/CreateNew">CREATE NEW</NavLink>
-</nav>
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
+        <nav>
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
+        </nav>
+    </div>
+
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
+
 
 <div class="take-quiz-page">
     <h1>Take Quiz</h1>
@@ -125,52 +132,68 @@
         background-color: #006a05;
     }
 
-   .navbar1 {
+    header {
         display: flex;
-        justify-content: space-around;
+        justify-content: space-between;
         align-items: center;
-        background-color: #f1f1f1;
-        padding: 2px;
-        border-bottom: 2px solid #ccc;
-        position: fixed;
-        top: 0;
-        width: 84%;
-        height: 80px;
-        z-index: 1000;
-        margin-left: -24px;
+        padding: 10px 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
     }
-    .nav-button1 {
-        display: inline-block;
-        padding: 5px 20px;
-        background-color: #d0d0d0;
-        color: rgb(0, 0, 0);
-        text-align: center;
+
+    header nav {
+        display: flex;
+        gap: 49px;
+    }
+
+    header nav a {
         text-decoration: none;
-        border: #000;
-        border-radius: 5px;
-        cursor: pointer;
-        text-decoration: underline;
+        color: #4e7429;
+        font-weight: bold;
+        font-size: 1rem;
     }
-    .nav-button2 {
-        display: inline-block;
-        padding: 5px 20px;
-        background-color: #218b3c;
+
+    header nav a:hover {
+        text-decoration: underline; /* Underline on hover */
+    }
+
+    .auth-links {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .auth-links a {
+        color: #4e7429;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .auth-links .GoToLogIn {
+        padding: 5px 15px;
+        background-color: #4e7429;
         color: white;
-        text-align: center;
-        text-decoration: none;
         border: none;
         border-radius: 5px;
         cursor: pointer;
-        font-weight: bold;
     }
-    .nav-button:hover {
-        background-color: #0056b3;
+
+    .auth-links .GoToLogIn:hover {
+        opacity: 0.9;
     }
-    
-    .nav-logo{
-         width: 50px;
-        height: 45px;
+
+    .button-style {
+        text-decoration: none; /* Remove underline */
+        color: #4e7429; /* Set the text color */
+        font-weight: bold; /* Make the text bold */
+        background: none; /* Remove background */
+        border: none; /* Remove border */
+        font-size: 1rem; /* Adjust font size if needed */
+        cursor: pointer; /* Change the cursor to a pointer */
+        padding: 0; /* Remove padding to match a link */
+        margin: 8px;
     }
+
     .answers-list {
         list-style-type: none;
         padding: 0;

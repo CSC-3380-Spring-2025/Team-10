@@ -90,8 +90,10 @@ body {
     border-bottom: 2px solid #ccc;
     position: fixed;
     top: 0;
-    width: 100%;
+    width: 83%;
+    height: 80px;
     z-index: 1000;
+    margin-left: -32px;
 }
 
 .navbar button {

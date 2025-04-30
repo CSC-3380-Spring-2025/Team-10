@@ -6,26 +6,12 @@ header {
     align-items: center;
     padding: 10px 20px;
     background-color: #ffffff;
-    width: 100%;
-    box-sizing: border-box;
-    border-bottom: 2px solid #d5e8d4;
-    margin-bottom: 20px;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    gap: 30px;
-}
-
-.logo img {
-    height: 50px;
-    width: auto;
+    box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
 }
 
 header nav {
     display: flex;
-    gap: 30px;
+    gap: 49px;
 }
 
 header nav a {
@@ -36,28 +22,46 @@ header nav a {
 }
 
 header nav a:hover {
-    text-decoration: underline;
+    text-decoration: underline; /* Underline on hover */
 }
 
 .auth-links {
     display: flex;
-    gap: 10px;
+    align-items: center;
+    gap: 15px;
 }
 
 .auth-links a {
+    color: #4e7429;
     text-decoration: none;
     font-weight: bold;
-    font-size: 1rem;
-    color: #4e7429;
-    padding: 5px 15px;
-    border: 1px solid #4e7429;
-    border-radius: 5px;
 }
 
-.auth-links a:hover {
+.auth-links .GoToLogIn {
+    padding: 5px 15px;
     background-color: #4e7429;
     color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
 }
+
+.auth-links .GoToLogIn:hover {
+    opacity: 0.9;
+}
+
+.button-style {
+    text-decoration: none; /* Remove underline */
+    color: #4e7429; /* Set the text color */
+    font-weight: bold; /* Make the text bold */
+    background: none; /* Remove background */
+    border: none; /* Remove border */
+    font-size: 1rem; /* Adjust font size if needed */
+    cursor: pointer; /* Change the cursor to a pointer */
+    padding: 0; /* Remove padding to match a link */
+    margin: 8px;
+}
+
 
 /* === CALENDAR STYLES === */
 

@@ -9,64 +9,9 @@ body {
     height: 100vh;
     margin: 0;
     background-color: #009951; /* trying to make background green */
-}
-
-.flip-card {
-    background-color: transparent;
-    width: 600px; /* Adjust width of card -lex */
-    height: 300px;
-    border: 1px solid #f1f1f1;
-    perspective: 1000px; 
-    margin: auto; /* Ensures proper centering */
+    padding-top: 50px;
 }
   
-/* position the front and back side */
-.flip-card-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    text-align: center;
-    transition: transform 0.8s;
-    transform-style: preserve-3d;
-}
-  
-/* Do an horizontal flip when you move the mouse over the flip box container */
-.flip-card:hover .flip-card-inner {
-    transform: rotateY(180deg);
-}
-  
-/* Position the front and back side */
-.flip-card-front, .flip-card-back {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    -webkit-backface-visibility: hidden;
-    backface-visibility: hidden;
-    display: flex; /* Enables flexbox for centering */
-    justify-content: center; /* Horizontally centers the content */
-    align-items: center; /* Vertically centers the content */
-    text-align: center; /* Ensures text is centered */
-}
-  
-/* Style the front side (fallback if image is missing) */
-.flip-card-front {
-    width: 100%;
-    height: 100%;
-    background: rgba(138.82, 82.53, 22.37, 0.73); /* background color */
-    border: 14px #2F1B05 solid; /* border */
-    color: black;
-}
-  
-/* Style the back side */
-.flip-card-back {
-    width: 100%;
-    height: 100%;
-    background: rgba(138.82, 82.53, 22.37, 0.73); /* Match front side background */
-    border: 14px #2F1B05 solid; /* Match front side border */
-    color: white;
-    transform: rotateY(180deg);
-}
-
 .slink-icon {
     position: absolute;
     top:30px;
@@ -165,8 +110,160 @@ body {
 }
 
 .nav-logo {
-    height: 40px; /* Adjust the height of the logo */
-    margin-left: 10px; /* Add some spacing from the left edge */
-    align-self: center; /* Vertically align the logo in the navbar */
+    height: 40px; 
+    margin-left: 10px; 
+    align-self: center; 
 }
 
+.card-counter { 
+    position: center;
+    top: 50px; 
+    text-align: center; 
+    font-size: 24px; 
+    font-weight: bold; 
+    font-family: fantasy, sans-serif;
+    color: rgb(37, 18, 18); /* card counter color */
+    z-index: 10; 
+}
+
+/* General card styles */
+.card-body {
+    position: center;
+    font-size: 2rem;
+    color: #d8d8d8d2;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.tile-front, .tile-back {
+    background-color: rgba(138.82, 82.53, 22.37, 0.73); 
+    border: 14px #2F1B05 solid; /* border of card collor -lexi */
+    height: 250px;
+    width: 500px;
+    transition: all 0.8s ease;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 3px;
+    overflow: hidden;
+    box-shadow: 0 2rem 2rem rgba(2, 136, 11, 0.15);
+    transition: all 0.3s ease;
+}
+
+.tile-back {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+}
+
+.card-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100%;
+    position: relative;
+    margin: 5;
+    padding: 0;
+    transform: translateY(-300px);
+}
+
+label[for=flip-checkbox] {
+    display: block;
+    -webkit-perspective: 800px;
+    perspective: 800px;
+}
+
+.reversible {
+    position: relative;
+    width: 450px; /* changes card with -Lexi */
+    margin: 50px auto;
+    -webkit-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-transition: transform 0.4s ease;
+    transition: transform 0.4s ease;
+}
+
+input[type=checkbox]:checked + label .reversible {
+    -webkit-transform: rotateY(180deg);
+    transform: rotateY(180deg);
+}
+
+.reversible .card {
+    position: absolute;
+    left: 5;
+    top: 0;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.arrows {
+    position: absolute; 
+    width: 50%; 
+    height: 0; 
+    top: 45%; 
+    transform: translateY(-50%); 
+    display: flex;
+    justify-content: space-between; 
+    pointer-events: auto; 
+}
+
+.arrow-left, .arrow-right {
+    position: relative; 
+    cursor: pointer; 
+    background-color: rgba(138, 82, 22, 0.73); 
+    border: 2px solid #2F1B05; 
+    border-radius: 50%; 
+    width: 50px; 
+    height: 50px; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 4px #999; 
+    transition: all 0.3s ease; 
+    pointer-events: auto; 
+}
+
+.arrow-left:hover, .arrow-right:hover {
+    background-color: rgba(100, 50, 20, 0.9); 
+    box-shadow: 0 6px #666; 
+}
+
+.arrow-left:active, .arrow-right:active {
+    background-color: rgba(80, 40, 15, 0.9); 
+    box-shadow: 0 2px #333; 
+    transform: translateY(2px); 
+}
+
+.arrow-left {
+    left: -60px; 
+}
+
+.arrow-right {
+    right: -60px; 
+}
+
+.arrow-left::before, .arrow-right::before {
+    content: ''; 
+    display: block;
+    width: 0;
+    height: 0;
+    border-style: solid;
+}
+
+.arrow-left::before {
+    border-width: 10px 15px 10px 0; 
+    border-color: transparent #fff transparent transparent; 
+}
+
+.arrow-right::before {
+    border-width: 10px 0 10px 15px; 
+    border-color: transparent transparent transparent #fff; 
+}

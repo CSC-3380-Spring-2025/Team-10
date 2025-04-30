@@ -12,6 +12,62 @@ body {
     padding-top: 50px;
 }
 
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
+}
+
+header img {
+    height: 40px;
+}
+
+header nav {
+    display: flex;
+    gap: 49px;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #4e7429;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.auth-links a {
+    color: #4e7429;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-links .GoToLogIn {
+    padding: 5px 15px;
+    background-color: #4e7429;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-links .GoToLogIn:hover {
+    opacity: 0.9;
+}
+.logo img {
+    height: 50px;
+    width: 45px;
+    margin-right: 15px;
+    display: block;
+}
+
 .navbar {
     display: flex;
     justify-content: space-between;
@@ -85,9 +141,9 @@ body {
     position: relative;
     top: 70px; /*adjust height of card counter */
     text-align: center;
-    font-size: 24px;
-    font-weight: bold;
-    font-family: fantasy, sans-serif;
+    font-size: 12px;
+    font-weight: bolder;
+    font-family: Verdana;
     color: rgb(37, 18, 18);
     z-index: 10;
 }

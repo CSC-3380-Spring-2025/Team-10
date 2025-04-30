@@ -1,6 +1,7 @@
 @*Lexi Reed *@
 @page "/flashcard"
 
+
 <nav class="navbar"> 
     <img class="nav-logo" src="/Pictures/StudySprout.png" alt="Study Sprout Logo" />
     <button class="sign-up">Sign Up</button>
@@ -10,15 +11,73 @@
     <button class="create-new">CREATE NEW</button>
 </nav>
 
-<div class="flip-card"> 
-  <div class="flip-card-inner">
-    <div class="flip-card-front">
-      <h1>what's the best study tool?</h1>
-      <img class="slink-icon" src="Slink.png" alt="Slink Image" />
-    </div>
-    <div class="flip-card-back">
-      <h1>Study Sprout</h1>
-    </div>
-  </div>
+<div class= "card-counter">
+  <h2>@CurrentCard/@TotalCards</h2>
 </div>
+
+<div class="card-wrapper">
+    <input type="checkbox" id="flip-card" style="display: none;" @bind="IsFlipped" />
+    <label for="flip-card">
+        <div class="reversible">
+            <div class="card tile-back">
+                <div class="card-body">
+                    <p>@CurrentFlashcard.Question</p>
+                </div>
+            </div>
+            <div class="card tile-front">
+                <div class="card-body">
+                    <h1>@CurrentFlashcard.Answer</h1>
+                </div>
+            </div>
+        </div>
+    </label>
+
+    <div class="arrows">
+        <button class="arrow-left" @onclick="PreviousCard"></button>
+        <button class="arrow-right" @onclick="NextCard"></button>
+    </div>
+</div>
+
+@code {
+    private int CurrentCard { get; set; } = 1; 
+    private int TotalCards { get; set; } = 6; 
+    private bool IsFlipped { get; set; } = false;
+
+    private List<Flashcardset> Flashcards { get; set; } = new()
+    {
+        new Flashcardset { Question = "What is the best study tool?", Answer = "StudySprout" },
+        new Flashcardset { Question = "What is better: Quizlet or StudySprout?", Answer = "StudySprout" },
+        new Flashcardset { Question = "What study tool is everybody using?", Answer = "StudySprout duh" },
+        new Flashcardset { Question = "What are Anki and Quizlet?", Answer = "Old study tools" },
+        new Flashcardset { Question = "StudySprout is second to?", Answer = "No one!" },
+        new Flashcardset { Question = "What grade is StudySprout going to get?", Answer = "100!!!!!" },
+    };
+
+    private Flashcardset CurrentFlashcard => Flashcards[CurrentCard - 1];
+
+    private void NextCard()
+    {
+        if (CurrentCard < Flashcards.Count)
+        {
+            CurrentCard++;
+            IsFlipped = false; // Unflip the card
+        }
+    }
+
+    private void PreviousCard()
+    {
+        if (CurrentCard > 1)
+        {
+            CurrentCard--;
+            IsFlipped = false; // Unflip the card
+        }
+    }
+
+    public class Flashcardset
+    {
+        public string? Question { get; set; }
+        public string? Answer { get; set; }
+    }
+}
+
 

@@ -1,4 +1,4 @@
-{
+/*{
   "$schema": "https://json.schemastore.org/launchsettings.json",
     "profiles": {
       "http": {
@@ -20,4 +20,20 @@
         }
       }
     }
+  }*/
+
+
+{
+  "$schema": "https://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "StudySprout": {
+      "commandName": "Project",
+      "dotnetRunMessages": true,
+      "launchBrowser": true,
+      "applicationUrl": "https://localhost:7296;http://localhost:5290",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      }
+    }
   }
+}

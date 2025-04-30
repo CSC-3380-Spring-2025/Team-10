@@ -19,6 +19,8 @@ body {
     flex-direction: column;
 }
 
+/* NAV BAR FORMATTING */
+
 header {
     display: flex;
     justify-content: space-between;
@@ -44,6 +46,40 @@ header nav a {
     font-size: 1rem;
 }
 
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.auth-links a {
+    color: #4e7429;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-links .GoToLogIn {
+    padding: 5px 15px;
+    background-color: #4e7429;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-links .GoToLogIn:hover {
+    opacity: 0.9;
+}
+
+.logo img {
+    height: 50px;
+    width: 45px;
+    margin-right: 15px;
+    display: block;
+}
+
+/* BANNER FORMATTING */
+
 .banner {
     background-image: url('mystudysetspic.png');
     background-size: cover;
@@ -68,6 +104,8 @@ header nav a {
     right: 20px;
     height: 100px;
 }
+
+/* HEADERS */
 
 h1 {
     font-size: 3rem;
@@ -115,14 +153,7 @@ ul li h3 {
     font-size: 1rem;
 }
 
-.study-set {
-    background: #fff;
-    margin: 20px 0;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    position: relative;
-}
+/* study-set FORMATTING */
 
 .study-set h3 {
     color: #4e7429;
@@ -159,37 +190,100 @@ ul li h3 {
     opacity: 0.9;
 }
 
-.auth-links {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+/* SETS BOXES */
+
+.study-sets-container {
+    max-width: 800px;
+    margin: 0 auto;
 }
 
-.auth-links a {
-    color: #4e7429;
-    text-decoration: none;
-    font-weight: bold;
+.study-set {
+    background-color: white;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    overflow: hidden;
+    border: 1.5px solid #e0e0e0;
 }
 
-.auth-links .GoToLogIn {
-    padding: 5px 15px;
-    background-color: #4e7429;
-    color: white;
+.study-set-header {
+    position: relative;
+}
+
+.created-date {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: #f0f0f0;
+    color: #666;
+    font-size: 0.8rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+}
+
+.set-title {
     border: none;
-    border-radius: 5px;
-    cursor: pointer;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 15px;
+    margin: 0;
+    width: 100%;
+    font-size: 1.2rem;
+    color: #1c4d1d;
+    box-sizing: border-box;
+    font-weight: bolder;
 }
 
-.auth-links .GoToLogIn:hover {
-    opacity: 0.9;
+.set-title::placeholder {
+    color: #4CAF50;
 }
 
-.logo img {
-    height: 50px;
-    width: 45px;
-    margin-right: 15px;
-    display: block;
+.set-description {
+    min-height: 120px;
+    padding: 10px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    resize: none;
+    font-size: 1rem;
+    color: #666;
 }
+
+.set-description::placeholder {
+    color: #4CAF50;
+}
+
+.study-set-footer {
+    display: flex;
+    padding: 12px;
+    gap: 10px;
+    justify-content: space-between;
+}
+
+.learn-by {
+    flex: 0 0 auto;
+    padding: 10px 15px;
+    background-color: #f0f0f0;
+    color: #4CAF50;
+    font-weight: 500;
+    font-size: 0.9rem;
+    border-right: 1px solid #e0e0e0;
+    border-radius: 20px;
+}
+
+.days-remaining {
+    flex: 1;
+    padding: 10px 15px;
+    background-color: #a9554f;
+    color: white;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-align: center;
+    border-radius: 20px;
+}
+
+/* ALERTS FORMATTING */
 
 .alert {
     padding: 12px;

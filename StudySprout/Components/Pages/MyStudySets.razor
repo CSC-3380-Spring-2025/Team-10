@@ -45,8 +45,7 @@ else if (sets == null || sets.Count == 0)
 }
 else
 {
-    <div class="study-sets-container">
-        @* First, show the data directly as a fallback *@
+   @*<div class="study-sets-container">
         <div class="study-sets-direct">
             @foreach (var set in sets)
             {
@@ -57,6 +56,24 @@ else
                 </div>
             }
         </div>
+    </div>*@
+
+
+    <div class="study-sets-container">
+        @foreach (var set in sets)
+        {
+            <div class="study-set">
+                <div class="study-set-header">
+                    <div class="created-date">CREATED: </div>
+                    <input type="text" class="set-title" placeholder="SET TITLE" value="@set.TITLE">
+                </div>
+                <textarea class="set-description" placeholder="DESCRIPTION">@set.DESCRIPTION</textarea>
+                <div class="study-set-footer">
+                    <div class="learn-by">LEARN BY @set.LEARNBY</div>
+                    <div class="days-remaining">DAYS REMAINING: </div>
+                </div>
+            </div>
+        }
     </div>
 }
 

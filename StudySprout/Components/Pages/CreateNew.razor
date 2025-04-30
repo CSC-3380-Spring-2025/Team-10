@@ -7,13 +7,13 @@
 @inject IConfiguration Configuration
 
 <PageTitle>CREATE NEW</PageTitle>
-3
+
 <header>
     <div class="logo">
-        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
+        <img src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
         <nav>
-            <a href="/MyStudySets">MY STUDY SETS</a>
-            <a href="/CreateNew" class="active">CREATE NEW SET</a>
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
         </nav>
     </div>
 
@@ -126,11 +126,62 @@
         flex-direction: column;
     }
 
-    main {
-        max-width: 800px;
-        margin: 0 auto;
-        padding: 20px;
-        flex-grow: 1;
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background-color: #f8f8f8;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
+    }
+
+    header nav {
+        display: flex;
+        gap: 49px;
+    }
+
+    header nav a {
+        text-decoration: none;
+        color: #4e7429;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    header nav a:hover {
+        text-decoration: underline; /* Underline on hover */
+    }
+
+    .auth-links {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .auth-links a {
+        color: #4e7429;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .auth-links .GoToLogIn {
+        padding: 5px 15px;
+        background-color: #4e7429;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .auth-links .GoToLogIn:hover {
+        opacity: 0.9;
     }
 
     h1 {
@@ -267,43 +318,9 @@
         text-decoration: underline;
     }
 
-    header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px 20px;
-        background-color: #ffffff;
-        width: 160%;
-        margin-left: -231px;
-        margin-top: -16px;
-        box-sizing: border-box;
-    }
-
-    img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    header nav {
-        display: flex;
-        gap: 49px;
-    }
-
-    header nav a {
-        text-decoration: none;
-        color: #4e7429;
-        font-weight: bold;
-        font-size: 1rem;
-    }
-
-    header nav a:hover {
-        text-decoration: underline;
-    }
-
     .logo img {
-        height: 50px;
-        width: 45px;
-        margin-top: -8px;
+        object-fit: contain;
+        display: block;
     }
 
     .slink-icon {
@@ -314,34 +331,16 @@
         width: 135px;
     }
 
-    .auth-links a {
-        text-decoration: none;
-        font-weight: bold;
-        font-size: 1rem;
-        color: #4e7429;
-        padding: 5px 15px;
-        border: 1px solid #4e7429;
-        border-radius: 5px;
-    }
-
-    .auth-links a:hover {
-        background-color: #4e7429;
-        color: white;
-    }
-
     .banner {
         background-image: url('background3.jpg');
         background-size: cover;
-        background-position: top;
+        background-position: center;
         text-align: center;
         color: white;
-        padding: 50px 20px;
+        padding: 60px 20px;
         position: relative;
-        width: 165%;
-        margin-left: -230px;
-        height: 248px;
-        box-sizing: border-box;
-        font-weight: bolder;
+        width: 100%;
+        height: 250px;
     }
     .debug-info {
         margin: 20px auto;

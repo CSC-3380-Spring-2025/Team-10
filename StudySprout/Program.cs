@@ -12,13 +12,21 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 builder.Services.AddSingleton<StudySprout.DatabaseData.StudyCalendarEdit>();
 
-builder.Services.AddSingleton(_ =>
+/*builder.Services.AddSingleton(_ =>
 {
     return new FirestoreDbBuilder{
         ProjectId = "studysprout-67ec9"
     }.Build();
+});*/
+
+builder.Services.AddSingleton<FirestoreDb>(provider => 
+{
+    string projectId = "studysprout-67ec9"; 
+    return FirestoreDb.Create(projectId); 
 });
 
+
+builder.Services.AddScoped<user1>();
 
 var app = builder.Build();
 

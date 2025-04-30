@@ -1,3 +1,8 @@
+@using Google.Cloud.Firestore;
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+@inject user1 user1
+
 @page "/signin"
 
 <PageTitle>Sign In</PageTitle>
@@ -9,16 +14,24 @@
     </div>
     <div class="signin-container">
         <h1>Sign In</h1>
-        <form>
+        <form @onsubmit="HandleSubmit">
             <div class="form-group">
                 <label for="email">Email:</label>
-                <input type="email" id="email" @bind="Email" class="form-control" placeholder="Enter your email" />
+                <input type="email" id="email" @bind="Email" class="form-control" placeholder="Enter your email" maxlength="60" minlength="3" required />
             </div>
             <div class="form-group">
                 <label for="password">Password:</label>
-                <input type="password" id="password" @bind="Password" class="form-control" placeholder="Enter your password" />
+                <input type="password" id="password" @bind="Password" class="form-control" placeholder="Enter your password" size="30" maxlength="69" minlength="9" required/>
             </div>
-            <button type="button" @onclick="HandleSignIn" class="btn btn-primary">Sign In</button>
+            <button type="submit" disabled="@isLoading">Sign In</button>
+            @if (isLoading)
+            {
+                <span>Loading...</span>
+            }
+            @if (!string.IsNullOrEmpty(LoginMsg))
+            {
+                <p>@LoginMsg</p>
+            }
         </form>
         @if (!string.IsNullOrEmpty(ErrorMessage))
         {
@@ -125,6 +138,67 @@
     private string Email { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
     private string ErrorMessage { get; set; } = string.Empty;
+    private string LoginMsg = "";
+    private bool isLoading = false;
+    FirestoreDb StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+
+
+    public class Users
+    {
+        public string id { get; set; }
+        public string email { get; set; }
+        public string password { get; set; }
+        public Boolean isUser { get; set; }
+    }
+
+    private IEnumerable<Users> users = Array.Empty<Users>();
+    
+    private async Task HandleSubmit()
+    {
+        isLoading = true;
+        await retrieveData();
+        isLoading = false;
+    }
+
+    private async Task retrieveData()
+    {
+        CollectionReference userCollection = StudySproutDB.Collection("UserAccount");
+        QuerySnapshot snapshot = await userCollection.GetSnapshotAsync();
+        var list = new List<Users>();
+        
+        foreach(var doc in snapshot.Documents)
+        {
+            list.Add(new Users {id = doc.Id, email = doc.GetValue<string>("Email"), password = doc.GetValue<string>("Password"), isUser = doc.GetValue<Boolean>("IsUser")});
+        }
+        users = list;
+
+        int isSuccessful = -1;
+        foreach(var u in users)
+        {
+            if(u.email == Email && u.password == Password)
+            {
+                LoginMsg = "Logged in!";
+                isSuccessful = 1;
+                user1.SetUser(Email, Password);
+                LoginMsg = user1.email;
+
+                if(u.isUser == true)
+                {
+                    Navigation.NavigateTo("/CreateNew");
+                }
+                else
+                {
+                    Navigation.NavigateTo("/");
+                }
+                break;
+            }
+            else
+            {
+                isSuccessful = 0;
+            }
+        }
+        if(isSuccessful == 0) LoginMsg = "Invalid email or password. Try again!";
+    }
 
     private void HandleSignIn()
     {

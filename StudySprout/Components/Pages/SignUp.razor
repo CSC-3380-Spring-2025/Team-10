@@ -36,7 +36,7 @@
                     <label for="confirm-password">Confirm Password:</label>
                     <input type="password" id="confirm-password" @bind="ConfirmPassword" class="form-control" placeholder="Confirm your password" />
                 </div>
-                <button type="submit" disabled="@isLoading">Sign Up</button>
+                <button class="submit" type="submit" disabled="@isLoading">Sign Up</button>
                 @if (isLoading)
                 {
                     <span>Creating account...</span>
@@ -126,7 +126,7 @@
         border-radius: 5px;
     }
 
-    .btn {
+    .submit {
         width: 100%;
         padding: 10px;
         background-color: #00d44a;
@@ -166,7 +166,7 @@
     private string StatusMessage { get; set; } = string.Empty;
     private bool isLoading = false;
 
-    FirestoreDb StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+  FirestoreDb StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
 
     private async Task HandleSubmit()
     {

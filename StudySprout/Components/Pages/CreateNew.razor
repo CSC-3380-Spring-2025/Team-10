@@ -4,16 +4,16 @@
 @page "/CreateNew"
 @attribute [StreamRendering]
 @inject NavigationManager Navigation
+@inject IConfiguration Configuration
 
 <PageTitle>CREATE NEW</PageTitle>
-
+3
 <header>
     <div class="logo">
         <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
         <nav>
-            @*<a href="/MyGarden">MY GARDEN</a>*@
             <a href="/MyStudySets">MY STUDY SETS</a>
-            <a href="/CreateNew"class="active">CREATE NEW SET</a>
+            <a href="/CreateNew" class="active">CREATE NEW SET</a>
         </nav>
     </div>
 
@@ -26,35 +26,44 @@
 <div class="banner">
     <h1><span class="highlight">CREATE</span> A NEW</h1>
     <h1><span class="highlight">STUDY SET.</span></h1>
-    @*<h4>READY, SET, STUDY!</h4>*@
     <img class="slink-icon" src="/Slink.png" alt="Slink Icon"/>
 </div>
 
 <main>
-    <form>
+    <div class="debug-info">
+        <h3>Debug Info:</h3>
+        <p>Firestore Status: @(StudySproutDB != null ? "Connected" : "Not Connected")</p>
+        <p>Last Action: @debugLastAction</p>
+    </div>
+    
+    <form @onsubmit="HandleFormSubmit" @onsubmit:preventDefault="true">
         <div>
             <label for="setTitle">SET TITLE</label>
-            <input type="text" id="setTitle" @bind="setTitle" />
-            @if (string.IsNullOrEmpty(setTitle))
+            <input type="text" id="setTitle" @bind="setTitle" @bind:event="oninput" />
+            @if (!string.IsNullOrEmpty(validationErrors["TITLE"]))
             {
-                <p class="alert alert-danger">Set Title is required.</p>
+                <p class="alert alert-danger">@validationErrors["TITLE"]</p>
             }
         </div>
 
         <div>
             <label for="description">DESCRIPTION</label>
-            <input type="text" id="description" @bind="description" />
-            @if (string.IsNullOrEmpty(description))
+            <input type="text" id="description" @bind="description" @bind:event="oninput" />
+            @if (!string.IsNullOrEmpty(validationErrors["DESCRIPTION"]))
             {
-                <p class="alert alert-danger">Description is required.</p>
+                <p class="alert alert-danger">@validationErrors["DESCRIPTION"]</p>
             }
         </div>
 
         <div>
-            <button type="button" class="btn btn-primary" @onclick="async () => await CreateStudySet()">CREATE</button>
+            <label for="learnBy">LEARN BY</label>
+            <input type="date" id="learnBy" @bind="learnBy" />
+        </div>
+
+        <div>
+            <button type="button" class="btn btn-primary" @onclick="HandleCreateButtonClick">CREATE</button>
         </div>
     </form>
-
 
     @if (isSuccess)
     {
@@ -66,8 +75,17 @@
         <p class="alert alert-danger">@errorMessage</p>
     }
 
+    <h3>Debug Logs</h3>
+    <div class="debug-logs">
+        @foreach (var log in debugLogs)
+        {
+            <div class="log-entry">@log</div>
+        }
+    </div>
+
     @if (sets != null && sets.Count > 0)
     {
+        <h3>Recent Study Sets</h3>
         <ul>
             @foreach (var set in sets)
             {
@@ -79,11 +97,12 @@
             }
         </ul>
     }
-    else
+    else if (dataLoaded)
     {
         <p>No study sets available. Create your first study set!</p>
     }
 </main>
+
 
 <style>
     body, html {
@@ -318,129 +337,336 @@
         color: white;
         padding: 50px 20px;
         position: relative;
-        width: 165%; /* Adjust width to account for the left navigation panel */
-        margin-left: -230px; /* Shift the banner to the right to align with the navigation panel */
+        width: 165%;
+        margin-left: -230px;
         height: 248px;
         box-sizing: border-box;
         font-weight: bolder;
+    }
+    .debug-info {
+        margin: 20px auto;
+        padding: 15px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .debug-logs {
+        max-height: 200px;
+        overflow-y: auto;
+        margin: 20px auto;
+        padding: 10px;
+        background-color: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-family: monospace;
+    }
+    
+    .log-entry {
+        margin-bottom: 5px;
+        padding: 3px;
+        border-bottom: 1px solid #eee;
     }
 </style>
 
 @code
 {
-    public string setTitle { get; set; }
-    public string description { get; set; }
-    public bool isSuccess { get; set; }
-    public bool isError { get; set; }
-    public string errorMessage { get; set; }
-
-    private FirestoreDb StudySproutDB;
+    FirestoreDb StudySproutDB;
 
     public List<StudySet> sets { get; set; } = new List<StudySet>();
+    private System.Threading.Timer _timer;
+
+    public string setTitle { get; set; } = "";
+    public string description { get; set; } = "";
+    public DateTime learnBy { get; set; } = DateTime.Now.AddDays(7);
+
+    public bool isSuccess { get; set; } = false;
+    public bool isError { get; set; } = false;
+    public bool dataLoaded { get; set; } = false;
+    public string errorMessage { get; set; } = string.Empty;
+    public string debugLastAction { get; set; } = "None";
+    public List<string> debugLogs { get; set; } = new List<string>();
+    
+    public int buttonClickCount { get; set; } = 0;
+    public int formSubmitCount { get; set; } = 0;
+    
+    private Dictionary<string, string> validationErrors = new Dictionary<string, string>
+    {
+        { "TITLE", "" },
+        { "DESCRIPTION", "" }
+    };
+
+
+    private void AddLog(string message)
+    {
+        debugLogs.Insert(0, $"[{DateTime.Now:HH:mm:ss}] {message}");
+        Console.WriteLine(message);
+        if (debugLogs.Count > 20) debugLogs.RemoveAt(debugLogs.Count - 1);
+        InvokeAsync(StateHasChanged);
+    }
 
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Initializing Firestore");
+        AddLog("Page initialized");
+        _timer = new System.Threading.Timer(
+            callback: async state => await InvokeAsync(StateHasChanged),
+            state: null,
+            dueTime: TimeSpan.FromSeconds(1),
+            period: TimeSpan.FromSeconds(1)
+        );
+
+        await InitializeFirestore();
+    }
+
+    private async Task InitializeFirestore()
+    {
+        AddLog("Initializing Firestore");
+        debugLastAction = "Initializing";
+        
         try
         {
             StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+            AddLog("Firestore initialized successfully");
+            
             await LoadStudySets();
+            dataLoaded = true;
+            debugLastAction = "Initialized";
         }
         catch (Exception ex)
         {
             isError = true;
             errorMessage = $"Error initializing Firestore: {ex.Message}";
-            Console.WriteLine(errorMessage);
+            AddLog($"ERROR: {errorMessage}");
+            if (ex.InnerException != null)
+            {
+                AddLog($"Inner Exception: {ex.InnerException.Message}");
+            }
+            debugLastAction = "Error";
         }
     }
-     private async Task CreateStudySet()
-    {
-        Console.WriteLine("Form submitted");
-        Console.WriteLine($"Input Data - Title: {setTitle}, Description: {description}");
 
+    private async Task CreateStudySet()
+    {
+        AddLog($"===== STARTING CreateStudySet =====");
+        AddLog($"Form submitted - Title: {setTitle}, Description: {description}");
+        debugLastAction = "Creating Study Set";
+        
         isSuccess = false;
         isError = false;
         errorMessage = string.Empty;
+        ResetValidation();
 
-        if (string.IsNullOrEmpty(setTitle) || string.IsNullOrEmpty(description))
+        bool isValid = true;
+        if (string.IsNullOrEmpty(setTitle))
         {
-            Console.WriteLine("Validation failed: Missing required fields.");
-            isError = true;
-            errorMessage = "Please fill out all fields correctly!";
+            validationErrors["TITLE"] = "Set Title is required.";
+            isValid = false;
+        }
+        if (string.IsNullOrEmpty(description))
+        {
+            validationErrors["DESCRIPTION"] = "Description is required.";
+            isValid = false;
+        }
+
+        if (!isValid)
+        {
+            AddLog("Validation failed: Missing required fields.");
+            await InvokeAsync(StateHasChanged);
             return;
         }
 
-        try
+        try 
         {
-            Console.WriteLine("Connecting to Firestore");
+            AddLog("Connecting to Firestore...");
+            
+            if (StudySproutDB == null)
+            {
+                AddLog("ERROR: Firestore DB is null, trying to recreate connection");
+                StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+            }
+            
+            AddLog("Getting collection reference: MyStudySetsDB");
             CollectionReference studySetsCollection = StudySproutDB.Collection("MyStudySetsDB");
-
-            //Create new doc in  "StudySets" collection
-            await studySetsCollection.AddAsync(new StudySet
+            
+            AddLog("Creating new StudySet object");
+            var newStudySet = new StudySet
             {
                 TITLE = setTitle,
-                DESCRIPTION = description
-            });
+                DESCRIPTION = description,
+                LEARNBY = learnBy,
+                CREATED = Timestamp.FromDateTime(DateTime.UtcNow)
+            };
+            
+            AddLog($"Creating StudySet: TITLE={setTitle}, DESCRIPTION={description}, LEARNBY={learnBy}");
+            
+            var properties = typeof(StudySet).GetProperties();
+            foreach (var prop in properties)
+            {
+                var value = prop.GetValue(newStudySet);
+                AddLog($"Property {prop.Name} = {value}");
+            }
 
-            Console.WriteLine("Study set successfully saved!");
+            AddLog("Calling AddAsync to save to Firestore...");
+            DocumentReference addedDocRef = await studySetsCollection.AddAsync(newStudySet);
+            
+            AddLog($"Document added with ID: {addedDocRef.Id}");
+            
             isSuccess = true;
-
-            await ReloadStudySets();
+            debugLastAction = "Study Set Created";
+            
+            await LoadStudySets();
             ClearInputs();
+            await InvokeAsync(StateHasChanged);
         }
         catch (Exception e)
         {
-            Console.WriteLine($"Firestore save error: {e.Message}");
+            AddLog($"ERROR saving to Firestore: {e.Message}");
+            if (e.InnerException != null)
+            {
+                AddLog($"Inner Exception: {e.InnerException.Message}");
+            }
             isError = true;
-            errorMessage = $"Firestore save error: {e.Message}";
+            errorMessage = $"Error saving to Firestore: {e.Message}";
+            debugLastAction = "Error";
+            await InvokeAsync(StateHasChanged);
         }
     }
+
     private async Task LoadStudySets()
     {
         try
         {
-            Console.WriteLine("Loading study sets from Firestore...");
-            CollectionReference studySetsCollection = StudySproutDB.Collection("StudySets");
+            AddLog("Loading study sets from Firestore...");
+            
+            if (StudySproutDB == null)
+            {
+                AddLog("ERROR: Firestore DB is null, trying to recreate connection");
+                StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+            }
+            
+            CollectionReference studySetsCollection = StudySproutDB.Collection("MyStudySetsDB");
+            AddLog("Getting snapshot from MyStudySetsDB collection");
+            
             QuerySnapshot snapshot = await studySetsCollection.GetSnapshotAsync();
-
-            sets.Clear();
+            AddLog($"Got {snapshot.Documents.Count} documents in snapshot");
+            
+            var tempSets = new List<StudySet>();
 
             foreach (DocumentSnapshot document in snapshot.Documents)
             {
                 if (document.Exists)
                 {
-                    Console.WriteLine($"Document ID: {document.Id}");
-                    foreach (var field in document.ToDictionary())
+                    AddLog($"Document ID: {document.Id}");
+                    
+                    try
                     {
-                        
-                        Console.WriteLine($"{field.Key}: {field.Value}");
+                        var data = document.ConvertTo<StudySet>();
+                        tempSets.Add(data);
+                        AddLog($"Added set: {data.TITLE}");
                     }
-                    var data = document.ConvertTo<StudySet>();
-                    sets.Add(data);
+
+                    catch (Exception convEx)
+                    {
+                        AddLog($"ERROR converting document: {convEx.Message}");
+                        try
+                        {
+                            // Try first with Dictionary for more reliable deserialization
+                            Dictionary<string, object> docData = document.ToDictionary();
+                            var studySet = new StudySet
+                            {
+                                TITLE = docData.ContainsKey("TITLE") ? docData["TITLE"].ToString() : "",
+                                DESCRIPTION = docData.ContainsKey("DESCRIPTION") ? docData["DESCRIPTION"].ToString() : "",
+                                LEARNBY = docData.ContainsKey("LEARNBY") ? 
+                                    (docData["LEARNBY"] is Timestamp ts ? ts.ToDateTime() : DateTime.Now) : 
+                                    DateTime.Now,
+                                CREATED = docData.ContainsKey("CREATED") ?
+                                    (docData["CREATED"] is Timestamp created ? created : Timestamp.FromDateTime(DateTime.UtcNow)) :
+                                    Timestamp.FromDateTime(DateTime.UtcNow)
+                            };
+                            tempSets.Add(studySet);
+                            AddLog($"Added set (using manual conversion): {studySet.TITLE}");
+                        }
+                        catch (Exception secEx)
+                        {
+                            AddLog($"SECOND ERROR converting document: {secEx.Message}");
+                        }
+                    }
                 }
             }
-        Console.WriteLine("Study sets loaded successfully.");
+            sets = tempSets;
+            AddLog($"Loaded {sets.Count} study sets successfully");
+            dataLoaded = true;
         }
         catch (Exception ex)
         {
-            Console.WriteLine($"Error loading study sets: {ex.Message}");
+            AddLog($"ERROR loading study sets: {ex.Message}");
+            if (ex.InnerException != null)
+            {
+                AddLog($"Inner Exception: {ex.InnerException.Message}");
+            }
             isError = true;
             errorMessage = $"An error occurred while loading study sets: {ex.Message}";
         }
     }
-    private async Task ReloadStudySets()
+
+    private async Task HandleCreateButtonClick()
     {
-        await LoadStudySets();
+        buttonClickCount++;
+        AddLog($"Create button clicked (count: {buttonClickCount})");
+        try
+        {
+            await CreateStudySet();
+        }
+        catch (Exception ex)
+        {
+            AddLog($"ERROR in button click handler: {ex.Message}");
+            isError = true;
+            errorMessage = $"Error in button handler: {ex.Message}";
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task HandleFormSubmit()
+    {
+        formSubmitCount++;
+        AddLog($"Form submitted via submit event (count: {formSubmitCount})");
+        try 
+        {
+            await CreateStudySet();
+        }
+        catch (Exception ex)
+        {
+            AddLog($"ERROR in form submit handler: {ex.Message}");
+            if (ex.InnerException != null)
+            {
+                AddLog($"Inner Exception: {ex.InnerException.Message}");
+            }
+            isError = true;
+            errorMessage = $"Error in form submit handler: {ex.Message}";
+            await InvokeAsync(StateHasChanged);
+        }
     }
 
     private void ClearInputs()
     {
         setTitle = string.Empty;
         description = string.Empty;
+        learnBy = DateTime.Now.AddDays(7);
     }
+
+    private void ResetValidation()
+    {
+        validationErrors["TITLE"] = "";
+        validationErrors["DESCRIPTION"] = "";
+    }
+
     public void GoToLogIn()
     {
-        Console.WriteLine("Go to LogIn/SignIn...");
         Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
     }
 }

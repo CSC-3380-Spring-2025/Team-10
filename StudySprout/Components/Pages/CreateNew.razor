@@ -1,13 +1,14 @@
 @using Google.Cloud.Firestore;
+@inject NavigationManager Navigation
+@*@rendermode InteractiveServer*@
 @using StudySprout.Models
 
+@*@inject StudySet StudySet*@
+
 @page "/CreateNew"
-@attribute [StreamRendering]
-@inject NavigationManager Navigation
-@inject IConfiguration Configuration
 
 <PageTitle>CREATE NEW</PageTitle>
-3
+
 <header>
     <div class="logo">
         <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
@@ -30,42 +31,48 @@
 </div>
 
 <main>
-    <div class="debug-info">
+    @*<div class="debug-info">
         <h3>Debug Info:</h3>
         <p>Firestore Status: @(StudySproutDB != null ? "Connected" : "Not Connected")</p>
         <p>Last Action: @debugLastAction</p>
-    </div>
+    </div>*@
     
-    <form @onsubmit="HandleFormSubmit" @onsubmit:preventDefault="true">
+    <form @onsubmit="HandleSubmit">
         <div>
-            <label for="setTitle">SET TITLE</label>
-            <input type="text" id="setTitle" @bind="setTitle" @bind:event="oninput" />
-            @if (!string.IsNullOrEmpty(validationErrors["TITLE"]))
+            <label for="TITLE">SET TITLE</label>
+            <input type="text" id="TITLE" @bind="TITLE" placeholder="Enter your set's title" required />
+            @*@if (!string.IsNullOrEmpty(validationErrors["TITLE"]))
             {
                 <p class="alert alert-danger">@validationErrors["TITLE"]</p>
-            }
+            }*@
         </div>
 
         <div>
-            <label for="description">DESCRIPTION</label>
-            <input type="text" id="description" @bind="description" @bind:event="oninput" />
-            @if (!string.IsNullOrEmpty(validationErrors["DESCRIPTION"]))
+            <label for="DESCRIPTION">DESCRIPTION</label>
+            <input type="text" id="DESCRIPTION" @bind="DESCRIPTION" placeholder="Enter your set's description" required />
+            @*@if (!string.IsNullOrEmpty(validationErrors["DESCRIPTION"]))
             {
                 <p class="alert alert-danger">@validationErrors["DESCRIPTION"]</p>
-            }
+            }*@
         </div>
 
         <div>
-            <label for="learnBy">LEARN BY</label>
-            <input type="date" id="learnBy" @bind="learnBy" />
+            <label for="LEARNBY">LEARN BY</label>
+            <input type="date" id="LEARNBY" @bind="LEARNBY" required />
         </div>
 
-        <div>
-            <button type="button" class="btn btn-primary" @onclick="HandleCreateButtonClick">CREATE</button>
-        </div>
+        <button type="submit" disabled="@isLoading">CREATE</button>
+        @if(isLoading)
+        {
+            <span>Loading...</span>
+        }
+        @if (!string.IsNullOrEmpty(Msg))
+        {
+            <p>@Msg</p>
+        }
     </form>
 
-    @if (isSuccess)
+    @*@if (isSuccess)
     {
         <p class="alert alert-success">Study set created successfully!</p>
     }
@@ -73,17 +80,17 @@
     @if (isError)
     {
         <p class="alert alert-danger">@errorMessage</p>
-    }
+    }*@
 
-    <h3>Debug Logs</h3>
+    @*<h3>Debug Logs</h3>
     <div class="debug-logs">
         @foreach (var log in debugLogs)
         {
             <div class="log-entry">@log</div>
         }
-    </div>
+    </div>*@
 
-    @if (sets != null && sets.Count > 0)
+    @*@if (sets != null && sets.Count > 0)
     {
         <h3>Recent Study Sets</h3>
         <ul>
@@ -97,7 +104,8 @@
             }
         </ul>
     }
-    else if (dataLoaded)
+    else *@
+    @if (DataLoaded)
     {
         <p>No study sets available. Create your first study set!</p>
     }
@@ -371,26 +379,109 @@
 
 @code
 {
-    FirestoreDb StudySproutDB;
+    
+    private StudySet StudySet = new StudySet();
+    private string TITLE { get; set; } = string.Empty;
+    private string DESCRIPTION { get; set; } = string.Empty;
+    private DateTime LEARNBY { get; set; } = DateTime.Now.AddDays(7);
 
-    public List<StudySet> sets { get; set; } = new List<StudySet>();
-    private System.Threading.Timer _timer;
+    public bool DataLoaded { get; set; } = false; //IsUser (?)
+    private string ErrorMessage { get; set; } = string.Empty;
+    private string Msg = "";
+    private bool isLoading = false;
 
-    public string setTitle { get; set; } = "";
-    public string description { get; set; } = "";
-    public DateTime learnBy { get; set; } = DateTime.Now.AddDays(7);
-
-    public bool isSuccess { get; set; } = false;
+    /*public bool isSuccess { get; set; } = false;
     public bool isError { get; set; } = false;
-    public bool dataLoaded { get; set; } = false;
     public string errorMessage { get; set; } = string.Empty;
     public string debugLastAction { get; set; } = "None";
     public List<string> debugLogs { get; set; } = new List<string>();
     
     public int buttonClickCount { get; set; } = 0;
-    public int formSubmitCount { get; set; } = 0;
+    public int formSubmitCount { get; set; } = 0;*/
     
-    private Dictionary<string, string> validationErrors = new Dictionary<string, string>
+    FirestoreDb StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+
+    private async Task HandleSubmit()
+    {
+        isLoading = true;
+        ErrorMessage = string.Empty;
+        Msg = string.Empty;
+
+        if(string.IsNullOrEmpty(TITLE) || string.IsNullOrEmpty(DESCRIPTION))
+        {
+            ErrorMessage = "Fill required fields.";
+            isLoading = false;
+            return;
+        }
+
+        if (await TitleExists(TITLE))
+        {
+            ErrorMessage = "A set with this title already exists.";
+            isLoading = false;
+            return;
+        }
+
+        await CreateStudySet();
+        isLoading = false;
+    }
+
+    private async Task<bool> TitleExists(string title)
+    {
+        CollectionReference setCollection = StudySproutDB.Collection("MyStudySetsDB");
+        Query query = setCollection.WhereEqualTo("TITLE", title);
+        QuerySnapshot snapshot = await query.GetSnapshotAsync();
+
+        return snapshot.Documents.Count > 0;
+    }
+
+    private async Task CreateStudySet()
+    {
+        try
+        {
+            CollectionReference setCollection = StudySproutDB.Collection("MyStudySetsDB");
+            
+            // Create document data
+            Dictionary<string, object> setData = new Dictionary<string, object>
+            {
+                { "TITLE", TITLE },
+                { "DESCRIPTION", DESCRIPTION },
+                { "LEARNBY", LEARNBY },
+                { "DataLoaded", DataLoaded }
+            };
+            
+            // Add the document
+            DocumentReference docRef = await setCollection.AddAsync(setData);
+            
+            // Successfully created account
+            Msg = "Set created successfully!";
+            
+            // Set user in the user1 service
+            StudySet.SetData(TITLE, DESCRIPTION, LEARNBY);
+            
+            // Navigate to appropriate page based on user type
+            await Task.Delay(1000); // Short delay to show success message
+            if (DataLoaded)
+            {
+                Navigation.NavigateTo("/MyStudySets");
+            }
+            else
+            {
+                Navigation.NavigateTo("/CreateNew");
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error creating set: {ex.Message}";
+        }
+    }
+
+
+
+
+
+
+
+    /*private Dictionary<string, string> validationErrors = new Dictionary<string, string>
     {
         { "TITLE", "" },
         { "DESCRIPTION", "" }
@@ -493,11 +584,11 @@
             {
                 TITLE = setTitle,
                 DESCRIPTION = description,
-                LEARNBY = learnBy,
+                LEARNBY = LearnBy,
                 CREATED = Timestamp.FromDateTime(DateTime.UtcNow)
             };
             
-            AddLog($"Creating StudySet: TITLE={setTitle}, DESCRIPTION={description}, LEARNBY={learnBy}");
+            AddLog($"Creating StudySet: TITLE={setTitle}, DESCRIPTION={Description}, LEARNBY={LearnBy}");
             
             var properties = typeof(StudySet).GetProperties();
             foreach (var prop in properties)
@@ -650,8 +741,8 @@
     private void ClearInputs()
     {
         setTitle = string.Empty;
-        description = string.Empty;
-        learnBy = DateTime.Now.AddDays(7);
+        Description = string.Empty;
+        LearnBy = DateTime.Now.AddDays(7);
     }
 
     private void ResetValidation()
@@ -668,5 +759,5 @@
     public void Dispose()
     {
         _timer?.Dispose();
-    }
+    }*/
 }

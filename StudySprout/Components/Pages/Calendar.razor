@@ -1,6 +1,7 @@
 ﻿@page "/calendar"
 @using Google.Cloud.Firestore
 @using StudySprout.DatabaseData
+@using StudySprout.Models
 
 <header>
     <div class="logo">
@@ -78,7 +79,6 @@
 </div>
 
 @code {
-    private FirestoreDb StudySproutDB;
     public List<StudyTime> Events { get; set; } = new();
     public bool isError { get; set; }
     public string errorMessage { get; set; }
@@ -94,7 +94,7 @@
     private int DaysInMonth => DateTime.DaysInMonth(currentYear, currentMonth);
     private int FirstDayOfWeek => (int)new DateTime(currentYear, currentMonth, 1).DayOfWeek;
 
-    StudySproutDB = FireStoreDb.Create("studysprout-67ec9");
+    FirestoreDb StudySproutDB;
 
     protected override async Task OnInitializedAsync()
     {

@@ -531,6 +531,20 @@
         }
     }
 
+    private async Task CreateStudySetAsync()
+    {
+        var newStudySet = new StudySet
+        {
+            TITLE = setTitle,
+            DESCRIPTION = description,
+            LEARNBY = learnBy,
+            CREATED = Timestamp.FromDateTime(DateTime.UtcNow)
+        };
+
+        var studySetDoc = await StudySproutDB.Collection("StudySets").AddAsync(newStudySet);
+        await studySetDoc.UpdateAsync("FlashcardIDs", new List<string>()); // Initialize FlashcardIDs
+    }
+
     private async Task LoadStudySets()
     {
         try
@@ -662,6 +676,25 @@
     public void GoToLogIn()
     {
         Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+
+    public async Task DeleteStudySetAsync(string studySetId)
+    {
+        // Retrieve the StudySet document
+        var studySetDoc = await StudySproutDB.Collection("StudySets").Document(studySetId).GetSnapshotAsync();
+        if (!studySetDoc.Exists) throw new Exception("StudySet not found");
+
+        // Get the list of FlashcardIDs
+        var flashcardIds = studySetDoc.GetValue<List<string>>("FlashcardIDs");
+
+        // Delete all associated flashcards
+        foreach (var flashcardId in flashcardIds)
+        {
+            await StudySproutDB.Collection("flashcards").Document(flashcardId).DeleteAsync();
+        }
+
+        // Delete the StudySet document
+        await StudySproutDB.Collection("StudySets").Document(studySetId).DeleteAsync();
     }
 
     public void Dispose()

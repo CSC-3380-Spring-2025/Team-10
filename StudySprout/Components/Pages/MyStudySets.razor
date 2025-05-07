@@ -65,11 +65,11 @@ else
             <div class="study-set">
                 <div class="study-set-header">
                     <div class="created-date">CREATED: </div>
-                    <input type="text" class="set-title" placeholder="SET TITLE" value="@set.TITLE">
+                    <input type="text" class="set-title" placeholder="SET TITLE" value="@set.setTitle">
                 </div>
-                <textarea class="set-description" placeholder="DESCRIPTION">@set.DESCRIPTION</textarea>
+                <textarea class="set-description" placeholder="DESCRIPTION">@set.description</textarea>
                 <div class="study-set-footer">
-                    <div class="learn-by">LEARN BY @set.LEARNBY</div>
+                    <div class="learn-by">LEARN BY @set.learnBy</div>
                     <div class="days-remaining">DAYS REMAINING: </div>
                 </div>
             </div>
@@ -79,7 +79,7 @@ else
 
 @code {
     private FirestoreDb StudySproutDB;
-    private List<StudySet> sets = new List<StudySet>();
+    private List<set1> sets = new List<set1>();
     private bool isError = false;
     private bool dataLoaded = false;
     private string errorMessage = string.Empty;
@@ -129,16 +129,16 @@ else
             CollectionReference studySetsCollection = StudySproutDB.Collection("MyStudySetsDB");
             QuerySnapshot snapshot = await studySetsCollection.GetSnapshotAsync();
 
-            var tempSets = new List<StudySet>();
+            var tempSets = new List<set1>();
 
             foreach (DocumentSnapshot document in snapshot.Documents)
             {
                 if (document.Exists)
                 {
                     Console.WriteLine($"Document ID: {document.Id}");
-                    var data = document.ConvertTo<StudySet>();
+                    var data = document.ConvertTo<set1>();
                     tempSets.Add(data);
-                    Console.WriteLine($"Added: TITLE={data.TITLE}");
+                    Console.WriteLine($"Added: TITLE={data.setTitle}");
                 }
             }
 
@@ -157,7 +157,7 @@ else
     }
 
     // This is an alternative approach if the Virtualize with Items doesn't work
-    private async ValueTask<ItemsProviderResult<StudySet>> LoadVirtualizedStudySets(ItemsProviderRequest request)
+    private async ValueTask<ItemsProviderResult<set1>> LoadVirtualizedStudySets(ItemsProviderRequest request)
     {
         Console.WriteLine($"Virtualization Request: StartIndex={request.StartIndex}, Count={request.Count}");
 
@@ -167,7 +167,7 @@ else
         var paginatedSets = sets.Skip(startIndex).Take(pageSize).ToList();
         Console.WriteLine($"Returning {paginatedSets.Count} items out of {sets.Count} total items.");
 
-        return new ItemsProviderResult<StudySet>(paginatedSets, sets.Count);
+        return new ItemsProviderResult<set1>(paginatedSets, sets.Count);
     }
 
     public void Dispose()

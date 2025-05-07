@@ -1,3 +1,4 @@
 {
-    "dotnet.defaultSolution": "StudySprout.sln"
+    "dotnet.defaultSolution": "StudySprout.sln",
+    "FSharp.suggestGitignore": false
 }

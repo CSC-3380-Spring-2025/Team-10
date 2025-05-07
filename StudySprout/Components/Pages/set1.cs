@@ -4,7 +4,7 @@ using Google.Cloud.Firestore;
 public class set1
 {
     public set1() { }
-    
+
     [FirestoreProperty("setTitle")]
     public string setTitle { get; set; }
 
@@ -13,6 +13,7 @@ public class set1
 
     [FirestoreProperty("learnBy")]
     public DateTime learnBy { get; set; }
+    
 
     public void SetSet(string t, string d, DateTime l)
     {

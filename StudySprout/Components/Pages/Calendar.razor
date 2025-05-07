@@ -1,4 +1,5 @@
 ﻿@page "/calendar"
+@rendermode InteractiveServer
 @using Google.Cloud.Firestore
 @using StudySprout.DatabaseData
 @using StudySprout.Models
@@ -167,29 +168,37 @@
 
     private async Task AddEvent()
     {
-        var newEvent = new StudyTime
+    var newEvent = new StudyTime
         {
-            Title = newTitle,
-            StartDate = newDate,
-            EndDate = newDate.AddHours(1),
-            Category = newCategory
+        Title = newTitle,
+        StartDate = newDate,
+        EndDate = newDate.AddHours(1),
+        Category = newCategory
         };
 
-        try
+    try
         {
-            await StudySproutDB.Collection("calendarEvents").AddAsync(newEvent);
-            Events.Add(newEvent);
-            showForm = false;
-            newTitle = string.Empty;
-            newCategory = string.Empty;
-            newDate = DateTime.Today;
-            StateHasChanged();
+        await StudySproutDB.Collection("calendarEvents").AddAsync(newEvent);
+        Console.WriteLine($"Added event: {newEvent.Title} on {newEvent.StartDate}");
+        Console.WriteLine($"Events count: {Events.Count}");
+        Events.Add(newEvent);
+
+
+        currentMonth = newDate.Month;
+        currentYear = newDate.Year;
+
+        showForm = false;
+        newTitle = string.Empty;
+        newCategory = string.Empty;
+        newDate = DateTime.Today;
+        StateHasChanged();
         }
-        catch (Exception ex)
+    catch (Exception ex)
         {
-            isError = true;
-            errorMessage = $"Error adding event: {ex.Message}";
-            Console.WriteLine(errorMessage);
+        isError = true;
+        errorMessage = $"Error adding event: {ex.Message}";
+        Console.WriteLine(errorMessage);
         }
-    }
+    } 
+
 }

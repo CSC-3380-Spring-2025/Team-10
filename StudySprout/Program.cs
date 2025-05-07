@@ -27,6 +27,8 @@ builder.Services.AddSingleton<FirestoreDb>(provider =>
 
 
 builder.Services.AddScoped<user1>();
+builder.Services.AddScoped<set1>();
+
 
 var app = builder.Build();
 

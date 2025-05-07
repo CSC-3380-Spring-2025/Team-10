@@ -58,6 +58,21 @@
             <input type="date" id="learnBy" @bind="learnBy" class="form-control" placeholder="Enter your set's due date"/>
         </div>
 
+        <div class="term-definitions-container">
+            @for (int i = 0; i < termDefinitionPairs.Count; i++)
+            {
+                var index = i;
+                <div class="term-definition-pair">
+                    <div class="term-definition-inputs">
+                        <input type="text" placeholder="Term" @bind="termDefinitionPairs[index].Term" class="term-input" />
+                        <input type="text" placeholder="Definition" @bind="termDefinitionPairs[index].Definition" class="definition-input" />
+                    </div>
+                    <button type="button" class="remove-btn" @onclick="() => RemovePair(index)">×</button>
+                </div>
+            }
+            <button type="button" class="add-pair-btn" @onclick="AddNewPair">+ Add Another Term</button>
+        </div>
+
         <button class="submit" type="submit" disabled="@isLoading">CREATE</button>
                 @if (isLoading)
                 {
@@ -218,6 +233,62 @@
         outline: none;
     }
 
+    .term-definitions-container {
+        margin-bottom: 25px;
+    }
+
+    .term-definition-pair {
+        display: flex;
+        margin-bottom: 15px;
+        align-items: center;
+    }
+
+    .term-definition-inputs {
+        display: flex;
+        flex: 1;
+        gap: 10px;
+    }
+
+    .term-input {
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+    .definition-input {
+        flex: 2;
+        margin-bottom: 0;
+    }
+
+    .remove-btn {
+        background-color: #ff6b6b;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .add-pair-btn {
+        background-color: #4e7429;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 15px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .add-pair-btn:hover {
+        background-color: #3a581f;
+    }
+
     button.btn {
         display: block;
         width: 100%;
@@ -334,6 +405,11 @@
     .submit:hover {
         background-color: #00b321;
     }
+
+    .errorMessage {
+        color: #dc3545;
+        font-weight: bold;
+    }
 </style>
 
 @code
@@ -342,6 +418,13 @@
     public string description { get; set; } = string.Empty;
     public DateTime learnBy { get; set; } = DateTime.Now.AddDays(7);
 
+    public class TermDefinitionPair
+    {
+        public string Term { get; set; } = string.Empty;
+        public string Definition { get; set; } = string.Empty;
+    }
+    private List<TermDefinitionPair> termDefinitionPairs = new List<TermDefinitionPair>();
+
     public bool IsSuccess { get; set; } = false;
     public string ErrorMessage { get; set; } = string.Empty;
     private string StatusMessage { get; set; } = string.Empty;
@@ -349,15 +432,52 @@
     
     FirestoreDb StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
 
+    protected override void OnInitialized()
+    {
+        AddNewPair();
+    }
+
+    private void AddNewPair()
+    {
+        termDefinitionPairs.Add(new TermDefinitionPair());
+    }
+
+    private Task RemovePair(int index)
+    {
+        if (termDefinitionPairs.Count > 1) // Keep at least one pair
+        {
+            termDefinitionPairs.RemoveAt(index);
+        }
+        return Task.CompletedTask;
+    }
+
     private async Task HandleSubmit()
     {
         isLoading = true;
         ErrorMessage = string.Empty;
         StatusMessage = string.Empty;
 
-        if (string.IsNullOrEmpty(setTitle) || string.IsNullOrEmpty(description))
+        if (string.IsNullOrEmpty(setTitle))
         {
-            ErrorMessage = "All fields are required.";
+            ErrorMessage = "Title field is required.";
+            isLoading = false;
+            return;
+        }
+
+        // Validate that at least one term-definition pair has content
+        bool hasValidPair = false;
+        foreach (var pair in termDefinitionPairs)
+        {
+            if (!string.IsNullOrWhiteSpace(pair.Term) && !string.IsNullOrWhiteSpace(pair.Definition))
+            {
+                hasValidPair = true;
+                break;
+            }
+        }
+
+        if (!hasValidPair)
+        {
+            ErrorMessage = "At least one term-definition pair must be filled out.";
             isLoading = false;
             return;
         }
@@ -390,6 +510,11 @@
         {
             CollectionReference userCollection = StudySproutDB.Collection("MyStudySetsDB");
             
+            // Filter out empty pairs
+            var validPairs = termDefinitionPairs
+                .Where(p => !string.IsNullOrWhiteSpace(p.Term) && !string.IsNullOrWhiteSpace(p.Definition))
+                .ToList();
+
             // Create document data
             Dictionary<string, object> setData = new Dictionary<string, object>
             {
@@ -397,8 +522,16 @@
                 { "description", description },
                 { "learnBy", Timestamp.FromDateTime(learnBy.ToUniversalTime()) },
                 { "IsSuccess", IsSuccess },
-                { "CreatedDate", Timestamp.GetCurrentTimestamp() }
+                { "CreatedDate", Timestamp.GetCurrentTimestamp() },
+                { "TermCount", validPairs.Count }
             };
+
+            // Add term-definition pairs to the document
+            for (int i = 0; i < validPairs.Count; i++)
+            {
+                setData[$"term_{i}"] = validPairs[i].Term;
+                setData[$"definition_{i}"] = validPairs[i].Definition;
+            }
             
             // Add the document
             DocumentReference docRef = await userCollection.AddAsync(setData);

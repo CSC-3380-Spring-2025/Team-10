@@ -239,7 +239,7 @@ ul li h3 {
 }
 
 .set-description {
-    min-height: 120px;
+    min-height: 40px;
     padding: 10px;
     margin: 0;
     width: 100%;
@@ -275,7 +275,7 @@ ul li h3 {
 .days-remaining {
     flex: 1;
     padding: 10px 15px;
-    background-color: #a9554f;
+    background-color: #f1e7e6;
     color: white;
     font-weight: 500;
     font-size: 0.9rem;

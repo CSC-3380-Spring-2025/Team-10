@@ -45,20 +45,6 @@ else if (sets == null || sets.Count == 0)
 }
 else
 {
-   @*<div class="study-sets-container">
-        <div class="study-sets-direct">
-            @foreach (var set in sets)
-            {
-                <div class="study-set">
-                    <h3>@set.TITLE</h3>
-                    <p>@set.DESCRIPTION</p>
-                    <p>Learn by: @set.LEARNBY.ToString("MMMM d, yyyy")</p>
-                </div>
-            }
-        </div>
-    </div>*@
-
-
     <div class="study-sets-container">
         @foreach (var set in sets)
         {
@@ -70,7 +56,7 @@ else
                 <textarea class="set-description" placeholder="DESCRIPTION">@set.description</textarea>
                 <div class="study-set-footer">
                     <div class="learn-by">LEARN BY @set.learnBy</div>
-                    <div class="days-remaining">DAYS REMAINING: </div>
+                    <div class="days-remaining"></div>
                 </div>
             </div>
         }
@@ -87,15 +73,13 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        // Start a timer to periodically refresh the UI
+        //Timer to refresh UI
         _timer = new System.Threading.Timer(
             async _ => await InvokeAsync(StateHasChanged),
             null,
             TimeSpan.Zero,
             TimeSpan.FromSeconds(1)
         );
-
-        // Direct async call instead of Task.Run
         await InitializeFirestore();
     }
 
@@ -116,7 +100,6 @@ else
         finally
         {
             dataLoaded = true;
-            // Make sure this executes on the UI thread
             await InvokeAsync(StateHasChanged);
         }
     }
@@ -145,7 +128,6 @@ else
             sets = tempSets;
             Console.WriteLine($"Total sets: {sets.Count}");
             
-            // Make sure dataLoaded is set to true
             dataLoaded = true;
         }
         catch (Exception ex)
@@ -156,7 +138,6 @@ else
         }
     }
 
-    // This is an alternative approach if the Virtualize with Items doesn't work
     private async ValueTask<ItemsProviderResult<set1>> LoadVirtualizedStudySets(ItemsProviderRequest request)
     {
         Console.WriteLine($"Virtualization Request: StartIndex={request.StartIndex}, Count={request.Count}");

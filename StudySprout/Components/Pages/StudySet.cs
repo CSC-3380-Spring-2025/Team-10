@@ -17,5 +17,8 @@ namespace StudySprout.Models
 
         [FirestoreProperty("CREATED")]
         public Timestamp CREATED { get; set; } = Timestamp.FromDateTime(DateTime.UtcNow);
+
+        [FirestoreProperty("FLASHCARDIDS")]
+        public ICollection<string> FLASHCARDIDS { get; set; } = new List<string>();
     }
 }

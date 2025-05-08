@@ -8,6 +8,7 @@
 
 <PageTitle>Sign Up</PageTitle>
 
+<!-- container and front end logic -->
 <div class="signup-page">
     <div class="signup-left">
         <h2 class="signup-text">
@@ -37,6 +38,7 @@
                     <input type="password" id="confirm-password" @bind="ConfirmPassword" class="form-control" placeholder="Confirm your password" />
                 </div>
                 <button class="submit" type="submit" disabled="@isLoading">Sign Up</button>
+                <!-- logic for creating the account and error handling -->
                 @if (isLoading)
                 {
                     <span>Creating account...</span>
@@ -57,6 +59,7 @@
     </div>
 </div>
 
+@* css for the page *@
 <style>
     .signup-page {
         display: flex;
@@ -156,6 +159,7 @@
 </style>
 
 @code {
+    // Properties for user input
     private string FullName { get; set; } = string.Empty;
     private string Email { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
@@ -166,8 +170,10 @@
     private string StatusMessage { get; set; } = string.Empty;
     private bool isLoading = false;
 
+    // Firestore database connection
    FirestoreDb StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
 
+    //Submission handler
     private async Task HandleSubmit()
     {
         isLoading = true;
@@ -208,7 +214,8 @@
         await CreateNewUser();
         isLoading = false;
     }
-
+    
+    // Check if email already exists in the database
     private async Task<bool> EmailExists(string email)
     {
         CollectionReference userCollection = StudySproutDB.Collection("UserAccount");
@@ -218,6 +225,7 @@
         return snapshot.Documents.Count > 0;
     }
 
+    // Create a new user in the database
     private async Task CreateNewUser()
     {
         try
@@ -260,6 +268,7 @@
         }
     }
 
+    // Handle sign-up logic
     private void HandleSignUp()
     {
         if (Password != ConfirmPassword)

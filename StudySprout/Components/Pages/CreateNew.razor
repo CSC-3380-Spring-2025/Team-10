@@ -129,7 +129,7 @@
     }
 
     header nav a:hover {
-        text-decoration: underline; /* Underline on hover */
+        text-decoration: underline;
     }
 
     .auth-links {
@@ -432,7 +432,7 @@
 
     private Task RemovePair(int index)
     {
-        if (termDefinitionPairs.Count > 1) // Keep at least one pair
+        if (termDefinitionPairs.Count > 1)
         {
             termDefinitionPairs.RemoveAt(index);
         }
@@ -452,7 +452,7 @@
             return;
         }
 
-        // Validate that at least one term-definition pair has content
+        //check at least one pair has content
         bool hasValidPair = false;
         foreach (var pair in termDefinitionPairs)
         {
@@ -470,7 +470,7 @@
             return;
         }
 
-        // Check if setTitle already exists
+        //if setTitle already exists
         if (await TitleExists(setTitle))
         {
             ErrorMessage = "A set with this title already exists.";
@@ -478,7 +478,7 @@
             return;
         }
 
-        // Create new set
+        //create new set
         await CreateStudySet();
         isLoading = false;
     }
@@ -498,12 +498,12 @@
         {
             CollectionReference userCollection = StudySproutDB.Collection("MyStudySetsDB");
             
-            // Filter out empty pairs
+            //remove empty pairs
             var validPairs = termDefinitionPairs
                 .Where(p => !string.IsNullOrWhiteSpace(p.Term) && !string.IsNullOrWhiteSpace(p.Definition))
                 .ToList();
 
-            // Create document data
+            //create doc data
             Dictionary<string, object> setData = new Dictionary<string, object>
             {
                 { "setTitle", setTitle },
@@ -514,23 +514,18 @@
                 { "TermCount", validPairs.Count }
             };
 
-            // Add term-definition pairs to the document
+            //add pairs to doc
             for (int i = 0; i < validPairs.Count; i++)
             {
                 setData[$"term_{i}"] = validPairs[i].Term;
                 setData[$"definition_{i}"] = validPairs[i].Definition;
             }
-            
-            // Add the document
             DocumentReference docRef = await userCollection.AddAsync(setData);
-            
-            // Successfully created account
             StatusMessage = "Set created successfully!";
             
-            // Set user in the user1 service
             set1.SetSet(setTitle, description, learnBy);
             
-            await Task.Delay(1000); // Short delay to show success message
+            await Task.Delay(1000);
             if (IsSuccess)
             {
                 Navigation.NavigateTo("/MyStudySets");
@@ -555,7 +550,6 @@
 
     private void HandleSetCreation()
     {
-        // Add your sign-up logic here
         Console.WriteLine($"Title: {setTitle}, Description: {description}, LearnBy: {learnBy}");
     }
 

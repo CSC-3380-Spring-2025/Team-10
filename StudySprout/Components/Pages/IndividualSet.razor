@@ -1,4 +1,4 @@
-@page "/MyStudySets/@set.documentId"
+@page "/MyStudySets/{documentId}"
 @inject NavigationManager Navigation
 
 @using Google.Cloud.Firestore
@@ -94,6 +94,7 @@ else
     {
         try
         {
+            //open each individual document
             DocumentReference docRef = StudySproutDB.Collection("MyStudySetsDB").Document(documentId);
             DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
             
@@ -127,13 +128,10 @@ else
                     }
                 }
                 
-                // Extract terms and definitions
+                //terms and definitions
                 studySet.Terms = new Dictionary<string, string>();
                 var data = snapshot.ToDictionary();
-                
-                // Look for different ways terms might be stored
-                
-                // Method 1: Using "terms" field as a dictionary
+                                
                 if (snapshot.ContainsField("terms") && snapshot.GetValue<object>("terms") is Dictionary<string, object> termsDict)
                 {
                     foreach (var pair in termsDict)
@@ -142,7 +140,6 @@ else
                     }
                 }
                 
-                // Method 2: Using term_X and definition_X fields
                 var termFields = data.Where(kv => kv.Key.StartsWith("term_")).ToList();
                 var defFields = data.Where(kv => kv.Key.StartsWith("definition_")).ToList();
                 
@@ -164,7 +161,6 @@ else
                 }
                 else if (defFields.Any())
                 {
-                    // If only definition fields, use them directly
                     foreach (var defField in defFields)
                     {
                         string index = defField.Key.Replace("definition_", "");
@@ -172,12 +168,11 @@ else
                     }
                 }
                 
-                // If we still have no terms, check for individually named fields
+                //count number of terms to be saved
                 if (studySet.Terms.Count == 0)
                 {
                     foreach (var field in data)
                     {
-                        // Skip known metadata fields
                         if (field.Key == "title" || field.Key == "setTitle" || 
                             field.Key == "description" || field.Key == "learnBy")
                             continue;
@@ -186,7 +181,6 @@ else
                     }
                 }
                 
-                // If still no terms, add a placeholder
                 if (studySet.Terms.Count == 0)
                 {
                     studySet.Terms.Add("Sample Term", "This study set appears to be empty. Add terms and definitions.");
@@ -194,7 +188,6 @@ else
             }
             else
             {
-                // List all documents to help with debugging
                 Query allDocsQuery = StudySproutDB.Collection("MyStudySetsDB");
                 QuerySnapshot allDocsSnapshot = await allDocsQuery.GetSnapshotAsync();
                 
@@ -210,7 +203,7 @@ else
                 }
                 
                 isError = true;
-                errorMessage = $"Study set with ID '{documentId}' not found. {availableDocs}";
+                errorMessage = $"Study set with ID '{documentId}' not found.;
             }
         }
         catch (Exception ex)

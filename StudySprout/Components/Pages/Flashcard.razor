@@ -3,9 +3,8 @@
 @rendermode InteractiveServer
 @using Google.Cloud.Firestore
 
-@*Lexi Reed *@
-@page "/flashcard"
 
+@page "/flashcard"
 
 <header>
     <div class="logo">
@@ -50,7 +49,7 @@
 </div>
 
 @code {
-    [Inject]
+    [Inject] //Firebase elements 
     private NavigationManager NavigationManager { get; set; }
 
     [Inject]
@@ -60,12 +59,21 @@
     private int TotalCards { get; set; } = 0;
     private bool IsFlipped { get; set; } = false;
 
-    private List<Flashcardset> Flashcards { get; set; } = new();
+    private List<Flashcardset> Flashcards { get; set; } = new()
+    {
+        new Flashcardset { Question = "What is the best study tool?", Answer = "StudySprout" },
+        new Flashcardset { Question = "What is better: Quizlet or StudySprout?", Answer = "StudySprout" },
+        new Flashcardset { Question = "What study tool is everybody using?", Answer = "StudySprout duh" },
+        new Flashcardset { Question = "What are Anki and Quizlet?", Answer = "Old study tools" },
+        new Flashcardset { Question = "StudySprout is second to?", Answer = "No one!" },
+        new Flashcardset { Question = "What grade is StudySprout going to get?", Answer = "100!!!!!" },
+    };
+
     private Flashcardset CurrentFlashcard => Flashcards.Count > 0 ? Flashcards[CurrentCard - 1] : new Flashcardset();
 
     protected override async Task OnInitializedAsync()
     {
-        // Replace "yourStudySetId" with the actual StudySet ID you want to load
+        //from firebase
         string studySetId = "set1";
 
         try
@@ -84,9 +92,9 @@
         if (CurrentCard < Flashcards.Count)
         {
             CurrentCard++;
-            IsFlipped = false; // Unflip the card
+            IsFlipped = false; // unflip the card
         }
-        StateHasChanged(); // Refresh the UI to show the new card
+        StateHasChanged(); // show the new card
     }
 
     private void PreviousCard()
@@ -94,21 +102,20 @@
         if (CurrentCard > 1)
         {
             CurrentCard--;
-            IsFlipped = false; // Unflip the card
+            IsFlipped = false; // unflip the card
         }
-        StateHasChanged(); // Refresh the UI to show the new card
+        StateHasChanged(); // show new card
     }
 
     public async Task<List<Flashcardset>> GetFlashcardsByStudySetAsync(string studySetId)
     {
-        // Retrieve the StudySet document
+
         var studySetDoc = await FirestoreDb.Collection("StudySets").Document(studySetId).GetSnapshotAsync();
         if (!studySetDoc.Exists) throw new Exception("StudySet not found");
 
-        // Get the list of FlashcardIDs
+        
         var flashcardIds = studySetDoc.GetValue<List<string>>("FlashcardIDs");
 
-        // Fetch the flashcards using their IDs
         var flashcards = new List<Flashcardset>();
         foreach (var flashcardId in flashcardIds)
         {
@@ -128,5 +135,3 @@
         public string? Answer { get; set; }
     }
 }
-
-

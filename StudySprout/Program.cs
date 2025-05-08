@@ -2,7 +2,7 @@ using StudySprout.Components;
 using Google.Cloud.Firestore;
 
 
-string credentialPath = Path.Combine(Directory.GetCurrentDirectory(), "Credentials", "studysprout-67ec9-firebase-adminsdk-fbsvc-b844ad9ee9.json");
+string credentialPath = Path.Combine(Directory.GetCurrentDirectory(), "Credentials", "studysprout-67ec9-firebase-adminsdk-fbsvc-7b57af8da5.json");
 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", credentialPath);
 
 var builder = WebApplication.CreateBuilder(args);

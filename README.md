@@ -20,6 +20,7 @@ Styles Guide(s): StudySprout/Git Master - Code Standards.pdf inside of VSCode or
 
 # How to Run Dev and Test Environment
 
+
 ## Dependencies
 - We used several free VSCode extensions including:
 	- C#
@@ -29,7 +30,7 @@ Styles Guide(s): StudySprout/Git Master - Code Standards.pdf inside of VSCode or
 	- GitLens
 	- vscode-pdf
 - We used Blazor as a frontend which requires .NET to be installed on the computer. 
-- We used FireBase which requires a SDK Key to work the front end of the database that has been emailed to you. Download the JSON file from the email and place it in the empty Credentials folder to work when running the site. The JSON file name should match what is in the Program.cs credentialpath function.
+- We used FireBase which requires a SDK Key to work the front end of the database that has been emailed to you. Download the JSON file from the email and place it in a empty folder inside of StudySprout named Credentials to work when running the site. The JSON file name should match what is in the Program.cs credentialpath function.
 
 ### Downloading Dependencies
 - https://dotnet.microsoft.com/en-us/download/dotnet/9.0 follow this link and download both the SDK 9.0.203 and ASP.NET Core Runtime 9.0.4 that works for your computer (windows vs MacOS vs Linux) and install them. 

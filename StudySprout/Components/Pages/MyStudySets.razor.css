@@ -224,7 +224,6 @@ ul li h3 {
 
 .set-title {
     border: none;
-    border-bottom: 1px solid #e0e0e0;
     padding: 15px;
     margin: 0;
     width: 100%;
@@ -232,6 +231,7 @@ ul li h3 {
     color: #1c4d1d;
     box-sizing: border-box;
     font-weight: bolder;
+    text-decoration: none;
 }
 
 .set-title::placeholder {

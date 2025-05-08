@@ -50,8 +50,9 @@ else
         {
             <div class="study-set">
                 <div class="study-set-header">
-                    <div class="created-date">CREATED: </div>
-                    <input type="text" class="set-title" placeholder="SET TITLE" value="@set.setTitle">
+                    <!--<div class="created-date">CREATED: </div>-->
+                    <a href="/MyStudySets/@set.documentId" class="set-title">@set.setTitle</a>
+                    <!-- <input type="text" class="set-title" value="@set.setTitle"> -->
                 </div>
                 <textarea class="set-description" placeholder="DESCRIPTION">@set.description</textarea>
                 <div class="study-set-footer">
@@ -120,6 +121,7 @@ else
                 {
                     Console.WriteLine($"Document ID: {document.Id}");
                     var data = document.ConvertTo<set1>();
+                    data.documentId = document.Id;
                     tempSets.Add(data);
                     Console.WriteLine($"Added: TITLE={data.setTitle}");
                 }

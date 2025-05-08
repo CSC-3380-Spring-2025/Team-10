@@ -1,0 +1,184 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    box-sizing: border-box;
+}
+
+* {
+    box-sizing: inherit;
+}
+
+body {
+    background-color: #f4f7fa;
+    color: #333;
+    line-height: 1.6;
+    font-size: 16px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* NAV BAR FORMATTING */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
+}
+
+header img {
+    height: 40px;
+}
+
+header nav {
+    display: flex;
+    gap: 49px;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #4e7429;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.auth-links a {
+    color: #4e7429;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-links .GoToLogIn {
+    padding: 5px 15px;
+    background-color: #4e7429;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-links .GoToLogIn:hover {
+    opacity: 0.9;
+}
+
+.logo img {
+    height: 50px;
+    width: 45px;
+    margin-right: 15px;
+    display: block;
+}
+
+/* BANNER FORMATTING */
+
+.banner {
+    background-image: url('wood.jpg');
+    background-size: cover;
+    background-position: bottom;
+    text-align: center;
+    color: rgb(255, 255, 255);
+    padding: 60px 20px;
+    position: relative;
+    width: 100%;
+    height: 250px;
+}
+
+.banner h1 {
+    font-size: 4rem;
+    margin: 0;
+    color:#ffffff;
+    text-shadow: #000000;
+    text-transform: uppercase;
+    font-weight: bolder;
+    text-shadow: 4px 3px #000000;
+    size-adjust: auto;
+    line-height: 70px;
+}
+
+header1 {
+    font-size: 1.6rem;
+    font-weight: bolder;
+    align-self: center;
+    color: #5cc057;
+    text-shadow: 4px 3px #000000;
+}
+.banner title {
+    font-size: 6rem;
+    margin: 0;
+    text-shadow: #000000;
+}
+
+.banner .slink-icon {
+    position: absolute;
+    bottom: 10px;
+    right: 20px;
+    height: 80px;
+}
+
+/* HEADER */
+
+.set-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* TERMS HEADERS */
+
+.set-description {
+    min-height: 40px;
+    padding: 10px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    border: none;
+    resize: none;
+    font-size: 1rem;
+    color: #666;
+}
+
+.set-description::placeholder {
+    color: #4CAF50;
+}
+
+h2 {
+    font-size: 3rem;
+    padding: 10px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    border: #333;
+    color:#4e7429;
+    text-align: center;
+}
+
+h3 {
+    font-size: 1rem;
+    padding: 10px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    border: #333;
+    border-radius: 2px;
+    resize: none;
+    color:#4e7429;
+}
+
+.term {
+    font-size: 1rem;
+    padding: 10px;
+    margin: 0;
+    width: 100%;
+    box-sizing: border-box;
+    border: #333;
+    resize: none;
+    color:#4e7429;
+}

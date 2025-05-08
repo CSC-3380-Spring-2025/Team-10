@@ -5,7 +5,10 @@
 
 @page "/signin"
 
+
 <PageTitle>Sign In</PageTitle>
+
+<!-- header and container logic for the front end of the page -->
 <div class="signin-page">
     <div class="signin-left">
         <h2 class="signin-text"><span class="bold">Welcome Back!</span></h2>
@@ -33,6 +36,7 @@
                 <p>@LoginMsg</p>
             }
         </form>
+        <!-- error handling and password reset link-->
         @if (!string.IsNullOrEmpty(ErrorMessage))
         {
             <p class=" errorMessage">@ErrorMessage</p>
@@ -45,6 +49,8 @@
         </p>
     </div>
 </div>
+
+@* css for the page *@
 <style>
      .signin-page {
         display: flex;
@@ -135,14 +141,16 @@
 </style>
 
 @code {
+    // Variables for the sign-in page
     private string Email { get; set; } = string.Empty;
     private string Password { get; set; } = string.Empty;
     private string ErrorMessage { get; set; } = string.Empty;
     private string LoginMsg = "";
     private bool isLoading = false;
+    //firebase connection
     FirestoreDb StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
 
-
+// User class to hold user data
     public class Users
     {
         public string id { get; set; }
@@ -151,8 +159,10 @@
         public Boolean isUser { get; set; }
     }
 
+    // List to hold user data
     private IEnumerable<Users> users = Array.Empty<Users>();
     
+    //function to handle the submition on the button click 
     private async Task HandleSubmit()
     {
         isLoading = true;
@@ -160,6 +170,7 @@
         isLoading = false;
     }
 
+    //function to retrieve data from the database and check if the user is valid or not
     private async Task retrieveData()
     {
         CollectionReference userCollection = StudySproutDB.Collection("UserAccount");
@@ -200,6 +211,7 @@
         if(isSuccessful == 0) LoginMsg = "Invalid email or password. Try again!";
     }
 
+// Function to handle sign-in logic
     private void HandleSignIn()
     {
         if (string.IsNullOrEmpty(Email) || string.IsNullOrEmpty(Password))

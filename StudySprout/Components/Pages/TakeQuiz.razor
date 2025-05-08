@@ -3,6 +3,7 @@
 
 <PageTitle>Take Quiz</PageTitle>
 
+<!-- header logic and front end -->
 <header>
     <div class="logo">
         <img class="logo" src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
@@ -18,7 +19,7 @@
     </div>
 </header>
 
-
+<!-- quiz taking container that goes to new questions on click-->
 <div class="take-quiz-page">
     <h1>Take Quiz</h1>
     <p>Quiz ID: @QuizId</p>
@@ -50,6 +51,7 @@
             </div>
         </div>
     }
+    <!-- shows the results of the quiz -->
     else if (ShowResults)
     {
         <div class="results">
@@ -76,6 +78,7 @@
     }
 </div>
 
+@* css for the page *@
 <style>
     .take-quiz-page {
         max-width: 800px;
@@ -219,6 +222,7 @@
 </style>
 
 @code {
+    //stores the quiz id and quiz questions
     [Parameter]
     public int QuizId { get; set; }
 
@@ -323,6 +327,7 @@
         ShowResults = true;
     }
     
+    // Calculate the score based on correct answers
     private void CalculateScore()
     {
         Score = 0;
@@ -336,6 +341,7 @@
         }
     }
     
+    //shows if the answer is correct or not
     private bool IsCorrect(int questionIndex)
     {
         if (questionIndex >= 0 && questionIndex < Questions.Count)

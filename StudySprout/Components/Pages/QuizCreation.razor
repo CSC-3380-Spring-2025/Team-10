@@ -42,6 +42,7 @@
     }
 </div>
 
+@* css for the page *@
 <style>
     .quiz-creation-page {
         max-width: 800px;
@@ -96,10 +97,12 @@
 </style>
 
 @code {
+    // Properties and fields
     private string QuizTitle { get; set; } = string.Empty;
     private List<Flashcard> Flashcards { get; set; } = new List<Flashcard>();
     private string SuccessMessage { get; set; } = string.Empty;
 
+    
     protected override void OnInitialized()
     {
         // Mock data for flashcards
@@ -111,6 +114,7 @@
         };
     }
 
+    // Method to save the quiz
     private void SaveQuiz()
     {
         if (string.IsNullOrEmpty(QuizTitle))
@@ -131,6 +135,7 @@
         SuccessMessage = $"Quiz '{QuizTitle}' has been saved successfully!";
     }
 
+    // Mock Flashcard class
     private class Flashcard
     {
         public int Id { get; set; }

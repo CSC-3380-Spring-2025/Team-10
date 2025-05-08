@@ -3,6 +3,7 @@
 
 <PageTitle>Quiz</PageTitle>
 
+<!-- header for the navigation on the website -->
 <header>
     <div class="logo">
         <img class="logo" src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
@@ -18,6 +19,7 @@
     </div>
 </header>
 
+<!-- banner for the page -->
 <div class="banner">
     <h1><span class="highlight">QUIZZES.</span></h1>
 </div>
@@ -48,6 +50,7 @@
     </div>
 </div>
 
+<!-- css for the quiz page -->
 <style>
     .quiz-page {
         max-width: 800px;
@@ -154,14 +157,14 @@
     }
 
     .button-style {
-        text-decoration: none; /* Remove underline */
-        color: #4e7429; /* Set the text color */
-        font-weight: bold; /* Make the text bold */
-        background: none; /* Remove background */
-        border: none; /* Remove border */
-        font-size: 1rem; /* Adjust font size if needed */
-        cursor: pointer; /* Change the cursor to a pointer */
-        padding: 0; /* Remove padding to match a link */
+        text-decoration: none; 
+        color: #4e7429; 
+        font-weight: bold; 
+        background: none; 
+        border: none; 
+        font-size: 1rem; 
+        cursor: pointer; 
+        padding: 0; 
         margin: 8px;
     }
     
@@ -199,6 +202,7 @@
         Navigation.NavigateTo("/quizcreation", forceLoad: true);
     }
 
+    // Navigation methods for other pages
     private void NavigatetoSignUp()
     {
         Console.WriteLine("Navigating to sign up...");

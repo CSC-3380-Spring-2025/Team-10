@@ -20,7 +20,7 @@
 </header>
 
 
-
+<!-- main calendar information -->
 <div class="calendar">
     <div class="header">
         <button @onclick="PreviousMonth">‹</button>
@@ -28,6 +28,7 @@
         <button @onclick="NextMonth">›</button>
     </div>
 
+<!-- add event button and the form -->
     <div class="add-event-wrapper">
         <button class="add-event-btn" @onclick="ShowAddEventForm">
             + Add Event
@@ -44,7 +45,7 @@
             </div>
         }
     </div>
-
+<!-- labels for days of the week in calendar -->
     <div class="day-labels">
         <div>Sun</div>
         <div>Mon</div>
@@ -55,6 +56,7 @@
         <div>Sat</div>
     </div>
 
+<!-- calendar day grid -->
     <div class="days">
         @for (int i = 0; i < FirstDayOfWeek; i++)
         {
@@ -80,26 +82,34 @@
 </div>
 
 @code {
+    //lists all of the events from firebase
     public List<StudyTime> Events { get; set; } = new();
+
+    //flags messages for error handling
     public bool isError { get; set; }
     public string errorMessage { get; set; }
 
+    //displays current month and the year
     private int currentMonth = 4;
     private int currentYear = 2025;
 
+    //the input fields for adding a new event
     private string newTitle = string.Empty;
     private string newCategory = string.Empty;
     private DateTime newDate = DateTime.Today;
     private bool showForm = false;
 
+    //calculates the number of days in the current month
     private int DaysInMonth => DateTime.DaysInMonth(currentYear, currentMonth);
+
+    //gets the day of the week (starting Sunday = 0) for the first of the month when displayed
     private int FirstDayOfWeek => (int)new DateTime(currentYear, currentMonth, 1).DayOfWeek;
 
     FirestoreDb StudySproutDB;
 
+    //loads data from firestore
     protected override async Task OnInitializedAsync()
     {
-        Console.WriteLine("Initializing Firestore");
         try
         {
             StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
@@ -109,7 +119,6 @@
         {
             isError = true;
             errorMessage = $"Error initializing Firestore: {ex.Message}";
-            Console.WriteLine(errorMessage);
         }
     }
 
@@ -125,10 +134,9 @@
         {
             isError = true;
             errorMessage = $"Error loading events: {ex.Message}";
-            Console.WriteLine(errorMessage);
         }
     }
-
+    
     private void PreviousMonth()
     {
         currentMonth--;
@@ -138,7 +146,6 @@
             currentYear--;
         }
 
-        Console.WriteLine($"Moved to: {currentMonth}/{currentYear}");
         StateHasChanged();
     }
 
@@ -151,7 +158,6 @@
             currentYear++;
         }
 
-        Console.WriteLine($"Moved to: {currentMonth}/{currentYear}");
         StateHasChanged();
     }
 
@@ -167,38 +173,46 @@
     }
 
     private async Task AddEvent()
-    {
+{
+
     var newEvent = new StudyTime
-        {
+    {
         Title = newTitle,
         StartDate = newDate,
         EndDate = newDate.AddHours(1),
         Category = newCategory
-        };
+    };
 
     try
+    {
+        
+        if (StudySproutDB == null)
         {
+            throw new NullReferenceException("Firestore database is not initialized.");
+        }
+
         await StudySproutDB.Collection("calendarEvents").AddAsync(newEvent);
-        Console.WriteLine($"Added event: {newEvent.Title} on {newEvent.StartDate}");
-        Console.WriteLine($"Events count: {Events.Count}");
+
         Events.Add(newEvent);
 
-
+        
         currentMonth = newDate.Month;
         currentYear = newDate.Year;
 
+        
         showForm = false;
         newTitle = string.Empty;
         newCategory = string.Empty;
         newDate = DateTime.Today;
+
         StateHasChanged();
-        }
+    }
     catch (Exception ex)
-        {
+    {
         isError = true;
         errorMessage = $"Error adding event: {ex.Message}";
-        Console.WriteLine(errorMessage);
-        }
-    } 
+    }
+}
+
 
 }

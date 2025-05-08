@@ -1,4 +1,4 @@
-/* === NAVBAR STYLES === */
+/* Navbar style */
 
 header {
     display: flex;
@@ -63,7 +63,7 @@ header nav a:hover {
 }
 
 
-/* === CALENDAR STYLES === */
+/* Calendar Style */
 
 .header {
     display: flex;
@@ -144,7 +144,7 @@ header nav a:hover {
     background-color: #b5d8ff;
 }
 
-/* === ADD EVENT BUTTON & DROPDOWN === */
+/* Added event button and style */
 
 .add-event-wrapper {
     position: relative;

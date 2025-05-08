@@ -1,4 +1,5 @@
 namespace StudySprout.DatabaseData
+//data model for StudyTime class
 {
     public class StudyTime
     {

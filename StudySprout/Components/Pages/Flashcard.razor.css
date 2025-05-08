@@ -1,4 +1,4 @@
-/*Lexi Reed*/
+
 /* Styles for the Flashcard page */
 
 
@@ -113,10 +113,10 @@ header nav a {
 }
 
 .right-section {
-    display: flex; /* Aligns the buttons horizontally */
-    align-items: center; /* Vertically centers the buttons */
-    gap: 20px; /* Adds spacing between the buttons */
-    margin-left: auto; /* Pushes the entire section to the far right */
+    display: flex; 
+    align-items: center; 
+    gap: 20px; 
+    margin-left: auto; 
 }
 
 .nav-button {

@@ -45,6 +45,7 @@ else if (sets == null || sets.Count == 0)
 }
 else
 {
+    //display each study set
     <div class="study-sets-container">
         @foreach (var set in sets)
         {
@@ -74,7 +75,7 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        //Timer to refresh UI
+        //timer to refresh UI
         _timer = new System.Threading.Timer(
             async _ => await InvokeAsync(StateHasChanged),
             null,
@@ -84,6 +85,7 @@ else
         await InitializeFirestore();
     }
 
+    //connect to firebase db
     private async Task InitializeFirestore()
     {
         try
@@ -115,6 +117,7 @@ else
 
             var tempSets = new List<set1>();
 
+            //fetch data for each document to be read
             foreach (DocumentSnapshot document in snapshot.Documents)
             {
                 if (document.Exists)

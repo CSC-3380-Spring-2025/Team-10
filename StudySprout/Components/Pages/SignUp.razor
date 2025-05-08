@@ -234,17 +234,11 @@
                 { "CreatedDate", Timestamp.GetCurrentTimestamp() }
             };
             
-            // Add the document
             DocumentReference docRef = await userCollection.AddAsync(userData);
-            
-            // Successfully created account
             StatusMessage = "Account created successfully!";
-            
-            // Set user in the user1 service
             user1.SetUser(Email, Password);
             
-            // Navigate to appropriate page based on user type
-            await Task.Delay(1000); // Short delay to show success message
+            await Task.Delay(1000);
             if (IsUser)
             {
                 Navigation.NavigateTo("/CreateNew");
@@ -267,8 +261,6 @@
             Console.WriteLine("Passwords do not match!");
             return;
         }
-
-        // Add your sign-up logic here
         Console.WriteLine($"Name: {FullName}, Email: {Email}, Password: {Password}");
     }
 }

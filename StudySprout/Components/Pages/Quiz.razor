@@ -1,0 +1,245 @@
+@page "/quiz"
+@rendermode InteractiveServer
+
+<PageTitle>Quiz</PageTitle>
+
+<!-- header for the navigation on the website -->
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
+        <nav>
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
+        </nav>
+    </div>
+
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
+
+<!-- banner for the page -->
+<div class="banner">
+    <h1><span class="highlight">QUIZZES.</span></h1>
+</div>
+
+<div class="quiz-page">
+    <!-- Button to navigate to Quiz Creation -->
+   <button @onclick="NavigateToQuizCreation" class="btn btn-primary">Create a New Quiz</button>
+
+    <!-- List of Saved Quizzes -->
+    <div class="saved-quizzes">
+        <h2>Saved Quizzes</h2>
+        @if (SavedQuizzes.Count == 0)
+        {
+            <p>No quizzes saved yet.</p>
+        }
+        else
+        {
+            <ul>
+                @foreach (var quiz in SavedQuizzes)
+                {
+                    <li>
+                        <span>@quiz.Title</span>
+                        <button @onclick="() => TakeQuiz(quiz.Id)" class="btn btn-secondary">Take Quiz</button>
+                    </li>
+                }
+            </ul>
+        }
+    </div>
+</div>
+
+<!-- css for the quiz page -->
+<style>
+    .quiz-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .btn {
+        padding: 10px 20px;
+        margin: 10px 0;
+        background-color: #139d11;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .btn:hover {
+        background-color: #006a05;
+    }
+
+    .saved-quizzes ul {
+        list-style-type: none;
+        padding: 0;
+    }
+
+    .saved-quizzes li {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+
+    .saved-quizzes li button {
+        margin-left: 10px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #ffffff;
+        font-size: 4.5rem;
+        margin-top: 20px;
+        text-shadow: 5px 5px 8px #211e1e;
+        font-weight: bold;
+    }
+
+    h3 {
+        text-align: center;
+        color: #ff6a00;
+        font-size: 1.6rem;
+        margin-top: 1px;
+        text-shadow: 4px 4px 4px #000000;
+        font-weight: bold;
+    }
+
+     header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
+    }
+
+    header nav {
+        display: flex;
+        gap: 49px;
+    }
+
+    header nav a {
+        text-decoration: none;
+        color: #4e7429;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    header nav a:hover {
+        text-decoration: underline; /* Underline on hover */
+    }
+
+    .auth-links {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .auth-links a {
+        color: #4e7429;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .auth-links .GoToLogIn {
+        padding: 5px 15px;
+        background-color: #4e7429;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .auth-links .GoToLogIn:hover {
+        opacity: 0.9;
+    }
+
+    .button-style {
+        text-decoration: none; 
+        color: #4e7429; 
+        font-weight: bold; 
+        background: none; 
+        border: none; 
+        font-size: 1rem; 
+        cursor: pointer; 
+        padding: 0; 
+        margin: 8px;
+    }
+    
+    .banner {
+        background-image: url('quizzesbackground.jpg');
+        background-size: cover;
+        background-position: center;
+        text-align: center;
+        color: white;
+        padding: 60px 20px;
+        position: relative;
+        width: 100%;
+        height: 250px;
+    }
+
+
+
+    
+</style>
+
+@code {
+    @inject NavigationManager Navigation
+
+    // Mock data for saved quizzes
+    private List<QuizModel> SavedQuizzes { get; set; } = new List<QuizModel>
+    {
+        new QuizModel { Id = 1, Title = "Math Quiz" },
+        new QuizModel { Id = 2, Title = "Science Quiz" }
+    };
+
+    // Navigate to the Quiz Creation page
+   private void NavigateToQuizCreation()
+    {
+        Console.WriteLine("Navigating to quiz creation...");
+        Navigation.NavigateTo("/quizcreation", forceLoad: true);
+    }
+
+    // Navigation methods for other pages
+    private void NavigatetoSignUp()
+    {
+        Console.WriteLine("Navigating to sign up...");
+        Navigation.NavigateTo("/signup", forceLoad: true);
+    }
+    private void NavigateToSignIn()
+    {
+        Console.WriteLine("Navigating to sign in...");
+        Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+    private void NavigateToMyGarden()
+    {
+        Console.WriteLine("Navigating to my garden...");
+        Navigation.NavigateTo("/mygarden", forceLoad: true);
+    }
+    private void NavigateToStudySets()
+    {
+        Console.WriteLine("Navigating to my study sets...");
+        Navigation.NavigateTo("/mystudysets", forceLoad: true);
+    }
+    private void NavigateToCreatNew()
+    {
+        Console.WriteLine("Navigating to create new...");
+        Navigation.NavigateTo("/createnew", forceLoad: true);
+    }
+
+    // Take a quiz by navigating to a page with randomized questions
+    private void TakeQuiz(int quizId)
+    {
+        Console.WriteLine($"Navigating to take quiz with ID: {quizId}...");
+        Navigation.NavigateTo($"/takequiz/{quizId}");
+    }
+
+    // Quiz model
+    private class QuizModel
+    {
+        public int Id { get; set; }
+        public string Title { get; set; }
+    }
+}

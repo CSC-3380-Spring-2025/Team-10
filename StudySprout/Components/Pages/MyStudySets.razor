@@ -1,0 +1,163 @@
+@using Google.Cloud.Firestore
+@using StudySprout.Models
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@rendermode InteractiveServer
+
+@page "/MyStudySets"
+@inject NavigationManager Navigation
+@implements IDisposable
+
+<PageTitle>MY STUDY SETS</PageTitle>
+
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
+        <nav>
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
+        </nav>
+    </div>
+
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
+
+<div class="banner">
+    <h1><span class="highlight">MY</span> STUDY SETS.</h1>
+    <h4>READY, SET, STUDY!</h4>
+    <img class="slink-icon" src="/Slink.png" alt="Slink Icon" />
+</div>
+
+
+@if (!dataLoaded)
+{
+    <p>Loading study sets...</p>
+}
+else if (isError)
+{
+    <p class="alert alert-danger">@errorMessage</p>
+}
+else if (sets == null || sets.Count == 0)
+{
+    <p>No study sets found. Create a new set to get started!</p>
+}
+else
+{
+    //display each study set
+    <div class="study-sets-container">
+        @foreach (var set in sets)
+        {
+            <div class="study-set">
+                <div class="study-set-header">
+                    <!--<div class="created-date">CREATED: </div>-->
+                    <a href="/MyStudySets/@set.documentId" class="set-title">@set.setTitle</a>
+                    <!-- <input type="text" class="set-title" value="@set.setTitle"> -->
+                </div>
+                <textarea class="set-description" placeholder="DESCRIPTION">@set.description</textarea>
+                <div class="study-set-footer">
+                    <div class="learn-by">LEARN BY @set.learnBy</div>
+                    <div class="days-remaining"></div>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@code {
+    private FirestoreDb StudySproutDB;
+    private List<set1> sets = new List<set1>();
+    private bool isError = false;
+    private bool dataLoaded = false;
+    private string errorMessage = string.Empty;
+    private System.Threading.Timer _timer;
+
+    protected override async Task OnInitializedAsync()
+    {
+        //timer to refresh UI
+        _timer = new System.Threading.Timer(
+            async _ => await InvokeAsync(StateHasChanged),
+            null,
+            TimeSpan.Zero,
+            TimeSpan.FromSeconds(1)
+        );
+        await InitializeFirestore();
+    }
+
+    //connect to firebase db
+    private async Task InitializeFirestore()
+    {
+        try
+        {
+            Console.WriteLine("Initializing Firestore");
+            StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+            await LoadStudySets();
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+            errorMessage = $"Error initializing Firestore: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+        finally
+        {
+            dataLoaded = true;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+   private async Task LoadStudySets()
+   {
+        try
+        {
+            Console.WriteLine("Loading study sets from Firestore...");
+            CollectionReference studySetsCollection = StudySproutDB.Collection("MyStudySetsDB");
+            QuerySnapshot snapshot = await studySetsCollection.GetSnapshotAsync();
+
+            var tempSets = new List<set1>();
+
+            //fetch data for each document to be read
+            foreach (DocumentSnapshot document in snapshot.Documents)
+            {
+                if (document.Exists)
+                {
+                    Console.WriteLine($"Document ID: {document.Id}");
+                    var data = document.ConvertTo<set1>();
+                    data.documentId = document.Id;
+                    tempSets.Add(data);
+                    Console.WriteLine($"Added: TITLE={data.setTitle}");
+                }
+            }
+
+            sets = tempSets;
+            Console.WriteLine($"Total sets: {sets.Count}");
+            
+            dataLoaded = true;
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+            errorMessage = $"Error loading study sets: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+    }
+
+    private async ValueTask<ItemsProviderResult<set1>> LoadVirtualizedStudySets(ItemsProviderRequest request)
+    {
+        Console.WriteLine($"Virtualization Request: StartIndex={request.StartIndex}, Count={request.Count}");
+
+        var pageSize = request.Count;
+        var startIndex = request.StartIndex;
+
+        var paginatedSets = sets.Skip(startIndex).Take(pageSize).ToList();
+        Console.WriteLine($"Returning {paginatedSets.Count} items out of {sets.Count} total items.");
+
+        return new ItemsProviderResult<set1>(paginatedSets, sets.Count);
+    }
+
+    public void Dispose()
+    {
+        _timer?.Dispose();
+    }
+}

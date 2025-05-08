@@ -11,47 +11,45 @@ Make studying easier for yourself! Study Sprout is a tool that takes advantage o
 
 ## Platforms Tested on
 - MacOS
-- Android
-- iOS
-- Linux
 - Windows
 
 # Important Links
 Kanban Board: https://github.com/orgs/CSC-3380-Spring-2025/projects/23/views/1
-Designs: [link]\
-Styles Guide(s): [link]
+Designs: all pictures for the site are contained inside of the wwwroot folder. the link to the figma is https://www.figma.com/design/jBMUURKbz1Aa214jjdsGmN/Study-Sprout-fresh-start?node-id=0-1&p=f&t=HTkgcbFsyIYBuS2v-0 the invite has been sent.
+Styles Guide(s): StudySprout/Git Master - Code Standards.pdf inside of VSCode or found on moodle. 
 
 # How to Run Dev and Test Environment
 
 ## Dependencies
-- List all dependencies here
-- Don't forget to include versions
+- We used several free VSCode extensions including:
+	- C#
+	- .NET Install Tool
+	- C# Dev Kit
+	- GitHub Pull Requests
+	- GitLens
+	- vscode-pdf
+- We used Blazor as a frontend which requires .NET to be installed on the computer. 
+- We used FireBase which requires a SDK Key to work the front end of the database that has been emailed to you. Download the JSON file from the email and place it in the empty Credentials folder to work when running the site. The JSON file name should match what is in the Program.cs credentialpath function.
 
 ### Downloading Dependencies
-Describe where to download the dependencies here. Some will likely require a web download. Provide links here. For IDE extensions, make sure your project works with the free version of them, and detail which IDE(s) these are available in. 
+- https://dotnet.microsoft.com/en-us/download/dotnet/9.0 follow this link and download both the SDK 9.0.203 and ASP.NET Core Runtime 9.0.4 that works for your computer (windows vs MacOS vs Linux) and install them. 
+	- this is the only download that should be necessary aside from VSCode 
 
 ## Commands
-Describe how the commands and process to launch the project on the main branch in such a way that anyone working on the project knows how to check the affects of any code they add.
+- Open a new terminal once open in VSCode
+- When cloning the repository you will see the origin path from your local machine (PS C:\Users\username\VSCode\localfileforrepo on Windows)
+	- cd into Team-10 (this ensures that the command runs)
+	- cd into StudySprout (you cannot run the dotnet commands outside of this folder)
+- To clean the project (ensures that you have a safe build) run:
+	- dotnet clean 
+- To build the project (ensures that you have a complete build before runtime and makes execution shorter) run:
+	- dotnet build 
+- To run the project run: 
+	- dotnet watch run
+	- this will automatically open the site (to avoid having to manually type the host port) as well as show some hot commands in the case of restarting the page. 
+- To shut down the project 
+	- inside the dotnet terminal press control + C for windows or command + C for MacOS
+- If you receive an error on the My Study Sets or Create New Sets pages about the database not being found go into the Program.cs page an on line 5 replace the 
+"name_of_json_file.json" with the name_of_the_json_file.json sometimes the program does not like when the json is added and the file is not changed. 
+- When on the Quiz page when clicking take quiz button refresh the page to get to the quiz blazor still has some quirky issues that we have spent hours trying to debug and this is one 
 
-```sh
-Example terminal command syntax
-```
-
-It is very common in these sections to see code in peculiar boxes to help them stand out. Check the markdown section of the Project Specifications to see how to add more / customize these.
-
-```python
-def code_highlight_example(m: int, m: float, s: str) -> str:
-	return s + str(n*m)
-```
-
-```java
-public static void main(String[] args){
-	System.out.println("Hello, World!");
-}
-```
-
-```c#
-static void Main(){
-	Console.WriteLine("Hello, World!");
-}
-```

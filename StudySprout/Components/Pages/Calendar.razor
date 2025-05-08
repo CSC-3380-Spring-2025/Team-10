@@ -1,0 +1,204 @@
+﻿@page "/calendar"
+@rendermode InteractiveServer
+@using Google.Cloud.Firestore
+@using StudySprout.DatabaseData
+@using StudySprout.Models
+
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
+        <nav>
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
+        </nav>
+    </div>
+
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
+
+
+
+<div class="calendar">
+    <div class="header">
+        <button @onclick="PreviousMonth">‹</button>
+        <h2>@GetMonthName(currentMonth) @currentYear</h2>
+        <button @onclick="NextMonth">›</button>
+    </div>
+
+    <div class="add-event-wrapper">
+        <button class="add-event-btn" @onclick="ShowAddEventForm">
+            + Add Event
+        </button>
+
+        @if (showForm)
+        {
+            <div class="event-dropdown">
+                <h4>Add Event</h4>
+                <input placeholder="Title" @bind="newTitle" />
+                <input type="date" @bind="newDate" />
+                <input placeholder="Category" @bind="newCategory" />
+                <button @onclick="AddEvent">Save</button>
+            </div>
+        }
+    </div>
+
+    <div class="day-labels">
+        <div>Sun</div>
+        <div>Mon</div>
+        <div>Tue</div>
+        <div>Wed</div>
+        <div>Thu</div>
+        <div>Fri</div>
+        <div>Sat</div>
+    </div>
+
+    <div class="days">
+        @for (int i = 0; i < FirstDayOfWeek; i++)
+        {
+            <div class="day blank"></div>
+        }
+
+        @foreach (var day in Enumerable.Range(1, DaysInMonth))
+        {
+            var date = new DateTime(currentYear, currentMonth, day);
+            var events = Events
+                .Where(e => e.StartDate.Date == date.Date)
+                .ToList();
+
+            <div class="day">
+                <strong>@day</strong>
+                @foreach (var ev in events)
+                {
+                    <div class="event @ev.Category.ToLower()">@ev.Title</div>
+                }
+            </div>
+        }
+    </div>
+</div>
+
+@code {
+    public List<StudyTime> Events { get; set; } = new();
+    public bool isError { get; set; }
+    public string errorMessage { get; set; }
+
+    private int currentMonth = 4;
+    private int currentYear = 2025;
+
+    private string newTitle = string.Empty;
+    private string newCategory = string.Empty;
+    private DateTime newDate = DateTime.Today;
+    private bool showForm = false;
+
+    private int DaysInMonth => DateTime.DaysInMonth(currentYear, currentMonth);
+    private int FirstDayOfWeek => (int)new DateTime(currentYear, currentMonth, 1).DayOfWeek;
+
+    FirestoreDb StudySproutDB;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Console.WriteLine("Initializing Firestore");
+        try
+        {
+            StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+            await LoadStudyEvents();
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+            errorMessage = $"Error initializing Firestore: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+    }
+
+    private async Task LoadStudyEvents()
+    {
+        try
+        {
+            CollectionReference eventsRef = StudySproutDB.Collection("calendarEvents");
+            QuerySnapshot snapshot = await eventsRef.GetSnapshotAsync();
+            Events = snapshot.Documents.Select(doc => doc.ConvertTo<StudyTime>()).ToList();
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+            errorMessage = $"Error loading events: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+    }
+
+    private void PreviousMonth()
+    {
+        currentMonth--;
+        if (currentMonth < 1)
+        {
+            currentMonth = 12;
+            currentYear--;
+        }
+
+        Console.WriteLine($"Moved to: {currentMonth}/{currentYear}");
+        StateHasChanged();
+    }
+
+    private void NextMonth()
+    {
+        currentMonth++;
+        if (currentMonth > 12)
+        {
+            currentMonth = 1;
+            currentYear++;
+        }
+
+        Console.WriteLine($"Moved to: {currentMonth}/{currentYear}");
+        StateHasChanged();
+    }
+
+    private string GetMonthName(int month)
+    {
+        return new DateTime(currentYear, month, 1).ToString("MMMM");
+    }
+
+    private void ShowAddEventForm()
+    {
+        showForm = !showForm;
+        StateHasChanged();
+    }
+
+    private async Task AddEvent()
+    {
+    var newEvent = new StudyTime
+        {
+        Title = newTitle,
+        StartDate = newDate,
+        EndDate = newDate.AddHours(1),
+        Category = newCategory
+        };
+
+    try
+        {
+        await StudySproutDB.Collection("calendarEvents").AddAsync(newEvent);
+        Console.WriteLine($"Added event: {newEvent.Title} on {newEvent.StartDate}");
+        Console.WriteLine($"Events count: {Events.Count}");
+        Events.Add(newEvent);
+
+
+        currentMonth = newDate.Month;
+        currentYear = newDate.Year;
+
+        showForm = false;
+        newTitle = string.Empty;
+        newCategory = string.Empty;
+        newDate = DateTime.Today;
+        StateHasChanged();
+        }
+    catch (Exception ex)
+        {
+        isError = true;
+        errorMessage = $"Error adding event: {ex.Message}";
+        Console.WriteLine(errorMessage);
+        }
+    } 
+
+}

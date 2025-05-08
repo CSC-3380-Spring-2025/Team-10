@@ -1,0 +1,222 @@
+@*@page "/MyStudySets/{documentId}"
+@inject NavigationManager Navigation
+
+@using Google.Cloud.Firestore
+@using StudySprout.Models
+@using Microsoft.AspNetCore.Components.Web.Virtualization
+@rendermode InteractiveServer
+
+<PageTitle>Your Study Set</PageTitle>
+
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" />
+        <nav>
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
+        </nav>
+    </div>
+
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
+
+<div class="banner">
+    <header1 class="header1">YOUR STUDY SET</header1>
+    <h1><span class="title"></span>@(studySet?.setTitle ?? documentId)</h1>
+    <img class="slink-icon" src="/Slink.png" alt="Slink Icon" />
+</div>
+
+@if (!dataLoaded)
+{
+    <p>Loading study sets...</p>
+}
+else if (isError)
+{
+    <p class="alert alert-danger">@errorMessage</p>
+}
+else if (studySet == null || studySet.Terms.Count == 0)
+{
+    <p>Study Set not found.</p>
+}
+else
+{
+    <div class="set-container">
+        <div class="study-set">
+                <h2 class="set-description" placeholder="NO DESCRIPTION!">Description: @studySet.description</h2>
+                    <h3 class="learn-by">LEARN BY @studySet.learnBy</h3>
+                <div>
+                    @foreach (var term in studySet.Terms)
+                    {
+                        <div class="term">
+                            <strong>Term:</strong> @term.Key<br />
+                            <strong>Definition:</strong> @term.Value
+                        </div>
+                    }
+                </div>
+            </div>
+    </div>
+}
+
+@code {
+    [Parameter] public string documentId { get; set; }
+
+    private FirestoreDb StudySproutDB;
+
+    private set1 studySet;
+    private bool isError = false;
+    private bool dataLoaded = false;
+    private string errorMessage = string.Empty;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await InitializeFirestore();
+        await LoadStudySet();
+    }
+
+    private async Task InitializeFirestore()
+    {
+        try
+        {
+            StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+            errorMessage = $"Error initializing Firestore: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+    }
+
+    private async Task LoadStudySet()
+    {
+        try
+        {
+            //open each individual document
+            DocumentReference docRef = StudySproutDB.Collection("MyStudySetsDB").Document(documentId);
+            DocumentSnapshot snapshot = await docRef.GetSnapshotAsync();
+            
+            if (snapshot.Exists)
+            {
+                studySet = new set1();
+                
+                if (snapshot.ContainsField("setTitle"))
+                {
+                    studySet.setTitle = snapshot.GetValue<string>("setTitle");
+                }
+                
+                if (snapshot.ContainsField("description"))
+                {
+                    studySet.description = snapshot.GetValue<string>("description");
+                }
+                else
+                {
+                    studySet.description = "No description available.";
+                }
+                
+                if (snapshot.ContainsField("learnBy"))
+                {
+                    try
+                    {
+                        studySet.learnBy = snapshot.GetValue<DateTime>("learnBy");
+                    }
+                    catch
+                    {
+                        studySet.learnBy = DateTime.Now.AddDays(7);
+                    }
+                }
+                
+                //terms and definitions
+                studySet.Terms = new Dictionary<string, string>();
+                var data = snapshot.ToDictionary();
+                                
+                if (snapshot.ContainsField("terms") && snapshot.GetValue<object>("terms") is Dictionary<string, object> termsDict)
+                {
+                    foreach (var pair in termsDict)
+                    {
+                        studySet.Terms.Add(pair.Key, pair.Value.ToString());
+                    }
+                }
+                
+                var termFields = data.Where(kv => kv.Key.StartsWith("term_")).ToList();
+                var defFields = data.Where(kv => kv.Key.StartsWith("definition_")).ToList();
+                
+                if (termFields.Any() && defFields.Any())
+                {
+                    foreach (var termField in termFields)
+                    {
+                        string index = termField.Key.Replace("term_", "");
+                        string defKey = $"definition_{index}";
+                        
+                        if (data.ContainsKey(defKey))
+                        {
+                            studySet.Terms.Add(
+                                termField.Value.ToString(),
+                                data[defKey].ToString()
+                            );
+                        }
+                    }
+                }
+                else if (defFields.Any())
+                {
+                    foreach (var defField in defFields)
+                    {
+                        string index = defField.Key.Replace("definition_", "");
+                        studySet.Terms.Add($"Term {index}", defField.Value.ToString());
+                    }
+                }
+                
+                //count number of terms to be saved
+                if (studySet.Terms.Count == 0)
+                {
+                    foreach (var field in data)
+                    {
+                        if (field.Key == "title" || field.Key == "setTitle" || 
+                            field.Key == "description" || field.Key == "learnBy")
+                            continue;
+                            
+                        studySet.Terms.Add(field.Key, field.Value.ToString());
+                    }
+                }
+                
+                if (studySet.Terms.Count == 0)
+                {
+                    studySet.Terms.Add("Sample Term", "This study set appears to be empty. Add terms and definitions.");
+                }
+            }
+            else
+            {
+                Query allDocsQuery = StudySproutDB.Collection("MyStudySetsDB");
+                QuerySnapshot allDocsSnapshot = await allDocsQuery.GetSnapshotAsync();
+                
+                string availableDocs = "Available study sets in your collection:\n";
+                foreach (var doc in allDocsSnapshot.Documents)
+                {
+                    availableDocs += $"- {doc.Id}";
+                    if (doc.ContainsField("setTitle"))
+                    {
+                        availableDocs += $" (Title: {doc.GetValue<string>("setTitle")})";
+                    }
+                    availableDocs += "\n";
+                }
+                
+                isError = true;
+                errorMessage = $"Study set with ID '{documentId}' not found.;
+            }
+        }
+        catch (Exception ex)
+        {
+            isError = true;
+            errorMessage = $"Error loading study set: {ex.Message}";
+            Console.WriteLine(errorMessage);
+        }
+        finally
+        {
+            dataLoaded = true;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}
+*@

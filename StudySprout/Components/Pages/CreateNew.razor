@@ -1,38 +1,202 @@
+@using Google.Cloud.Firestore;
+@inject NavigationManager Navigation
+@rendermode InteractiveServer
+
+@inject set1 set1
+
 @page "/CreateNew"
-@attribute [StreamRendering]
 
 <PageTitle>CREATE NEW</PageTitle>
 
+<header>
+    <div class="logo">
+        <img src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
+        <nav>
+            <a href="/MyStudySets">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
+        </nav>
+    </div>
+
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
+
+<div class="banner">
+    <h1><span class="highlight">CREATE</span> A NEW</h1>
+    <h1><span class="highlight">STUDY SET.</span></h1>
+    <img class="slink-icon" src="/Slink.png" alt="Slink Icon"/>
+</div>
+
+<div class="set-container">
+    <form @onsubmit="HandleSubmit">
+        <div class="form-group">
+            <label for="setTitle">SET TITLE</label>
+            <input type="text" id="setTitle" @bind="setTitle" class="form-control" placeholder="Enter your set's title"/>
+        </div>
+
+        <div class="form-group">
+            <label for="description">DESCRIPTION</label>
+            <input type="text" id="description" @bind="description" class="form-control" placeholder="Enter your set's description" />
+        </div>
+
+        <div class="form-group">
+            <label for="learnBy">LEARN BY</label>
+            <input type="date" id="learnBy" @bind="learnBy" class="form-control" placeholder="Enter your set's due date"/>
+        </div>
+
+        <div class="term-definitions-container">
+            @for (int i = 0; i < termDefinitionPairs.Count; i++)
+            {
+                var index = i;
+                <div class="term-definition-pair">
+                    <div class="term-definition-inputs">
+                        <input type="text" placeholder="Term" @bind="termDefinitionPairs[index].Term" class="term-input" />
+                        <input type="text" placeholder="Definition" @bind="termDefinitionPairs[index].Definition" class="definition-input" />
+                    </div>
+                    <button type="button" class="remove-btn" @onclick="() => RemovePair(index)">×</button>
+                </div>
+            }
+            <button type="button" class="add-pair-btn" @onclick="AddNewPair">+ Add Another Term</button>
+        </div>
+
+        <button class="submit" type="submit" disabled="@isLoading">CREATE</button>
+                @if (isLoading)
+                {
+                    <span>Creating set...</span>
+                }
+                @if (!string.IsNullOrEmpty(StatusMessage))
+                {
+                    <p>@StatusMessage</p>
+                }
+    </form>
+    @if (!string.IsNullOrEmpty(ErrorMessage))
+    {
+            <p class="errorMessage">@ErrorMessage</p>
+    }
+</div>
+
 <style>
-    body {
-        font-family: 'Arial', sans-serif;
-        background-color: #f4f7fa;
-        color: #333;
+    body, html {
         margin: 0;
         padding: 0;
+        font-family: 'Arial', sans-serif;
+        box-sizing: border-box;
+    }
+
+    * {
+        box-sizing: inherit;
+    }
+
+    body {
+        background-color: #ffffff;
+        color: #333;
+        line-height: 1.6;
+        font-size: 16px;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .navbar {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+        background-color: #f8f8f8;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
+    }
+
+    header nav {
+        display: flex;
+        gap: 49px;
+    }
+
+    header nav a {
+        text-decoration: none;
+        color: #4e7429;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    header nav a:hover {
+        text-decoration: underline;
+    }
+
+    .auth-links {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .auth-links a {
+        color: #4e7429;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .auth-links .GoToLogIn {
+        padding: 5px 15px;
+        background-color: #4e7429;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .auth-links .GoToLogIn:hover {
+        opacity: 0.9;
+    }
+
+    .set-container {
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     }
 
     h1 {
         text-align: center;
-        color: #2a9d8f;
-        font-size: 2rem;
-        margin-top: 50px;
+        color: #000000;
+        font-size: 4rem;
+        margin-top: -5px;
+        text-shadow: 3px 5px 10px #ffffff;
+        font-weight: bold;
+    }
+    
+    h4 {
+        text-align: center;
+        color: #851212;
+        text-shadow: 2px 2px 5px #ffffff;
+        margin-top: 10px;
+        font-weight: bold;
+        font-size: 30px;
     }
 
     p {
         text-align: center;
         color: #555;
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        margin-bottom: 20px;
     }
 
-    div {
+    form {
         max-width: 600px;
-        margin: 0 auto;
-        padding: 30px;
+        margin: 20px auto;
+        padding: 20px;
         background-color: #fff;
         border-radius: 8px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
     }
 
     label {
@@ -43,20 +207,81 @@
         display: block;
     }
 
-    input[type="text"], input[type="date"] {
+    input[type="text"], input[type="date"], textarea, select {
         width: 100%;
-        padding: 10px;
+        padding: 12px;
         margin-bottom: 20px;
         border-radius: 4px;
         border: 1px solid #ccc;
         font-size: 1rem;
     }
 
+    input:focus, textarea:focus, select:focus {
+        border-color: #2a9d8f;
+        outline: none;
+    }
+
+    .term-definitions-container {
+        margin-bottom: 25px;
+    }
+
+    .term-definition-pair {
+        display: flex;
+        margin-bottom: 15px;
+        align-items: center;
+    }
+
+    .term-definition-inputs {
+        display: flex;
+        flex: 1;
+        gap: 10px;
+    }
+
+    .term-input {
+        flex: 1;
+        margin-bottom: 0;
+    }
+
+    .definition-input {
+        flex: 2;
+        margin-bottom: 0;
+    }
+
+    .remove-btn {
+        background-color: #ff6b6b;
+        color: white;
+        border: none;
+        border-radius: 50%;
+        width: 30px;
+        height: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-left: 10px;
+        cursor: pointer;
+        font-size: 18px;
+    }
+
+    .add-pair-btn {
+        background-color: #4e7429;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        padding: 8px 15px;
+        cursor: pointer;
+        font-size: 14px;
+        margin-top: 5px;
+    }
+
+    .add-pair-btn:hover {
+        background-color: #3a581f;
+    }
+
     button.btn {
         display: block;
         width: 100%;
         padding: 15px;
-        background-color: #2a9d8f;
+        background-color: #2a9d41;
         color: white;
         font-size: 1rem;
         border: none;
@@ -70,10 +295,11 @@
     }
 
     .alert {
-        padding: 10px;
-        border-radius: 4px;
+        padding: 12px;
+        border-radius: 5px;
         margin-top: 10px;
         text-align: center;
+        font-size: 1rem;
     }
 
     .alert-success {
@@ -88,74 +314,247 @@
         border: 1px solid #f5c6cb;
     }
 
-    .background-container {
-        background-image: url('/Users/lillianandino/Desktop/SPRING25/oo design/Team-10/StudySprout/wwwroot/background-create-new.jpeg'); /* Path to your image */
-        background-size: cover; /* Ensure the image covers the entire container */
-        background-position: center; /* Center the background image */
-        background-repeat: no-repeat; /* Don't repeat the background */
-        padding: 20px; /* Add some padding around the content */
-        color: white; /* White text color for visibility */
+    ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    ul li {
+        background: #fff;
+        margin: 10px 0;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    ul li h3 {
+        margin: 0;
+        font-size: 1.5rem;
+        color: #2a9d8f;
+    }
+
+    ul li p {
+        margin: 5px 0 0;
+        color: #555;
+        font-size: 1rem;
+    }
+
+    footer {
+        background-color: #2a9d8f;
+        color: white;
+        padding: 15px 0;
+        text-align: center;
+    }
+
+    footer a {
+        color: white;
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+
+    .logo img {
+        object-fit: contain;
+        display: block;
+    }
+
+    .slink-icon {
+        position: absolute;
+        bottom: 10px;
+        right: 20px;
+        height: 80px;
+        width: 135px;
+    }
+
+    .banner {
+        background-image: url('background3.jpg');
+        background-size: cover;
+        background-position: center;
+        text-align: center;
+        color: white;
+        padding: 60px 20px;
+        position: relative;
+        width: 100%;
+        height: 250px;
+    }
+
+    .submit {
+        width: 100%;
+        padding: 10px;
+        background-color: #00d44a;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .submit:hover {
+        background-color: #00b321;
+    }
+
+    .errorMessage {
+        color: #dc3545;
+        font-weight: bold;
     }
 </style>
 
-<h1>CREATE A NEW STUDY SET.</h1>
-
-<p>READY, SET, STUDY!</p>
-
-<!-- Create your own set of flashcards to study from.-->
-<div>
-    <label for="setTitle">SET TITLE</label>
-    <input type="text" id="setTitle" @bind="setTitle" required />
-
-    <label for="description">DESCRIPTION</label>
-    <input type="text" id="description" @bind="description"/>
-
-    <label for="dueDate">LEARN BY</label>
-    <input type="date" id="dueDate" @bind="dueDate"/>
-
-    <!-- Create your set -->
-    <button class="btn btn-primary" @onclick="create">CREATE</button>
-</div>
-
-@if (isSuccess)
-{
-    <p class="alert alert-success">Study set created successfully!</p>
-}
-
-@if (isError)
-{
-    <p class="alert alert-danger">Error: Please fill out all fields correctly!</p>
-}
-
 @code
 {
-    private string setTitle { get; set; }
-    private string description { get; set; }
-    private DateTime dueDate { get; set; }
-    private bool isSuccess { get; set; }
-    private bool isError { get; set; }
+    public string setTitle { get; set; } = string.Empty;
+    public string description { get; set; } = string.Empty;
+    public DateTime learnBy { get; set; } = DateTime.Now.AddDays(7);
 
-    private void create()
+    public class TermDefinitionPair
     {
-        // Reset success and error states
-        isSuccess = false;
-        isError = false;
+        public string Term { get; set; } = string.Empty;
+        public string Definition { get; set; } = string.Empty;
+    }
+    private List<TermDefinitionPair> termDefinitionPairs = new List<TermDefinitionPair>();
 
-        // Validate input
-        if (string.IsNullOrEmpty(setTitle) || string.IsNullOrEmpty(description) || dueDate == default)
+    public bool IsSuccess { get; set; } = false;
+    public string ErrorMessage { get; set; } = string.Empty;
+    private string StatusMessage { get; set; } = string.Empty;
+    private bool isLoading = false;
+    
+    FirestoreDb StudySproutDB = FirestoreDb.Create("studysprout-67ec9");
+
+    protected override void OnInitialized()
+    {
+        AddNewPair();
+    }
+
+    private void AddNewPair()
+    {
+        termDefinitionPairs.Add(new TermDefinitionPair());
+    }
+
+    private Task RemovePair(int index)
+    {
+        if (termDefinitionPairs.Count > 1)
         {
-            isError = true; // Show error if any required field is empty
+            termDefinitionPairs.RemoveAt(index);
+        }
+        return Task.CompletedTask;
+    }
+
+    private async Task HandleSubmit()
+    {
+        isLoading = true;
+        ErrorMessage = string.Empty;
+        StatusMessage = string.Empty;
+
+        if (string.IsNullOrEmpty(setTitle))
+        {
+            ErrorMessage = "Title field is required.";
+            isLoading = false;
             return;
         }
 
-        // Simulate saving the study set (e.g., to a database or API)
-        // This is where you would call a backend service or data repository to save the study set.
-        Console.WriteLine($"Creating study set: Title: {setTitle}, Description: {description}, Due Date: {dueDate}");
+        //check at least one pair has content
+        bool hasValidPair = false;
+        foreach (var pair in termDefinitionPairs)
+        {
+            if (!string.IsNullOrWhiteSpace(pair.Term) && !string.IsNullOrWhiteSpace(pair.Definition))
+            {
+                hasValidPair = true;
+                break;
+            }
+        }
 
-        // Simulate success
-        isSuccess = true;
-        setTitle = string.Empty; // Clear the input fields
+        if (!hasValidPair)
+        {
+            ErrorMessage = "At least one term-definition pair must be filled out.";
+            isLoading = false;
+            return;
+        }
+
+        //if setTitle already exists
+        if (await TitleExists(setTitle))
+        {
+            ErrorMessage = "A set with this title already exists.";
+            isLoading = false;
+            return;
+        }
+
+        //create new set
+        await CreateStudySet();
+        isLoading = false;
+    }
+
+    private async Task<bool> TitleExists(string title)
+    {
+        CollectionReference userCollection = StudySproutDB.Collection("MyStudySetsDB");
+        Query query = userCollection.WhereEqualTo("setTitle", title);
+        QuerySnapshot snapshot = await query.GetSnapshotAsync();
+        
+        return snapshot.Documents.Count > 0;
+    }
+
+    private async Task CreateStudySet()
+    {
+        try
+        {
+            CollectionReference userCollection = StudySproutDB.Collection("MyStudySetsDB");
+            
+            //remove empty pairs
+            var validPairs = termDefinitionPairs
+                .Where(p => !string.IsNullOrWhiteSpace(p.Term) && !string.IsNullOrWhiteSpace(p.Definition))
+                .ToList();
+
+            //create doc data
+            Dictionary<string, object> setData = new Dictionary<string, object>
+            {
+                { "setTitle", setTitle },
+                { "description", description },
+                { "learnBy", Timestamp.FromDateTime(learnBy.ToUniversalTime()) },
+                { "IsSuccess", IsSuccess },
+                { "CreatedDate", Timestamp.GetCurrentTimestamp() },
+                { "TermCount", validPairs.Count }
+            };
+
+            //add pairs to doc
+            for (int i = 0; i < validPairs.Count; i++)
+            {
+                setData[$"term_{i}"] = validPairs[i].Term;
+                setData[$"definition_{i}"] = validPairs[i].Definition;
+            }
+            DocumentReference docRef = await userCollection.AddAsync(setData);
+            StatusMessage = "Set created successfully!";
+            
+            set1.SetSet(setTitle, description, learnBy);
+            
+            await Task.Delay(1000);
+            if (IsSuccess)
+            {
+                Navigation.NavigateTo("/MyStudySets");
+            }
+            else
+            {
+                Navigation.NavigateTo("/CreateNew");
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error creating set: {ex.Message}";
+        }
+    }
+
+    private void ClearInputs()
+    {
+        setTitle = string.Empty;
         description = string.Empty;
-        dueDate = default; // Reset the due date to an empty value
+        learnBy = DateTime.Now.AddDays(7);
+    }
+
+    private void HandleSetCreation()
+    {
+        Console.WriteLine($"Title: {setTitle}, Description: {description}, LearnBy: {learnBy}");
+    }
+
+    public void GoToLogIn()
+    {
+        Navigation.NavigateTo("/signin", forceLoad: true);
     }
 }

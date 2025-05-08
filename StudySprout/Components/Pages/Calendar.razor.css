@@ -1,0 +1,201 @@
+/* === NAVBAR STYLES === */
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #ffffff;
+    box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
+}
+
+header nav {
+    display: flex;
+    gap: 49px;
+}
+
+header nav a {
+    text-decoration: none;
+    color: #4e7429;
+    font-weight: bold;
+    font-size: 1rem;
+}
+
+header nav a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+.auth-links {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.auth-links a {
+    color: #4e7429;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.auth-links .GoToLogIn {
+    padding: 5px 15px;
+    background-color: #4e7429;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.auth-links .GoToLogIn:hover {
+    opacity: 0.9;
+}
+
+.button-style {
+    text-decoration: none; /* Remove underline */
+    color: #4e7429; /* Set the text color */
+    font-weight: bold; /* Make the text bold */
+    background: none; /* Remove background */
+    border: none; /* Remove border */
+    font-size: 1rem; /* Adjust font size if needed */
+    cursor: pointer; /* Change the cursor to a pointer */
+    padding: 0; /* Remove padding to match a link */
+    margin: 8px;
+}
+
+
+/* === CALENDAR STYLES === */
+
+.header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.header button {
+    padding: 4px 8px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+    background-color: #88c38f;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+.header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.calendar {
+    max-width: 1000px;
+    margin: auto;
+    background: rgb(181, 236, 179);
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 4px 10px rgba(0,0,0,0.1);
+}
+
+.day-labels,
+.days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    text-align: center;
+}
+
+.day {
+    border: 1px solid #268331;
+    min-height: 100px;
+    padding: 5px;
+    position: relative;
+    background-color: #eaf6e4;
+    border-radius: 10px;
+}
+
+.day.blank {
+    background: transparent;
+    border: none;
+}
+
+.day strong {
+    position: absolute;
+    top: 5px;
+    left: 5px;
+}
+
+.event {
+    margin-top: 20px;
+    font-size: 0.8rem;
+    padding: 2px 5px;
+    border-radius: 5px;
+    word-wrap: break-word;
+}
+
+.event.personal {
+    background-color: #ffe4b5;
+}
+
+.event.work {
+    background-color: #f8c2c2;
+}
+
+.event.social {
+    background-color: #b5d8ff;
+}
+
+/* === ADD EVENT BUTTON & DROPDOWN === */
+
+.add-event-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 12px 0;
+}
+
+.add-event-btn {
+    padding: 6px 12px;
+    background-color: #6dbf7e;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.event-form {
+    margin: 12px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.event-form input {
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Dropdown-style form */
+.event-dropdown {
+    position: absolute;
+    top: 110%;
+    left: 0;
+    z-index: 10;
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    padding: 12px;
+    width: 250px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.event-dropdown input {
+    width: 100%;
+    margin-bottom: 8px;
+    padding: 6px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+
+
+  

@@ -1,0 +1,387 @@
+@page "/takequiz/{quizId:int}"
+@rendermode InteractiveServer
+
+<PageTitle>Take Quiz</PageTitle>
+
+<!-- header logic and front end -->
+<header>
+    <div class="logo">
+        <img class="logo" src="/favicon.png" alt="Study Sprout Logo" style="height: 50px; width: auto; object-fit: contain;" />
+        <nav>
+            <a href="/MyStudySets" class="active">MY STUDY SETS</a>
+            <a href="/CreateNew">CREATE NEW SET</a>
+        </nav>
+    </div>
+
+    <div class="auth-links">
+        <a href="/signup">Sign up</a>
+        <a href="/signin" class="GoToLogIn">Log in</a>
+    </div>
+</header>
+
+<!-- quiz taking container that goes to new questions on click-->
+<div class="take-quiz-page">
+    <h1>Take Quiz</h1>
+    <p>Quiz ID: @QuizId</p>
+
+    @if (CurrentQuestionIndex < Questions.Count && !ShowResults)
+    {
+        <div class="question-card">
+            <h3>Question @(CurrentQuestionIndex + 1) of @Questions.Count</h3>
+            <p>@Questions[CurrentQuestionIndex]</p>
+            
+            <div class="form-group">
+                <input type="text" @bind="UserAnswer" class="form-control" placeholder="Your answer" />
+            </div>
+            
+            <div class="button-group">
+                @if (CurrentQuestionIndex > 0)
+                {
+                    <button @onclick="PreviousQuestion" class="btn btn-secondary">Previous</button>
+                }
+                
+                @if (CurrentQuestionIndex < Questions.Count - 1)
+                {
+                    <button @onclick="NextQuestion" class="btn btn-primary">Next</button>
+                }
+                else
+                {
+                    <button @onclick="FinishQuiz" class="btn btn-success">Finish Quiz</button>
+                }
+            </div>
+        </div>
+    }
+    <!-- shows the results of the quiz -->
+    else if (ShowResults)
+    {
+        <div class="results">
+            <h2>Quiz Results</h2>
+            <p>You scored @Score out of @Questions.Count!</p>
+            
+            <h3>Your Answers:</h3>
+            <ul class="answers-list">
+                @for (int i = 0; i < Questions.Count; i++)
+                {
+                    <li>
+                        <p><strong>Question @(i+1):</strong> @Questions[i]</p>
+                        <p><strong>Your answer:</strong> @UserAnswers[i]</p>
+                        <p><strong>Correct answer:</strong> @CorrectAnswers[i]</p>
+                        <p class="@(IsCorrect(i) ? "correct" : "incorrect")">
+                            @(IsCorrect(i) ? "✓ Correct" : "✗ Incorrect")
+                        </p>
+                    </li>
+                }
+            </ul>
+            
+            <button @onclick="BackToQuizzes" class="btn btn-primary">Back to Quizzes</button>
+        </div>
+    }
+</div>
+
+@* css for the page *@
+<style>
+    .take-quiz-page {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    
+    .question-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 20px;
+        margin-top: 20px;
+        background-color: #f9f9f9;
+    }
+    
+    .button-group {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 20px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        margin-top: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+    
+    .btn {
+        padding: 10px 20px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    
+    .btn-primary {
+        background-color: #139d11;
+        color: white;
+    }
+    
+    .btn-secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .btn-success {
+        background-color: #28a745;
+        color: white;
+    }
+
+    .btn:hover {
+        background-color: #006a05;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 20px;
+        background-color: #ffffff;
+        box-shadow: 0 2ptx 5px rgba(0, 0, 0, 0.1);
+    }
+
+    header nav {
+        display: flex;
+        gap: 49px;
+    }
+
+    header nav a {
+        text-decoration: none;
+        color: #4e7429;
+        font-weight: bold;
+        font-size: 1rem;
+    }
+
+    header nav a:hover {
+        text-decoration: underline; /* Underline on hover */
+    }
+
+    .auth-links {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .auth-links a {
+        color: #4e7429;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .auth-links .GoToLogIn {
+        padding: 5px 15px;
+        background-color: #4e7429;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .auth-links .GoToLogIn:hover {
+        opacity: 0.9;
+    }
+
+    .button-style {
+        text-decoration: none; /* Remove underline */
+        color: #4e7429; /* Set the text color */
+        font-weight: bold; /* Make the text bold */
+        background: none; /* Remove background */
+        border: none; /* Remove border */
+        font-size: 1rem; /* Adjust font size if needed */
+        cursor: pointer; /* Change the cursor to a pointer */
+        padding: 0; /* Remove padding to match a link */
+        margin: 8px;
+    }
+
+    .answers-list {
+        list-style-type: none;
+        padding: 0;
+    }
+    
+    .answers-list li {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
+        background-color: #f9f9f9;
+    }
+    
+    .correct {
+        color: #28a745;
+        font-weight: bold;
+    }
+    
+    .incorrect {
+        color: #dc3545;
+        font-weight: bold;
+    }
+</style>
+
+@code {
+    //stores the quiz id and quiz questions
+    [Parameter]
+    public int QuizId { get; set; }
+
+    private List<string> Questions { get; set; } = new List<string>();  
+    private List<string> CorrectAnswers { get; set; } = new List<string>();
+    private List<string> UserAnswers { get; set; } = new List<string>();
+    private int CurrentQuestionIndex { get; set; } = 0;
+    private string UserAnswer { get; set; } = "";
+    private bool ShowResults { get; set; } = false;
+    private int Score { get; set; } = 0;
+
+    @inject NavigationManager Navigation
+
+    protected override void OnInitialized()
+    {
+        LoadQuestions();
+        // Initialize UserAnswers list with empty strings for each question
+        UserAnswers = new List<string>(new string[Questions.Count]);
+    }
+
+    private void LoadQuestions()
+    {
+        // Load questions based on the QuizId
+        if (QuizId == 1) // Math Quiz
+        {
+            Questions = new List<string>
+            {
+                "What is 2 + (2/3 * 4/5)? Round to 1 decimal if necessary.",
+                "What is 2.5 * 4^2 - 3? Round to 1 decimal if necessary.",
+                "What is the square root of 81?"
+            };
+            
+            CorrectAnswers = new List<string>
+            {
+                "2.5",
+                "37",
+                "9"
+            };
+        }
+        else if (QuizId == 2) // Science Quiz
+        {
+            Questions = new List<string>
+            {
+                "What is the name of the force that pulls objects toward Earth?",
+                "What is the largest planet in the solar system?",
+                "What is the process where plants make their own food?"
+            };
+        
+            CorrectAnswers = new List<string>
+            {
+                "gravity",
+                "jupiter",
+                "photosynthesis"
+            };
+        }
+        else
+        {
+            Questions = new List<string>
+            {
+                "No questions available for this quiz."
+            };
+            
+            CorrectAnswers = new List<string>
+            {
+                ""
+            };
+        }
+    }
+
+    private void NextQuestion()
+    {
+        // Save the current answer before moving to the next question
+        UserAnswers[CurrentQuestionIndex] = UserAnswer;
+        
+        if (CurrentQuestionIndex < Questions.Count - 1)
+        {
+            CurrentQuestionIndex++;
+            UserAnswer = UserAnswers[CurrentQuestionIndex] ?? "";
+        }
+    }
+
+    private void PreviousQuestion()
+    {
+        // Save the current answer before moving to the previous question
+        UserAnswers[CurrentQuestionIndex] = UserAnswer;
+        
+        if (CurrentQuestionIndex > 0)
+        {
+            CurrentQuestionIndex--;
+            UserAnswer = UserAnswers[CurrentQuestionIndex] ?? "";
+        }
+    }
+
+    private void FinishQuiz()
+    {
+        // Save the final question's answer
+        UserAnswers[CurrentQuestionIndex] = UserAnswer;
+        
+        // Calculate score
+        CalculateScore();
+        
+        ShowResults = true;
+    }
+    
+    // Calculate the score based on correct answers
+    private void CalculateScore()
+    {
+        Score = 0;
+        
+        for (int i = 0; i < Questions.Count; i++)
+        {
+            if (IsCorrect(i))
+            {
+                Score++;
+            }
+        }
+    }
+    
+    //shows if the answer is correct or not
+    private bool IsCorrect(int questionIndex)
+    {
+        if (questionIndex >= 0 && questionIndex < Questions.Count)
+        {
+            string userAnswer = UserAnswers[questionIndex]?.Trim().ToLower() ?? "";
+            string correctAnswer = CorrectAnswers[questionIndex]?.Trim().ToLower() ?? "";
+            
+            return userAnswer == correctAnswer;
+        }
+        
+        return false;
+    }
+
+    private void BackToQuizzes()
+    {
+        Navigation.NavigateTo("/quiz");
+    }
+
+    private void NavigatetoSignUp()
+    {
+        Navigation.NavigateTo("/signup", forceLoad: true);
+    }
+    
+    private void NavigateToSignIn()
+    {
+        Navigation.NavigateTo("/signin", forceLoad: true);
+    }
+    
+    private void NavigateToMyGarden()
+    {
+        Navigation.NavigateTo("/mygarden", forceLoad: true);
+    }
+    
+    private void NavigateToStudySets()
+    {
+        Navigation.NavigateTo("/mystudysets", forceLoad: true);
+    }
+    
+    private void NavigateToCreatNew()
+    {
+        Navigation.NavigateTo("/createnew", forceLoad: true);
+    }
+}
